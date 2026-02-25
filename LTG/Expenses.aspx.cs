@@ -4395,5 +4395,108 @@ END";
                 lblError.ForeColor = System.Drawing.Color.Red;
             }
         }
+        // ── Populate helpers called by PopulateFormForEdit ────────────────────────
+
+        private void PopulateLocalFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        {
+            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalFoodDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalFoodDate.Text = date;
+            txtLocalFoodAmount.Text = amount;
+            txtLocalFoodParticulars.Text = particulars;
+            txtLocalFoodRemarks.Text = remarks;
+            txtLocalSMONo.Text = smoNo;
+            txtLocalFoodSONo.Text = soNo;
+            txtLocalRefNo.Text = refNo;
+        }
+
+        private void PopulateLocalMiscellaneousFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        {
+            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalMiscDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalMiscDate.Text = date;
+            txtLocalMiscAmount.Text = amount;
+            txtLocalMiscItem.Text = particulars;
+            txtLocalMiscRemarks.Text = remarks;
+            txtLocalMiscSMONo.Text = smoNo;
+            txtLocalMiscSONo.Text = soNo;
+            txtLocalMiscRefNo.Text = refNo;
+        }
+
+        private void PopulateLocalOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        {
+            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalOthersDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalOthersDate.Text = date;
+            txtLocalOthersAmount.Text = amount;
+            txtLocalOthersParticulars.Text = particulars;
+            txtLocalOthersRemarks.Text = remarks;
+            txtLocalOthersSMONo.Text = smoNo;
+            txtLocalOthersSoNo.Text = soNo;
+            txtLocalOthersRefNo.Text = refNo;
+        }
+
+        private void PopulateLocalConveyanceFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        {
+            string mode = ddlLocalMode.SelectedValue;
+            if (mode == "Bike")
+            {
+                if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalBikeDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalBikeDate.Text = date;
+                txtLocalAmount.Text = amount;
+                txtLocalBikeParticular.Text = particulars;
+                txtLocalBikeRemarks.Text = remarks;
+                txtLocalBikeSMONo.Text = smoNo;
+                txtLocalBikeSONo.Text = soNo;
+                txtLocalBikeRefNo.Text = refNo;
+            }
+            else if (mode == "Cab/Bus")
+            {
+                if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalCabDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalCabDate.Text = date;
+                txtLocalCabAmount.Text = amount;
+                txtLocalCabParticular.Text = particulars;
+                txtLocalCabRemarks.Text = remarks;
+                txtLocalCabSMONo.Text = smoNo;
+                txtLocalCabSONo.Text = soNo;
+                txtLocalCabRefNo.Text = refNo;
+            }
+            else if (mode == "Auto")
+            {
+                if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalAutoDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalAutoDate.Text = date;
+                txtLocalAutoAmount.Text = amount;
+                txtLocalAutoParticular.Text = particulars;
+                txtLocalAutoRemarks.Text = remarks;
+                txtLocalAutoSMONo.Text = smoNo;
+                txtLocalAutoSONo.Text = soNo;
+                txtLocalAutoRefNo.Text = refNo;
+            }
+        }
+
+        private void PopulateTourFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        {
+            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtTourFoodDate.Text = d.ToString("yyyy-MM-dd"); else txtTourFoodDate.Text = date;
+            txtTourFoodAmount.Text = amount;
+            txtTourFoodParticulars.Text = particulars;
+            txtTourFoodRemarks.Text = remarks;
+            txtTourFoodSMONo.Text = smoNo;
+            txtTourFoodSONo.Text = soNo;
+            txtTourFoodRefNo.Text = refNo;
+        }
+
+        private void PopulateTourMiscellaneousFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        {
+            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtTourMiscDate.Text = d.ToString("yyyy-MM-dd"); else txtTourMiscDate.Text = date;
+            txtTourMiscAmount.Text = amount;
+            txtTourMiscItem.Text = particulars;
+            txtTourMiscParticulars.Text = particulars;
+            txtTourMiscRemarks.Text = remarks;
+            txtTourMiscSmoNo.Text = smoNo;
+            txtTourMiscSoNo.Text = soNo;
+            txtTourMiscRefNo.Text = refNo;
+        }
+
+        private void PopulateTourOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        {
+            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtTourOthersDate.Text = d.ToString("yyyy-MM-dd"); else txtTourOthersDate.Text = date;
+            txtTourOthersAmount.Text = amount;
+            txtParticularsTourOthers.Text = particulars;
+            txtRemarksTourOthers.Text = remarks;
+            txtTourOthersSmoNo.Text = smoNo;
+            txtTourOthersSoNo.Text = soNo;
+            txtTourOthersRefNo.Text = refNo;
+        }
     }
 }
