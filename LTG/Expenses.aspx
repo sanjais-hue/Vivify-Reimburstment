@@ -2703,63 +2703,7 @@ border:none;background:none;
                                                     </div>
                                                 </ItemTemplate>
                                             </asp:Repeater>
-                                            <!-- Imported Data Grid -->
-                                            <div class="col-12"
-                                                style="margin-top: 40px; margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
-                                                <h5
-                                                    style="color: midnightblue; margin-bottom: 15px; font-weight: bold; font-size: 1.3rem; font-family: 'Times New Roman', Times, serif;">
-                                                    Imported Excel Data Summary</h5>
-                                                <div
-                                                    style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px;">
-                                                    <asp:GridView ID="gvImportedData" runat="server"
-                                                        AutoGenerateColumns="false" CellPadding="8" CellSpacing="0"
-                                                        style="width: 100%; margin-bottom: 0; border-collapse: collapse; font-size: 13px;">
-                                                        <Columns>
-                                                            <asp:BoundField DataField="Date" HeaderText="Date"
-                                                                ItemStyle-Width="15%"
-                                                                ItemStyle-HorizontalAlign="Center" />
-                                                            <asp:BoundField DataField="Category" HeaderText="Local/Tour"
-                                                                ItemStyle-Width="15%"
-                                                                ItemStyle-HorizontalAlign="Center" />
-
-                                                            <asp:BoundField DataField="ExpenseType"
-                                                                HeaderText="Expenses" ItemStyle-HorizontalAlign="Center"
-                                                                HeaderStyle-HorizontalAlign="Center" />
-                                                            <asp:BoundField DataField="Total" HeaderText="Amount"
-                                                                ItemStyle-Width="15%"
-                                                                ItemStyle-HorizontalAlign="Center" />
-                                                            <asp:TemplateField HeaderText="Action" ItemStyle-Width="45%"
-                                                                ItemStyle-HorizontalAlign="Center">
-                                                                <ItemTemplate>
-                                                                    <asp:Button ID="btnEditRow" runat="server"
-                                                                        Text="Edit"
-                                                                        style="background-color: #999; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; margin-right: 5px; font-weight: bold; font-size: 12px;"
-                                                                        CommandArgument='<%# Container.DataItemIndex %>'
-                                                                        OnClick="btnEditRow_Click" />
-                                                                    <asp:Button ID="btnDeleteRow" runat="server"
-                                                                        Text="Delete"
-                                                                        style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 12px;"
-                                                                        CommandArgument='<%# Container.DataItemIndex %>'
-                                                                        OnClick="btnDeleteRow_Click" />
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                        </Columns>
-                                                        <HeaderStyle BackColor="#1a2a5e" ForeColor="white"
-                                                            Font-Bold="true" Font-Size="13px" HorizontalAlign="Center"
-                                                            VerticalAlign="Middle" />
-                                                        <RowStyle BackColor="white" BorderColor="#1a2a5e"
-                                                            BorderWidth="1px" HorizontalAlign="Center"
-                                                            VerticalAlign="Middle" Height="35px" />
-                                                        <AlternatingRowStyle BackColor="#f0f4f8" BorderColor="#1a2a5e"
-                                                            BorderWidth="1px" HorizontalAlign="Center"
-                                                            VerticalAlign="Middle" Height="35px" />
-                                                    </asp:GridView>
-                                                </div>
-                                                <asp:Label ID="lblNoData" runat="server"
-                                                    Text="No imported data to display"
-                                                    style="color: #999; font-style: italic; display: block; margin-top: 10px;"
-                                                    Visible="false" />
-                                            </div>
+                                            <!-- Deprecated Imported Data Grid removed -->
 
                                             <div class="d-flex justify-content-center gap-3 mt-3">
 
