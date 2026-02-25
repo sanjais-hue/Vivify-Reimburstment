@@ -19,74 +19,7 @@
             }
             const fileUrls = {};
 
-            function handleFileSelect(input, textBoxId, removeBtnId) {
-                if (input.files && input.files[0]) {
-                    const file = input.files[0];
-                    document.getElemen<%@ Page Title="" Language="C#" MasterPageFile="/Main.Master" AutoEventWireup="true" CodeBehind="Expenses.aspx.cs"
-    Inherits="Vivify.Expenses" Async="true" %><asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-        <script type="text/javascript">
-            function confirmSubmission() {
-                return confirm("Are you sure you want to Save?");
-            }
-            function confirmSubmit(statusid) {
-                if (statusid !== 2) {
-                    return confirm("Are you sure you want to submit?");
-                } else {
-                    return true;
-                }
-            }
-
-            function showAlert(message) {
-                alert(message);
-            }
-            const fileUrls = {};
-
-            function handleFileSelect(input, textBoxId, removeBtnId) {
-                if (input.files && input.files[0]) {
-                    const file = input.files[0];
-                    document.getElemen<%@ Page Title="" Language="C#" MasterPageFile="/Main.Master" AutoEventWireup="true" CodeBehind="Expenses.aspx.cs"
-    Inherits="Vivify.Expenses" Async="true" %><asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-        <script type="text/javascript">
-            function confirmSubmission() {
-                return confirm("Are you sure you want to Save?");
-            }
-            function confirmSubmit(statusid) {
-                if (statusid !== 2) {
-                    return confirm("Are you sure you want to submit?");
-                } else {
-                    return true;
-                }
-            }
-
-            function showAlert(message) {
-                alert(message);
-            }
-            const fileUrls = {};
-
-            function handleFileSelect(input, textBoxId, removeBtnId) {
-                if (input.files && input.files[0]) {
-                    const file = input.files[0];
-                    document.getElemen<%@ Page Title="" Language="C#" MasterPageFile="/Main.Master" AutoEventWireup="true" CodeBehind="Expenses.aspx.cs"
-    Inherits="Vivify.Expenses" Async="true" %><asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-        <script type="text/javascript">
-            function confirmSubmission() {
-                return confirm("Are you sure you want to Save?");
-            }
-            function confirmSubmit(statusid) {
-                if (statusid !== 2) {
-                    return confirm("Are you sure you want to submit?");
-                } else {
-                    return true;
-                }
-            }
-
-            function showAlert(message) {
-                alert(message);
-            }
-            const fileUrls = {};
 
             function handleFileSelect(input, textBoxId, removeBtnId) {
                 if (input.files && input.files[0]) {
@@ -2809,4 +2742,3 @@ border:none;background:none;
         </main>
 
     </asp:Content>
-
