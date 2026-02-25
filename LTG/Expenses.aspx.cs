@@ -3889,6 +3889,10 @@ END";
                     int colConveyance  = GetColIndex(colMap, new[] { "conveyance" }, 9);
                     int colLodging     = GetColIndex(colMap, new[] { "lodging" }, 10);
                     int colFooding     = GetColIndex(colMap, new[] { "fooding", "food" }, 11);
+                    int colSONo        = GetColIndex(colMap, new[] { "so", "sap", "so/sap no", "so no", "sap no" }, 12);
+                    int colSMONo       = GetColIndex(colMap, new[] { "smo", "wbs", "smo/wbs no", "smo no", "wbs no" }, 13);
+                    int colRefNo       = GetColIndex(colMap, new[] { "ref", "ref no" }, 14);
+                    int colRemarks     = GetColIndex(colMap, new[] { "remarks" }, 15);
 
                     int dataStartRow = (headerRow > 0) ? headerRow + 1 : 2;
 
@@ -3909,6 +3913,10 @@ END";
                         string rawConveyance  = (ws.Cells[r, colConveyance].Text  ?? "").Trim();
                         string rawLodging     = (ws.Cells[r, colLodging].Text     ?? "").Trim();
                         string rawFooding     = (ws.Cells[r, colFooding].Text     ?? "").Trim();
+                        string rawSONo        = (ws.Cells[r, colSONo].Text        ?? "").Trim();
+                        string rawSMONo       = (ws.Cells[r, colSMONo].Text       ?? "").Trim();
+                        string rawRefNo       = (ws.Cells[r, colRefNo].Text       ?? "").Trim();
+                        string rawRemarks     = (ws.Cells[r, colRemarks].Text     ?? "").Trim();
 
                         if (!string.IsNullOrEmpty(rawDate))      lastDate      = rawDate;
                         if (!string.IsNullOrEmpty(rawExpType))   lastExpType   = rawExpType;
@@ -3955,6 +3963,10 @@ END";
                             dr["Distance"]      = rawDistance;
                             dr["TransportType"] = transport;
                             dr["Amount"]        = convAmt.ToString("0.##");
+                            dr["SONo"]          = rawSONo;
+                            dr["SMONo"]         = rawSMONo;
+                            dr["RefNo"]         = rawRefNo;
+                            dr["Remarks"]       = rawRemarks;
                             dt.Rows.Add(dr);
                         }
                         if (hasFooding)
@@ -3970,6 +3982,10 @@ END";
                             dr["Distance"]      = "";
                             dr["TransportType"] = "";
                             dr["Amount"]        = foodAmt.ToString("0.##");
+                            dr["SONo"]          = rawSONo;
+                            dr["SMONo"]         = rawSMONo;
+                            dr["RefNo"]         = rawRefNo;
+                            dr["Remarks"]       = rawRemarks;
                             dt.Rows.Add(dr);
                         }
                         if (hasLodging)
@@ -3985,6 +4001,10 @@ END";
                             dr["Distance"]      = "";
                             dr["TransportType"] = "";
                             dr["Amount"]        = lodgAmt.ToString("0.##");
+                            dr["SONo"]          = rawSONo;
+                            dr["SMONo"]         = rawSMONo;
+                            dr["RefNo"]         = rawRefNo;
+                            dr["Remarks"]       = rawRemarks;
                             dt.Rows.Add(dr);
                         }
                     }
@@ -4064,6 +4084,10 @@ END";
             string distance  = row["Distance"].ToString();
             string transport = row["TransportType"].ToString();
             string amount    = row["Amount"].ToString();
+            string soNo      = row["SONo"].ToString();
+            string smoNo     = row["SMONo"].ToString();
+            string refNo     = row["RefNo"].ToString();
+            string remarks   = row["Remarks"].ToString();
 
             // ── Hide all sub-panels first (same as ddlExpenseType_SelectedIndexChanged) ──
             pnlLocalExpenses.Visible           = false;
@@ -4101,6 +4125,10 @@ END";
                     txtLocalFoodToTime.Text            = toTime;
                     txtLocalFoodParticulars.Text       = particulars;
                     txtLocalFoodAmount.Text            = amount;
+                    txtLocalFoodSONo.Text              = soNo;
+                    txtLocalSMONo.Text                 = smoNo;
+                    txtLocalRefNo.Text                 = refNo;
+                    txtLocalFoodRemarks.Text           = remarks;
                 }
                 else if (category == "Conveyance")
                 {
@@ -4117,6 +4145,10 @@ END";
                         txtLocalBikeParticular.Text   = particulars;
                         txtLocalDistance.Text         = distance;
                         txtLocalAmount.Text           = amount;
+                        txtLocalBikeSONo.Text         = soNo;
+                        txtLocalBikeSMONo.Text        = smoNo;
+                        txtLocalBikeRefNo.Text        = refNo;
+                        txtLocalBikeRemarks.Text      = remarks;
                     }
                     else if (transport == "Cab/Bus")
                     {
@@ -4126,6 +4158,10 @@ END";
                         txtLocalCabToTime.Text        = toTime;
                         txtLocalCabParticular.Text    = particulars;
                         txtLocalCabAmount.Text        = amount;
+                        txtLocalCabSONo.Text          = soNo;
+                        txtLocalCabSMONo.Text         = smoNo;
+                        txtLocalCabRefNo.Text         = refNo;
+                        txtLocalCabRemarks.Text       = remarks;
                     }
                     else if (transport == "Auto")
                     {
@@ -4136,6 +4172,10 @@ END";
                         txtLocalAutoParticular.Text   = particulars;
                         txtLocalAutoDistance.Text     = distance;
                         txtLocalAutoAmount.Text       = amount;
+                        txtLocalAutoSONo.Text         = soNo;
+                        txtLocalAutoSMONo.Text        = smoNo;
+                        txtLocalAutoRefNo.Text        = refNo;
+                        txtLocalAutoRemarks.Text      = remarks;
                     }
                 }
                 else if (category == "Lodging" || category == "Others")
@@ -4148,6 +4188,10 @@ END";
                     txtLocalOthersToTime.Text          = toTime;
                     txtLocalOthersParticulars.Text     = particulars;
                     txtLocalOthersAmount.Text          = amount;
+                    txtLocalOthersSoNo.Text            = soNo;
+                    txtLocalOthersSMONo.Text           = smoNo;
+                    txtLocalOthersRefNo.Text           = refNo;
+                    txtLocalOthersRemarks.Text         = remarks;
                 }
             }
             else if (expType == "Tour")
@@ -4163,6 +4207,10 @@ END";
                     txtTourFoodToTime.Text             = toTime;
                     txtTourFoodParticulars.Text        = particulars;
                     txtTourFoodAmount.Text             = amount;
+                    txtTourFoodSONo.Text               = soNo;
+                    txtTourFoodSMONo.Text              = smoNo;
+                    txtTourFoodRefNo.Text              = refNo;
+                    txtTourFoodRemarks.Text            = remarks;
                 }
                 else if (category == "Lodging")
                 {
@@ -4173,6 +4221,10 @@ END";
                     txtToTimeTourOthers.Text           = toTime;
                     txtParticularsTourOthers.Text      = particulars;
                     txtTourOthersAmount.Text           = amount;
+                    txtTourOthersSoNo.Text             = soNo;
+                    txtTourOthersSmoNo.Text            = smoNo;
+                    txtTourOthersRefNo.Text            = refNo;
+                    txtRemarksTourOthers.Text          = remarks;
                 }
                 else if (category == "Conveyance")
                 {
@@ -4190,6 +4242,10 @@ END";
                         txtTourAutoDistance.Text           = distance;
                         txtTourAutoAmount.Text             = amount;
                         ddlTourTransportMode.SelectedValue = "Auto";
+                        txtTourAutoSoNo.Text               = soNo;
+                        txtTourAutoSmoNo.Text              = smoNo;
+                        txtTourAutoRefNo.Text              = refNo;
+                        txTourAutoRemarks.Text             = remarks;
                     }
                     else if (transport == "Cab" || transport == "Cab/Bus")
                     {
@@ -4200,6 +4256,10 @@ END";
                         txtParticularsCab.Text             = particulars;
                         txtCabAmount.Text                  = amount;
                         ddlTourTransportMode.SelectedValue = "Cab";
+                        txtCabSoNo.Text                    = soNo;
+                        txtCabSmoNo.Text                   = smoNo;
+                        txtCabRefNo.Text                   = refNo;
+                        txtRemarksCab.Text                 = remarks;
                     }
                     else if (transport == "Train")
                     {
@@ -4209,6 +4269,10 @@ END";
                         txtToTimeTrain.Text                 = toTime;
                         txtParticularsTrain.Text            = particulars;
                         txtTrainAmount.Text                 = amount;
+                        txtTrainSoNo.Text                   = soNo;
+                        txtTrainSmoNo.Text                  = smoNo;
+                        txtTrainRefNo.Text                  = refNo;
+                        txtRemarksTrain.Text                = remarks;
                     }
                     else if (transport == "Bus")
                     {
@@ -4218,6 +4282,10 @@ END";
                         txtToTimeBus.Text                  = toTime;
                         txtParticularsBus.Text             = particulars;
                         txtBusAmount.Text                  = amount;
+                        txtBusSoNo.Text                    = soNo;
+                        txtBusSmoNo.Text                   = smoNo;
+                        txtBusRefNo.Text                   = refNo;
+                        txtRemarksBus.Text                 = remarks;
                     }
                     else if (transport == "Flight")
                     {
@@ -4227,6 +4295,10 @@ END";
                         txtFlightToTime.Text               = toTime;
                         txtFlightParticulars.Text          = particulars;
                         txtFlightAmount.Text               = amount;
+                        txtFlightSoNo.Text                 = soNo;
+                        txtFlightSmoNo.Text                = smoNo;
+                        txtFlightRefNo.Text                = refNo;
+                        txtFlightRemarks.Text              = remarks;
                     }
                 }
             }
@@ -4246,6 +4318,10 @@ END";
             dt.Columns.Add("Distance",      typeof(string));
             dt.Columns.Add("TransportType", typeof(string));
             dt.Columns.Add("Amount",        typeof(string));
+            dt.Columns.Add("SONo",          typeof(string));
+            dt.Columns.Add("SMONo",         typeof(string));
+            dt.Columns.Add("RefNo",         typeof(string));
+            dt.Columns.Add("Remarks",       typeof(string));
             return dt;
         }
 
