@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="/Main.Master" AutoEventWireup="true" CodeBehind="Expenses.aspx.cs"
+<%@ Page Title="" Language="C#" MasterPageFile="/Main.Master" AutoEventWireup="true" CodeBehind="Expenses.aspx.cs"
     Inherits="Vivify.Expenses" Async="true" %>
     <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
@@ -112,14 +112,15 @@
                     localStorage.setItem('excelFileRemoveBtn', 'show');
 
                     // Trigger the server-side import by clicking the hidden button
-                    document.getElementById('<%= btnImportExcel.ClientID %>').click();
+                    var importBtn = document.querySelector('[id$="btnImportExcel"]');
+                    if (importBtn) importBtn.click();
                 }
             }
 
             // Download Excel file when filename is clicked
             function downloadExcelFile() {
-                const fileInput = document.getElementById('<%= fileUploadExcel.ClientID %>');
-                fileInput.click();
+                var fileInput = document.querySelector('[id$="fileUploadExcel"]');
+                if (fileInput) fileInput.click();
             }
 
             // View and Download Excel file
@@ -457,7 +458,7 @@
                                         <button type="button" id="btnRemoveExcelFile"
                                             style="display:none; border:none; background:none; font-size:18px; font-weight:bold; line-height:16px; text-align:center; cursor:pointer; color:white; padding: 0; margin: 0;"
                                             title="Remove File"
-                                            onclick="removeFile('<%= fileUploadExcel.ClientID %>', 'txtExcelFileName', 'btnRemoveExcelFile')">×</button>
+                                            onclick="removeFile(document.querySelector('[id$=\'fileUploadExcel\']').id, 'txtExcelFileName', 'btnRemoveExcelFile')">×</button>
                                         <!-- View button -->
                                         <button type="button" id="btnViewExcelFile"
                                             style="display:none; border:none; background-color:#4CAF50; color:white; padding:6px 12px; border-radius:3px; cursor:pointer; font-size:12px; font-weight:bold;"
