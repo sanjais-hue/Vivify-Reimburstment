@@ -489,6 +489,8 @@
                                                 <Columns>
                                                     <asp:BoundField DataField="RowId" HeaderText="#"
                                                         ItemStyle-Width="30px" />
+                                                    <asp:BoundField DataField="SerialNumber" HeaderText="S.No"
+                                                        ItemStyle-Width="40px" />
                                                     <asp:BoundField DataField="ExpenseType" HeaderText="Type"
                                                         ItemStyle-Width="55px" />
                                                     <asp:BoundField DataField="Category" HeaderText="Category"

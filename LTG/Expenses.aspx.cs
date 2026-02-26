@@ -4126,6 +4126,7 @@ END";
             dt.Columns.Add("Particulars");
             dt.Columns.Add("TransportType");
             dt.Columns.Add("Distance");
+            dt.Columns.Add("SerialNumber");
             dt.Columns.Add("Amount");
 
             int displayRowId = 1;
@@ -4290,6 +4291,9 @@ END";
 
                         dr["TransportType"] = ExtractTransportType(worksheet, row, columnMap);
                         dr["Distance"] = ExtractDistance(worksheet, row, columnMap);
+                        if (columnMap.ContainsKey("SerialNumber") && columnMap["SerialNumber"].Count > 0)
+                            dr["SerialNumber"] = worksheet.Cells[row, columnMap["SerialNumber"][0]].Value?.ToString() ?? "";
+
                         dr["Amount"] = amountStr;
 
                         dt.Rows.Add(dr);
@@ -4347,7 +4351,15 @@ END";
             string toTime = row["ToTime"]?.ToString() ?? "";
 
             // Set Main Category
-            ddlExpenseType.SelectedValue = mainCategory;
+            string expenseTypeExcel = row.Table.Columns.Contains("ExpenseTypeExcel") ? row["ExpenseTypeExcel"]?.ToString() : "";
+            if (!string.IsNullOrEmpty(expenseTypeExcel) && (expenseTypeExcel == "Local" || expenseTypeExcel == "Tour" || expenseTypeExcel == "Award"))
+            {
+                ddlExpenseType.SelectedValue = expenseTypeExcel;
+            }
+            else
+            {
+                ddlExpenseType.SelectedValue = mainCategory;
+            }
             ddlExpenseType_SelectedIndexChanged(null, null);
 
             // Populate specific sub-category fields
@@ -4415,8 +4427,10 @@ END";
             dt.Columns.Add("RefNo");
             dt.Columns.Add("TransportMode");
             dt.Columns.Add("Distance");
+            dt.Columns.Add("SerialNumber");
             dt.Columns.Add("FromTime");
             dt.Columns.Add("ToTime");
+            dt.Columns.Add("ExpenseTypeExcel");
 
             int displayRowId = 1;
             string lastValidDate = ""; // Track the last seen valid date for carry-over
@@ -4618,6 +4632,12 @@ END";
 
                         if (columnMap.ContainsKey("ToTime") && columnMap["ToTime"].Count > 0)
                             dr["ToTime"] = worksheet.Cells[row, columnMap["ToTime"][0]].Value?.ToString() ?? "";
+
+                        if (columnMap.ContainsKey("ExpenseTypeColumn") && columnMap["ExpenseTypeColumn"].Count > 0)
+                            dr["ExpenseTypeExcel"] = worksheet.Cells[row, columnMap["ExpenseTypeColumn"][0]].Value?.ToString() ?? "";
+
+                        if (columnMap.ContainsKey("SerialNumber") && columnMap["SerialNumber"].Count > 0)
+                            dr["SerialNumber"] = worksheet.Cells[row, columnMap["SerialNumber"][0]].Value?.ToString() ?? "";
 
                         dt.Rows.Add(dr);
                     }
@@ -4904,6 +4924,9 @@ END";
                         AddToMap("TourLocalColumn", col);
                     else if ((cleanHeader.Equals("tour") || originalLower.Equals("tour")) || (cleanHeader.Equals("local") || originalLower.Equals("local")))
                         AddToMap("TourLocalColumn", col);
+
+                    if (cleanHeader.Contains("serial") || originalLower.Contains("slno") || originalLower.Contains("sno") || cleanHeader.Contains("serialnumber"))
+                        AddToMap("SerialNumber", col);
 
                     if (cleanHeader.Equals("expensetype") || originalLower.Equals("expense type") || originalLower.Equals("expensetype") ||
                         cleanHeader.Contains("category") || originalLower.Contains("category") || cleanHeader.Contains("nature") || originalLower.Contains("nature") || cleanHeader.Contains("head") || originalLower.Contains("head"))
