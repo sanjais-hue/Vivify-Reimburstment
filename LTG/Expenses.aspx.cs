@@ -4115,12 +4115,17 @@ END";
             System.Diagnostics.Debug.WriteLine("=== ExtractAllExpenseData CALLED ===");
             DataTable dt = new DataTable();
 
-            // Create columns - Date, Category (Local/Tour), ExpenseType, and Total
+            // Create columns for GridView preview
             dt.Columns.Add("RowId");
             dt.Columns.Add("Date");
             dt.Columns.Add("Category");
             dt.Columns.Add("ExpenseType");
-            dt.Columns.Add("Total");
+            dt.Columns.Add("FromTime");
+            dt.Columns.Add("ToTime");
+            dt.Columns.Add("Particulars");
+            dt.Columns.Add("TransportType");
+            dt.Columns.Add("Distance");
+            dt.Columns.Add("Amount");
 
             int displayRowId = 1;
             // Extract all data rows
@@ -4370,8 +4375,20 @@ END";
                     dr["RowId"] = displayRowId++;
                     dr["Date"] = dateStr;
                     dr["Category"] = mainCategory;
-                    dr["ExpenseType"] = expenseTypeDisplay;
-                    dr["Total"] = totalValue;
+                    dr["ExpenseType"] = !string.IsNullOrEmpty(matchedHeader) ? matchedHeader : subCategory;
+                    
+                    // Extract Preview Fields
+                    dr["FromTime"] = ExtractFromTime(worksheet, row, columnMap);
+                    dr["ToTime"] = ExtractToTime(worksheet, row, columnMap);
+                    
+                    if (columnMap.ContainsKey("Particulars") && columnMap["Particulars"].Count > 0)
+                        dr["Particulars"] = worksheet.Cells[row, columnMap["Particulars"][0]].Value?.ToString() ?? "";
+                    else
+                        dr["Particulars"] = "";
+
+                    dr["TransportType"] = ExtractTransportType(worksheet, row, columnMap);
+                    dr["Distance"] = ExtractDistance(worksheet, row, columnMap);
+                    dr["Amount"] = totalValue;
 
                     dt.Rows.Add(dr);
                 }
