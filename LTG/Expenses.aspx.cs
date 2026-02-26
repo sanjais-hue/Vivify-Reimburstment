@@ -3909,7 +3909,7 @@ END";
                                 gvExcelPreview.DataSource = dtDisplayData;
                                 gvExcelPreview.DataBind();
                                 gvExcelPreview.Visible = true;
-                                lblNoData.Visible = false;
+
 
                                 // Requirement #4: Display total from Excel
                                 decimal excelTotal = 0;
