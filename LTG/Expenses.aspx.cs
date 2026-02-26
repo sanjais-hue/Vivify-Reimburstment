@@ -5631,6 +5631,35 @@ END";
             return "0";
         }
 
+
+        private string ExtractFromTime(OfficeOpenXml.ExcelWorksheet worksheet, int row, Dictionary<string, List<int>> columnMap)
+        {
+            if (columnMap.ContainsKey("FromTime") && columnMap["FromTime"].Count > 0)
+                return worksheet.Cells[row, columnMap["FromTime"][0]].Value?.ToString() ?? "";
+            return "";
+        }
+
+        private string ExtractToTime(OfficeOpenXml.ExcelWorksheet worksheet, int row, Dictionary<string, List<int>> columnMap)
+        {
+            if (columnMap.ContainsKey("ToTime") && columnMap["ToTime"].Count > 0)
+                return worksheet.Cells[row, columnMap["ToTime"][0]].Value?.ToString() ?? "";
+            return "";
+        }
+
+        private string ExtractTransportType(OfficeOpenXml.ExcelWorksheet worksheet, int row, Dictionary<string, List<int>> columnMap)
+        {
+            if (columnMap.ContainsKey("TransportMode") && columnMap["TransportMode"].Count > 0)
+                return worksheet.Cells[row, columnMap["TransportMode"][0]].Value?.ToString() ?? "";
+            return "";
+        }
+
+        private string ExtractDistance(OfficeOpenXml.ExcelWorksheet worksheet, int row, Dictionary<string, List<int>> columnMap)
+        {
+            if (columnMap.ContainsKey("Distance") && columnMap["Distance"].Count > 0)
+                return worksheet.Cells[row, columnMap["Distance"][0]].Value?.ToString() ?? "";
+            return "";
+        }
+
         // Download Excel file from session
         public void DownloadExcelFile()
         {
