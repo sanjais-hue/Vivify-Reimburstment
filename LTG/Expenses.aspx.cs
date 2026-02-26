@@ -4129,6 +4129,7 @@ END";
             dt.Columns.Add("Amount");
 
             int displayRowId = 1;
+            string lastValidDate = ""; // Track the last seen valid date for carry-over
             // Extract all data rows
             for (int row = headerRowIndex + 1; row <= rowCount; row++)
             {
@@ -4166,23 +4167,27 @@ END";
                 // Extract Date with proper handling
                 string dateStr = ExtractDateFromCell(worksheet, row, columnMap);
 
-                // If no date found, use a default or skip
+                // Date Carry-over logic
                 if (string.IsNullOrEmpty(dateStr))
                 {
-                    dateStr = DateTime.Now.ToString("yyyy-MM-dd"); // Use today's date as fallback
-                }
-                else
-                {
-                    // Try to parse and reformat the date
-                    if (!DateTime.TryParse(dateStr, out DateTime parsedDate))
+                    if (!string.IsNullOrEmpty(lastValidDate))
                     {
-                        // If parsing fails, use today's date
-                        dateStr = DateTime.Now.ToString("yyyy-MM-dd");
+                        dateStr = lastValidDate;
                     }
                     else
                     {
-                        dateStr = parsedDate.ToString("yyyy-MM-dd");
+                        dateStr = DateTime.Now.ToString("yyyy-MM-dd"); // Fallback if first row is empty
                     }
+                }
+                else
+                {
+                    // Try to parse and reformat the date, then update lastValidDate
+                    if (DateTime.TryParse(dateStr, out DateTime parsedDate))
+                    {
+                        dateStr = parsedDate.ToString("yyyy-MM-dd");
+                        lastValidDate = dateStr;
+                    }
+                    // else keep original string (might be part of a non-date row we haven't filtered)
                 }
 
                 // Determine Main Category (Local, Tour)
@@ -4232,7 +4237,7 @@ END";
                 string matchedHeader = ""; // Capture actual header for display
                 System.Diagnostics.Debug.WriteLine($"ROW {row}: Starting category detection");
 
-                // Find which expense column has a value in this row
+                // Find all amounts in this row and create separate entries for each
                 for (int col = 1; col <= (worksheet.Dimension?.Columns ?? 0); col++)
                 {
                     var headerText = worksheet.Cells[headerRowIndex, col].Value?.ToString() ?? "";
@@ -4240,158 +4245,55 @@ END";
                     string combinedHeader = (headerText + " " + nextRowText).Trim();
                     string headerLower = combinedHeader.ToLower();
 
-                    System.Diagnostics.Debug.WriteLine($"  Col {col}: Header='{combinedHeader}'");
-
-                    // Skip non-expense columns - be specific
+                    // Skip helper columns and the Grand Total column
                     if (headerLower.Contains("distance") || headerLower.Contains("mode of") ||
                         headerLower.Contains("date") || headerLower.Contains("total") ||
-                        headerLower.Contains("time") || headerLower.Contains("engineer") ||
-                        headerLower.Contains("name") || headerLower.Contains("page") ||
-                        headerLower.Contains("signature") || headerLower.Contains("approved") ||
-                        headerLower.Contains("to") || headerLower.Contains("from") ||
-                        headerLower.Contains("place") || headerLower.Contains("location") ||
-                        headerLower.Contains("remark"))
+                        headerLower.Contains("time") || headerLower.Contains("remark") ||
+                        headerLower.Contains("smo") || headerLower.Contains("so") || headerLower.Contains("ref") ||
+                        headerLower.Contains("particulars") || headerLower.Contains("detail"))
                     {
-                        System.Diagnostics.Debug.WriteLine($"    -> Skipped (helper column)");
                         continue;
                     }
 
-                    // Check if this column has a value
+                    // Extract and check amount
                     string amountStr = ExtractAmountFromCell(worksheet, row, col);
-                    System.Diagnostics.Debug.WriteLine($"    -> Amount: {amountStr}");
-
                     if (decimal.TryParse(amountStr, out decimal val) && val > 0)
                     {
-                        System.Diagnostics.Debug.WriteLine($"    -> FOUND VALUE: {val}");
-                        // Capture the header text for display
-                        matchedHeader = combinedHeader.Trim();
-
-                        // Found a value! Now determine category from header
-                        if (headerLower.Contains("conveyance"))
-                        {
-                            subCategory = "Conveyance";
-                            System.Diagnostics.Debug.WriteLine($"    -> Matched: Conveyance");
-                        }
+                        // Determine category from header
+                        string currentSubCategory = "Miscellaneous";
+                        if (headerLower.Contains("conveyance") || headerLower.Contains("train") || headerLower.Contains("bus") || headerLower.Contains("flight") || headerLower.Contains("taxi") || headerLower.Contains("cab") || headerLower.Contains("auto"))
+                            currentSubCategory = "Conveyance";
                         else if (headerLower.Contains("food") || headerLower.Contains("fooding"))
-                        {
-                            subCategory = "Food";
-                            System.Diagnostics.Debug.WriteLine($"    -> Matched: Food");
-                        }
+                            currentSubCategory = "Food";
                         else if (headerLower.Contains("lodg"))
-                        {
-                            subCategory = "Lodging";
-                            System.Diagnostics.Debug.WriteLine($"    -> Matched: Lodging");
-                        }
+                            currentSubCategory = "Lodging";
                         else if (headerLower.Contains("other"))
-                        {
-                            subCategory = "Others";
-                            System.Diagnostics.Debug.WriteLine($"    -> Matched: Others");
-                        }
+                            currentSubCategory = "Others";
                         else if (headerLower.Contains("misc"))
-                        {
-                            subCategory = "Miscellaneous";
-                            System.Diagnostics.Debug.WriteLine($"    -> Matched: Miscellaneous");
-                        }
-                        else if (headerLower.Contains("train") || headerLower.Contains("bus"))
-                        {
-                            subCategory = "Conveyance";
-                            System.Diagnostics.Debug.WriteLine($"    -> Matched: Conveyance (train/bus)");
-                        }
+                            currentSubCategory = "Miscellaneous";
+
+                        // Create the row
+                        DataRow dr = dt.NewRow();
+                        dr["RowId"] = displayRowId++;
+                        dr["Date"] = dateStr;
+                        dr["Category"] = mainCategory; // Default to mainCategory detected earlier
+                        dr["ExpenseType"] = combinedHeader;
+                        
+                        // Shared fields from original Excel row
+                        dr["FromTime"] = ExtractFromTime(worksheet, row, columnMap);
+                        dr["ToTime"] = ExtractToTime(worksheet, row, columnMap);
+                        
+                        if (columnMap.ContainsKey("Particulars") && columnMap["Particulars"].Count > 0)
+                            dr["Particulars"] = worksheet.Cells[row, columnMap["Particulars"][0]].Value?.ToString() ?? "";
                         else
-                        {
-                            subCategory = "Miscellaneous";
-                            System.Diagnostics.Debug.WriteLine($"    -> No match, defaulting to Miscellaneous");
-                        }
-                        System.Diagnostics.Debug.WriteLine($"  Final category: {subCategory}");
-                        break; // Found the expense, stop looking
+                            dr["Particulars"] = "";
+
+                        dr["TransportType"] = ExtractTransportType(worksheet, row, columnMap);
+                        dr["Distance"] = ExtractDistance(worksheet, row, columnMap);
+                        dr["Amount"] = amountStr;
+
+                        dt.Rows.Add(dr);
                     }
-                }
-
-                // Final display string
-                // Use the matched header if available, otherwise fallback to Category-SubCategory
-                string expenseTypeDisplay = !string.IsNullOrEmpty(matchedHeader) ? matchedHeader : subCategory;
-
-
-                // Extract Amount (Total)
-                string totalValue = "0";
-
-
-
-                // First try: Use mapped Amount column
-                if (columnMap.ContainsKey("Amount") && columnMap["Amount"].Count > 0)
-                {
-                    string amountStr = ExtractAmountFromCell(worksheet, row, columnMap["Amount"][0]);
-                    if (amountStr != "0")
-                    {
-                        totalValue = amountStr;
-                    }
-                }
-
-                // Second try: Find rightmost numeric column (likely the total)
-                // MODIFIED: Also capture the header if we're falling back here
-                if (totalValue == "0")
-                {
-                    for (int col = worksheet.Dimension?.Columns ?? 0; col >= 1; col--)
-                    {
-                        string amountStr = ExtractAmountFromCell(worksheet, row, col);
-                        if (amountStr != "0")
-                        {
-                            totalValue = amountStr;
-
-                            // If we haven't found a header yet, or if it's currently "Miscellaneous", 
-                            // let's grab this column's header as a fallback display
-                            if (string.IsNullOrEmpty(matchedHeader) || subCategory == "Miscellaneous")
-                            {
-                                string fallbackHeader = worksheet.Cells[headerRowIndex, col].Value?.ToString() ?? "";
-                                var nextRowText = worksheet.Cells[headerRowIndex + 1, col].Value?.ToString() ?? "";
-                                string combinedFallback = (fallbackHeader + " " + nextRowText).Trim();
-
-                                if (!string.IsNullOrEmpty(combinedFallback) && !combinedFallback.ToLower().Contains("total"))
-                                {
-                                    matchedHeader = combinedFallback;
-                                    // Debug indicator to show this came from fallback
-                                    System.Diagnostics.Debug.WriteLine($"    -> Fallback Header: {matchedHeader}");
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                // Super Robust Skip: Only skip if Amount is 0 OR it's a known summary row text
-                if (totalValue == "0") continue;
-
-                string lowerDateStr = dateStr.ToLower();
-                if (lowerDateStr.StartsWith("total") || lowerDateStr.StartsWith("grand total") ||
-                    lowerDateStr.Equals("summary") || lowerDateStr.Equals("balance") ||
-                    lowerDateStr.Contains("page") || lowerDateStr.Contains("signature"))
-                {
-                    continue;
-                }
-
-                // Only add row if it has a valid date AND a valid amount (not 0)
-                if (!string.IsNullOrEmpty(dateStr) && totalValue != "0")
-                {
-                    DataRow dr = dt.NewRow();
-                    dr["RowId"] = displayRowId++;
-                    dr["Date"] = dateStr;
-                    dr["Category"] = mainCategory;
-                    dr["ExpenseType"] = !string.IsNullOrEmpty(matchedHeader) ? matchedHeader : subCategory;
-                    
-                    // Extract Preview Fields
-                    dr["FromTime"] = ExtractFromTime(worksheet, row, columnMap);
-                    dr["ToTime"] = ExtractToTime(worksheet, row, columnMap);
-                    
-                    if (columnMap.ContainsKey("Particulars") && columnMap["Particulars"].Count > 0)
-                        dr["Particulars"] = worksheet.Cells[row, columnMap["Particulars"][0]].Value?.ToString() ?? "";
-                    else
-                        dr["Particulars"] = "";
-
-                    dr["TransportType"] = ExtractTransportType(worksheet, row, columnMap);
-                    dr["Distance"] = ExtractDistance(worksheet, row, columnMap);
-                    dr["Amount"] = totalValue;
-
-                    dt.Rows.Add(dr);
                 }
             }
             return dt;
@@ -4466,14 +4368,14 @@ END";
                 ddlLocalExpenseType.SelectedValue = subCategory;
                 ddlLocalExpenseType_SelectedIndexChanged(null, null);
 
-                if (subCategory == "Food") PopulateLocalFoodFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo);
-                else if (subCategory == "Miscellaneous") PopulateLocalMiscellaneousFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo);
-                else if (subCategory == "Others") PopulateLocalOthersFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo);
+                if (subCategory == "Food") PopulateLocalFoodFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
+                else if (subCategory == "Miscellaneous") PopulateLocalMiscellaneousFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
+                else if (subCategory == "Others") PopulateLocalOthersFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
                 else if (subCategory == "Conveyance")
                 {
                     ddlLocalMode.SelectedValue = transportMode;
                     ddlLocalMode_SelectedIndexChanged(null, null);
-                    PopulateLocalConveyanceFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo);
+                    PopulateLocalConveyanceFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
                 }
             }
             else if (mainCategory == "Tour")
@@ -4482,9 +4384,15 @@ END";
                 ddlTourExpenseType.SelectedValue = subCategory;
                 ddlTourExpenseType_SelectedIndexChanged(null, null);
 
-                if (subCategory == "Food") PopulateTourFoodFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo);
-                else if (subCategory == "Miscellaneous") PopulateTourMiscellaneousFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo);
-                else if (subCategory == "Others") PopulateTourOthersFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo);
+                if (subCategory == "Food") PopulateTourFoodFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
+                else if (subCategory == "Miscellaneous") PopulateTourMiscellaneousFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
+                else if (subCategory == "Others" || subCategory == "Lodging") PopulateTourOthersFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
+                else if (subCategory == "Conveyance")
+                {
+                    ddlTourTransportMode.SelectedValue = transportMode;
+                    ddlTourTransportMode_SelectedIndexChanged(null, null);
+                    PopulateTourConveyanceFields(finalDate, amount, particulars, remarks, smoNo, soNo, refNo, fromTime, toTime, distance);
+                }
             }
         }
 
@@ -4511,6 +4419,7 @@ END";
             dt.Columns.Add("ToTime");
 
             int displayRowId = 1;
+            string lastValidDate = ""; // Track the last seen valid date for carry-over
             // Extract all data rows
             for (int row = headerRowIndex + 1; row <= rowCount; row++)
             {
@@ -4547,6 +4456,27 @@ END";
 
                 // Extract Date with proper handling
                 string dateStr = ExtractDateFromCell(worksheet, row, columnMap);
+
+                // Date Carry-over logic
+                if (string.IsNullOrEmpty(dateStr))
+                {
+                    if (!string.IsNullOrEmpty(lastValidDate))
+                    {
+                        dateStr = lastValidDate;
+                    }
+                    else
+                    {
+                        dateStr = DateTime.Now.ToString("yyyy-MM-dd");
+                    }
+                }
+                else
+                {
+                    if (DateTime.TryParse(dateStr, out DateTime parsedDate))
+                    {
+                        dateStr = parsedDate.ToString("yyyy-MM-dd");
+                        lastValidDate = dateStr;
+                    }
+                }
 
                 // Filter out unwanted rows based on textual content in the Date column
                 if (!string.IsNullOrEmpty(dateStr))
@@ -4605,7 +4535,7 @@ END";
                 string matchedHeader = ""; // Capture actual header for display
                 System.Diagnostics.Debug.WriteLine($"ExtractAllExpenseDataFull ROW {row}: Starting category detection");
 
-                // Find which expense column has a value in this row
+                // Determine all category amounts in this row and create separate entries
                 for (int col = 1; col <= (worksheet.Dimension?.Columns ?? 0); col++)
                 {
                     var headerText = worksheet.Cells[headerRowIndex, col].Value?.ToString() ?? "";
@@ -4613,182 +4543,85 @@ END";
                     string combinedHeader = (headerText + " " + nextRowText).Trim();
                     string headerLower = combinedHeader.ToLower();
 
-                    System.Diagnostics.Debug.WriteLine($"  Col {col}: Header='{combinedHeader}'");
-
-                    // Skip non-expense columns - be specific
+                    // Skip helper columns and the Grand Total column
                     if (headerLower.Contains("distance") || headerLower.Contains("mode of") ||
                         headerLower.Contains("date") || headerLower.Contains("total") ||
-                        headerLower.Contains("time") || headerLower.Contains("engineer") ||
-                        headerLower.Contains("name") || headerLower.Contains("page") ||
-                        headerLower.Contains("signature") || headerLower.Contains("approved") ||
-                        headerLower.Contains("to") || headerLower.Contains("from") ||
-                        headerLower.Contains("place") || headerLower.Contains("location") ||
-                        headerLower.Contains("remark"))
+                        headerLower.Contains("time") || headerLower.Contains("remark") ||
+                        headerLower.Contains("smo") || headerLower.Contains("so") || headerLower.Contains("ref") ||
+                        headerLower.Contains("particulars") || headerLower.Contains("detail"))
                     {
-                        System.Diagnostics.Debug.WriteLine($"    -> Skipped (helper column)");
                         continue;
                     }
 
-                    // Check if this column has a NUMERIC value
+                    // Extract and check amount
                     string amountStr = ExtractAmountFromCell(worksheet, row, col);
-                    System.Diagnostics.Debug.WriteLine($"    -> Amount: {amountStr}");
-
                     if (decimal.TryParse(amountStr, out decimal val) && val > 0)
                     {
-                        System.Diagnostics.Debug.WriteLine($"    -> FOUND: {val}");
-                        // Capture the header text for display
-                        matchedHeader = combinedHeader.Trim();
-
-                        // Found a numeric value! Now determine category from header
-                        if (headerLower.Contains("conveyance"))
-                        {
-                            subCategory = "Conveyance";
-                            System.Diagnostics.Debug.WriteLine($"    -> Category: Conveyance");
-                        }
+                        // Determine category from header
+                        string currentSubCategory = "Miscellaneous";
+                        if (headerLower.Contains("conveyance") || headerLower.Contains("train") || headerLower.Contains("bus") || headerLower.Contains("flight") || headerLower.Contains("taxi") || headerLower.Contains("cab") || headerLower.Contains("auto"))
+                            currentSubCategory = "Conveyance";
                         else if (headerLower.Contains("food") || headerLower.Contains("fooding"))
-                        {
-                            subCategory = "Food";
-                            System.Diagnostics.Debug.WriteLine($"    -> Category: Food");
-                        }
+                            currentSubCategory = "Food";
                         else if (headerLower.Contains("lodg"))
-                        {
-                            subCategory = "Lodging";
-                            System.Diagnostics.Debug.WriteLine($"    -> Category: Lodging");
-                        }
+                            currentSubCategory = "Lodging";
                         else if (headerLower.Contains("other"))
-                        {
-                            subCategory = "Others";
-                            System.Diagnostics.Debug.WriteLine($"    -> Category: Others");
-                        }
+                            currentSubCategory = "Others";
                         else if (headerLower.Contains("misc"))
-                        {
-                            subCategory = "Miscellaneous";
-                            System.Diagnostics.Debug.WriteLine($"    -> Category: Miscellaneous");
-                        }
-                        else if (headerLower.Contains("train") || headerLower.Contains("bus"))
-                        {
-                            subCategory = "Conveyance";
-                            System.Diagnostics.Debug.WriteLine($"    -> Category: Conveyance (train/bus)");
-                        }
-                        else
-                        {
-                            subCategory = "Miscellaneous";
-                            System.Diagnostics.Debug.WriteLine($"    -> Category: Miscellaneous (default)");
-                        }
-                        break; // Found the expense, stop looking
-                    }
-                }
-                System.Diagnostics.Debug.WriteLine($"  Final: {subCategory}");
+                            currentSubCategory = "Miscellaneous";
 
-                // Extract Amount
-                string amountValue = "0";
-                if (columnMap.ContainsKey("Amount") && columnMap["Amount"].Count > 0)
-                {
-                    string amtStr = ExtractAmountFromCell(worksheet, row, columnMap["Amount"][0]);
-                    if (amtStr != "0") amountValue = amtStr;
-                }
+                        DataRow dr = dt.NewRow();
+                        dr["RowId"] = displayRowId++;
+                        dr["Date"] = dateStr;
+                        dr["MainCategory"] = mainCategory;
+                        dr["SubCategory"] = currentSubCategory;
+                        dr["ExpenseType"] = combinedHeader;
+                        dr["Amount"] = amountStr;
 
-                if (amountValue == "0")
-                {
-                    for (int col = worksheet.Dimension?.Columns ?? 0; col >= 1; col--)
-                    {
-                        string amtStr = ExtractAmountFromCell(worksheet, row, col);
-                        if (amtStr != "0")
+                        // Shared fields from the same Excel row
+                        if (columnMap.ContainsKey("Particulars") && columnMap["Particulars"].Count > 0)
+                            dr["Particulars"] = worksheet.Cells[row, columnMap["Particulars"][0]].Value?.ToString() ?? "";
+                        
+                        if (columnMap.ContainsKey("Remarks") && columnMap["Remarks"].Count > 0)
+                            dr["Remarks"] = worksheet.Cells[row, columnMap["Remarks"][0]].Value?.ToString() ?? "";
+
+                        if (columnMap.ContainsKey("SMO") && columnMap["SMO"].Count > 0)
+                            dr["SMONo"] = worksheet.Cells[row, columnMap["SMO"][0]].Value?.ToString() ?? "";
+
+                        if (columnMap.ContainsKey("SO") && columnMap["SO"].Count > 0)
+                            dr["SONo"] = worksheet.Cells[row, columnMap["SO"][0]].Value?.ToString() ?? "";
+
+                        if (columnMap.ContainsKey("Ref") && columnMap["Ref"].Count > 0)
+                            dr["RefNo"] = worksheet.Cells[row, columnMap["Ref"][0]].Value?.ToString() ?? "";
+
+                        // Handle Transport Mode for Conveyance
+                        if (currentSubCategory == "Conveyance")
                         {
-                            amountValue = amtStr;
-
-                            // Fallback Header Capture for Full Extraction
-                            if (string.IsNullOrEmpty(matchedHeader) || subCategory == "Miscellaneous")
+                            dr["TransportMode"] = ExtractTransportType(worksheet, row, columnMap);
+                            // Fallback to header keywords
+                            if (string.IsNullOrEmpty(dr["TransportMode"].ToString()))
                             {
-                                string fallbackHeader = worksheet.Cells[headerRowIndex, col].Value?.ToString() ?? "";
-                                var nextRowText = worksheet.Cells[headerRowIndex + 1, col].Value?.ToString() ?? "";
-                                string combinedFallback = (fallbackHeader + " " + nextRowText).Trim();
-
-                                if (!string.IsNullOrEmpty(combinedFallback) && !combinedFallback.ToLower().Contains("total"))
-                                {
-                                    matchedHeader = combinedFallback;
-                                }
+                                if (headerLower.Contains("bike")) dr["TransportMode"] = "Bike";
+                                else if (headerLower.Contains("auto")) dr["TransportMode"] = "Auto";
+                                else if (headerLower.Contains("cab") || headerLower.Contains("taxi")) dr["TransportMode"] = "Cab";
+                                else if (headerLower.Contains("bus")) dr["TransportMode"] = "Bus";
+                                else if (headerLower.Contains("train")) dr["TransportMode"] = "Train";
+                                else if (headerLower.Contains("flight")) dr["TransportMode"] = "Flight";
                             }
-                            break;
                         }
+
+                        if (columnMap.ContainsKey("Distance") && columnMap["Distance"].Count > 0)
+                            dr["Distance"] = worksheet.Cells[row, columnMap["Distance"][0]].Value?.ToString() ?? "";
+
+                        if (columnMap.ContainsKey("FromTime") && columnMap["FromTime"].Count > 0)
+                            dr["FromTime"] = worksheet.Cells[row, columnMap["FromTime"][0]].Value?.ToString() ?? "";
+
+                        if (columnMap.ContainsKey("ToTime") && columnMap["ToTime"].Count > 0)
+                            dr["ToTime"] = worksheet.Cells[row, columnMap["ToTime"][0]].Value?.ToString() ?? "";
+
+                        dt.Rows.Add(dr);
                     }
                 }
-
-                if (amountValue == "0") continue;
-
-                string lowerDateStr = dateStr.ToLower();
-                if (lowerDateStr.StartsWith("total") || lowerDateStr.StartsWith("grand total") ||
-                    lowerDateStr.Equals("summary") || lowerDateStr.Equals("balance") ||
-                    lowerDateStr.Contains("page") || lowerDateStr.Contains("signature"))
-                {
-                    continue;
-                }
-
-                DataRow dr = dt.NewRow();
-                dr["RowId"] = displayRowId++;
-                dr["Date"] = dateStr;
-                dr["MainCategory"] = mainCategory;
-                dr["SubCategory"] = subCategory;
-                // Use the matched header if available, otherwise fallback to Main-Sub
-                dr["ExpenseType"] = !string.IsNullOrEmpty(matchedHeader) ? matchedHeader : subCategory;
-                dr["Amount"] = amountValue;
-
-                // Extract other fields
-                if (columnMap.ContainsKey("Particulars") && columnMap["Particulars"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["Particulars"][0]].Value;
-                    dr["Particulars"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("Remarks") && columnMap["Remarks"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["Remarks"][0]].Value;
-                    dr["Remarks"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("SMO") && columnMap["SMO"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["SMO"][0]].Value;
-                    dr["SMONo"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("SO") && columnMap["SO"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["SO"][0]].Value;
-                    dr["SONo"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("Ref") && columnMap["Ref"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["Ref"][0]].Value;
-                    dr["RefNo"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("TransportMode") && columnMap["TransportMode"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["TransportMode"][0]].Value;
-                    dr["TransportMode"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("Distance") && columnMap["Distance"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["Distance"][0]].Value;
-                    dr["Distance"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("FromTime") && columnMap["FromTime"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["FromTime"][0]].Value;
-                    dr["FromTime"] = cellValue?.ToString() ?? "";
-                }
-
-                if (columnMap.ContainsKey("ToTime") && columnMap["ToTime"].Count > 0)
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["ToTime"][0]].Value;
-                    dr["ToTime"] = cellValue?.ToString() ?? "";
-                }
-
-                dt.Rows.Add(dr);
             }
 
             return dt;
@@ -5295,7 +5128,7 @@ END";
             }
         }
 
-        private void PopulateLocalFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        private void PopulateLocalFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
         {
             try
             {
@@ -5309,7 +5142,6 @@ END";
 
                 if (!string.IsNullOrEmpty(amount))
                 {
-                    // Clean amount - remove any non-numeric characters except decimal point
                     string cleanAmount = System.Text.RegularExpressions.Regex.Replace(amount, @"[^\d.]", "");
                     if (!string.IsNullOrEmpty(cleanAmount))
                         txtLocalFoodAmount.Text = cleanAmount;
@@ -5337,7 +5169,7 @@ END";
             }
         }
 
-        private void PopulateLocalMiscellaneousFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        private void PopulateLocalMiscellaneousFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
         {
             try
             {
@@ -5378,7 +5210,7 @@ END";
             }
         }
 
-        private void PopulateLocalOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        private void PopulateLocalOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
         {
             try
             {
@@ -5419,7 +5251,7 @@ END";
             }
         }
 
-        private void PopulateLocalConveyanceFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        private void PopulateLocalConveyanceFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
         {
             try
             {
@@ -5441,6 +5273,24 @@ END";
                         if (!string.IsNullOrEmpty(cleanAmount))
                             txtLocalAmount.Text = cleanAmount;
                     }
+
+                    if (!string.IsNullOrEmpty(distance))
+                        txtLocalDistance.Text = distance;
+
+                    if (!string.IsNullOrEmpty(particulars))
+                        txtLocalParticulars.Text = particulars;
+
+                    if (!string.IsNullOrEmpty(remarks))
+                        txtLocalRemarks.Text = remarks;
+
+                    if (!string.IsNullOrEmpty(smoNo))
+                        txtLocalSMONo.Text = smoNo;
+
+                    if (!string.IsNullOrEmpty(soNo))
+                        txtLocalSONo.Text = soNo;
+
+                    if (!string.IsNullOrEmpty(refNo))
+                        txtLocalRefNo.Text = refNo;
                 }
                 else if (selectedMode == "Cab/Bus")
                 {
@@ -5484,7 +5334,7 @@ END";
             }
         }
 
-        private void PopulateTourFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        private void PopulateTourFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
         {
             try
             {
@@ -5525,7 +5375,7 @@ END";
             }
         }
 
-        private void PopulateTourMiscellaneousFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        private void PopulateTourMiscellaneousFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
         {
             try
             {
@@ -5558,6 +5408,12 @@ END";
 
                 if (!string.IsNullOrEmpty(refNo))
                     txtTourMiscRefNo.Text = refNo;
+
+                if (!string.IsNullOrEmpty(fromTime))
+                    txtTourMiscFromTime.Text = fromTime;
+
+                if (!string.IsNullOrEmpty(toTime))
+                    txtTourMiscToTime.Text = toTime;
             }
             catch (Exception ex)
             {
@@ -5566,7 +5422,7 @@ END";
             }
         }
 
-        private void PopulateTourOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
+        private void PopulateTourOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
         {
             try
             {
@@ -5599,10 +5455,90 @@ END";
 
                 if (!string.IsNullOrEmpty(refNo))
                     txtTourOthersRefNo.Text = refNo;
+
+                if (!string.IsNullOrEmpty(fromTime))
+                    txtFromTimeTourOthers.Text = fromTime;
+
+                if (!string.IsNullOrEmpty(toTime))
+                    txtToTimeTourOthers.Text = toTime;
             }
             catch (Exception ex)
             {
                 lblError.Text = $"Error populating Tour Others fields: {ex.Message}";
+                lblError.ForeColor = System.Drawing.Color.Red;
+            }
+        }
+
+        private void PopulateTourConveyanceFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo, string fromTime, string toTime, string distance)
+        {
+            try
+            {
+                string selectedMode = ddlTourTransportMode.SelectedValue;
+                if (selectedMode == "Flight")
+                {
+                    if (!string.IsNullOrEmpty(date)) txtFlightDate.Text = date;
+                    if (!string.IsNullOrEmpty(amount)) txtFlightAmount.Text = amount;
+                    if (!string.IsNullOrEmpty(particulars)) txtFlightParticulars.Text = particulars;
+                    if (!string.IsNullOrEmpty(remarks)) txtFlightRemarks.Text = remarks;
+                    if (!string.IsNullOrEmpty(smoNo)) txtFlightSmoNo.Text = smoNo;
+                    if (!string.IsNullOrEmpty(soNo)) txtFlightSoNo.Text = soNo;
+                    if (!string.IsNullOrEmpty(refNo)) txtFlightRefNo.Text = refNo;
+                    if (!string.IsNullOrEmpty(fromTime)) txtFlightFromTime.Text = fromTime;
+                    if (!string.IsNullOrEmpty(toTime)) txtFlightToTime.Text = toTime;
+                }
+                else if (selectedMode == "Bus")
+                {
+                    if (!string.IsNullOrEmpty(date)) txtBusDate.Text = date;
+                    if (!string.IsNullOrEmpty(amount)) txtBusAmount.Text = amount;
+                    if (!string.IsNullOrEmpty(particulars)) txtParticularsBus.Text = particulars;
+                    if (!string.IsNullOrEmpty(remarks)) txtRemarksBus.Text = remarks;
+                    if (!string.IsNullOrEmpty(smoNo)) txtBusSmoNo.Text = smoNo;
+                    if (!string.IsNullOrEmpty(soNo)) txtBusSoNo.Text = soNo;
+                    if (!string.IsNullOrEmpty(refNo)) txtBusRefNo.Text = refNo;
+                    if (!string.IsNullOrEmpty(fromTime)) txtFromTimeBus.Text = fromTime;
+                    if (!string.IsNullOrEmpty(toTime)) txtToTimeBus.Text = toTime;
+                }
+                else if (selectedMode == "Train")
+                {
+                    if (!string.IsNullOrEmpty(date)) txtTrainDate.Text = date;
+                    if (!string.IsNullOrEmpty(amount)) txtTrainAmount.Text = amount;
+                    if (!string.IsNullOrEmpty(particulars)) txtParticularsTrain.Text = particulars;
+                    if (!string.IsNullOrEmpty(remarks)) txtRemarksTrain.Text = remarks;
+                    if (!string.IsNullOrEmpty(smoNo)) txtTrainSmoNo.Text = smoNo;
+                    if (!string.IsNullOrEmpty(soNo)) txtTrainSoNo.Text = soNo;
+                    if (!string.IsNullOrEmpty(refNo)) txtTrainRefNo.Text = refNo;
+                    if (!string.IsNullOrEmpty(fromTime)) txtFromTimeTrain.Text = fromTime;
+                    if (!string.IsNullOrEmpty(toTime)) txtToTimeTrain.Text = toTime;
+                }
+                else if (selectedMode == "Cab")
+                {
+                    if (!string.IsNullOrEmpty(date)) txtCabDate.Text = date;
+                    if (!string.IsNullOrEmpty(amount)) txtCabAmount.Text = amount;
+                    if (!string.IsNullOrEmpty(particulars)) txtParticularsCab.Text = particulars;
+                    if (!string.IsNullOrEmpty(remarks)) txtRemarksCab.Text = remarks;
+                    if (!string.IsNullOrEmpty(smoNo)) txtCabSmoNo.Text = smoNo;
+                    if (!string.IsNullOrEmpty(soNo)) txtCabSoNo.Text = soNo;
+                    if (!string.IsNullOrEmpty(refNo)) txtCabRefNo.Text = refNo;
+                    if (!string.IsNullOrEmpty(fromTime)) txtFromTimeCab.Text = fromTime;
+                    if (!string.IsNullOrEmpty(toTime)) txtToTimeCab.Text = toTime;
+                }
+                else if (selectedMode == "Auto")
+                {
+                    if (!string.IsNullOrEmpty(date)) txtTourAutoDate.Text = date;
+                    if (!string.IsNullOrEmpty(amount)) txtTourAutoAmount.Text = amount;
+                    if (!string.IsNullOrEmpty(particulars)) txtTourAutoParticulars.Text = particulars;
+                    if (!string.IsNullOrEmpty(remarks)) txtTourAutoRemarks.Text = remarks;
+                    if (!string.IsNullOrEmpty(smoNo)) txtTourAutoSmoNo.Text = smoNo;
+                    if (!string.IsNullOrEmpty(soNo)) txtTourAutoSoNo.Text = soNo;
+                    if (!string.IsNullOrEmpty(refNo)) txtTourAutoRefNo.Text = refNo;
+                    if (!string.IsNullOrEmpty(fromTime)) txtTourAutoFromTime.Text = fromTime;
+                    if (!string.IsNullOrEmpty(toTime)) txtTourAutoToTime.Text = toTime;
+                    if (!string.IsNullOrEmpty(distance)) txtTourAutoDistance.Text = distance;
+                }
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = $"Error populating Tour Conveyance fields: {ex.Message}";
                 lblError.ForeColor = System.Drawing.Color.Red;
             }
         }
