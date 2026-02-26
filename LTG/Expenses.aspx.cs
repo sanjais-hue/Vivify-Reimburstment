@@ -29,6 +29,17 @@ namespace Vivify
         private DataTable dtLodging = new DataTable();
         private DataTable dtConveyance = new DataTable(); // Added here
         private DataTable dtRefreshment = new DataTable();
+
+        // Control declarations (moved from designer to avoid auto-regeneration issues)
+        protected global::System.Web.UI.WebControls.Panel pnlExcelPreview;
+        protected global::System.Web.UI.WebControls.GridView gvExcelPreview;
+        protected global::System.Web.UI.WebControls.FileUpload fileUploadExcel;
+        protected global::System.Web.UI.WebControls.Label lblExcelTotal;
+        protected global::System.Web.UI.WebControls.Button btnImportExcel;
+        protected global::System.Web.UI.WebControls.Repeater rptIndividualSummaries;
+        protected global::System.Web.UI.WebControls.HiddenField hdnEditRecordId;
+        protected global::System.Web.UI.WebControls.HiddenField hdnEditCategory;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             // Handle download action
