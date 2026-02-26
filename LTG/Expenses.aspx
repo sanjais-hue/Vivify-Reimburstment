@@ -458,7 +458,7 @@
                                         <button type="button" id="btnRemoveExcelFile"
                                             style="display:none; border:none; background:none; font-size:18px; font-weight:bold; line-height:16px; text-align:center; cursor:pointer; color:white; padding: 0; margin: 0;"
                                             title="Remove File"
-                                            onclick="removeFile(document.querySelector('[id$=\'fileUploadExcel\']').id, 'txtExcelFileName', 'btnRemoveExcelFile')">×</button>
+                                            onclick="removeFile(document.querySelector('[id$=fileUploadExcel]').id, 'txtExcelFileName', 'btnRemoveExcelFile')">×</button>
                                         <!-- View button -->
                                         <button type="button" id="btnViewExcelFile"
                                             style="display:none; border:none; background-color:#4CAF50; color:white; padding:6px 12px; border-radius:3px; cursor:pointer; font-size:12px; font-weight:bold;"
@@ -2773,4 +2773,4 @@ border:none;background:none;
                 </section>
             </div>
         </main>
-    </asp:Content>
+    </asp:Content>ent>
