@@ -4116,11 +4116,13 @@ END";
             DataTable dt = new DataTable();
 
             // Create columns - Date, Category (Local/Tour), ExpenseType, and Total
+            dt.Columns.Add("RowId");
             dt.Columns.Add("Date");
             dt.Columns.Add("Category");
             dt.Columns.Add("ExpenseType");
             dt.Columns.Add("Total");
 
+            int displayRowId = 1;
             // Extract all data rows
             for (int row = headerRowIndex + 1; row <= rowCount; row++)
             {
@@ -4365,6 +4367,7 @@ END";
                 if (!string.IsNullOrEmpty(dateStr) && totalValue != "0")
                 {
                     DataRow dr = dt.NewRow();
+                    dr["RowId"] = displayRowId++;
                     dr["Date"] = dateStr;
                     dr["Category"] = mainCategory;
                     dr["ExpenseType"] = expenseTypeDisplay;
@@ -4473,6 +4476,7 @@ END";
             DataTable dt = new DataTable();
 
             // Create columns - all fields for form population
+            dt.Columns.Add("RowId");
             dt.Columns.Add("Date");
             dt.Columns.Add("MainCategory");
             dt.Columns.Add("SubCategory");
@@ -4488,6 +4492,7 @@ END";
             dt.Columns.Add("FromTime");
             dt.Columns.Add("ToTime");
 
+            int displayRowId = 1;
             // Extract all data rows
             for (int row = headerRowIndex + 1; row <= rowCount; row++)
             {
@@ -4702,6 +4707,7 @@ END";
                 }
 
                 DataRow dr = dt.NewRow();
+                dr["RowId"] = displayRowId++;
                 dr["Date"] = dateStr;
                 dr["MainCategory"] = mainCategory;
                 dr["SubCategory"] = subCategory;
