@@ -4373,6 +4373,8 @@ END";
                     dt.Rows.Add(dr);
                 }
             }
+            return dt;
+        }
 
         protected void gvExcelPreview_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -4465,28 +4467,6 @@ END";
             }
         }
 
-        private DataTable ExtractAllExpenseData(OfficeOpenXml.ExcelWorksheet worksheet, int headerRowIndex, int rowCount)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("RowId");
-            dt.Columns.Add("Date");
-            dt.Columns.Add("MainCategory");
-            dt.Columns.Add("SubCategory");
-            dt.Columns.Add("ExpenseType");
-            dt.Columns.Add("Amount");
-            dt.Columns.Add("Particulars");
-            dt.Columns.Add("Remarks");
-            dt.Columns.Add("SMONo");
-            dt.Columns.Add("SONo");
-            dt.Columns.Add("RefNo");
-            dt.Columns.Add("TransportType");
-            dt.Columns.Add("Distance");
-            dt.Columns.Add("FromTime");
-            dt.Columns.Add("ToTime");
-            dt.Columns.Add("Category");
-
-            return dt; // Default return to satisfy grep search
-        }
 
         private DataTable ExtractAllExpenseDataFull(OfficeOpenXml.ExcelWorksheet worksheet, int headerRowIndex, int rowCount, Dictionary<string, List<int>> columnMap)
         {
