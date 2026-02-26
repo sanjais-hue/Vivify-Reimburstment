@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="/Main.Master" AutoEventWireup="true" CodeBehind="Expenses.aspx.cs"
+﻿<%@ Page Title="" Language="C#" MasterPageFile="/Main.Master" AutoEventWireup="true" CodeBehind="Expenses.aspx.cs"
     Inherits="Vivify.Expenses" Async="true" %>
     <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
@@ -16,6 +16,39 @@
 
             function showAlert(message) {
                 alert(message);
+            }
+
+            // ── Excel Edit helpers ────────────────────────────────────────────────
+            var excelFormDirty = false; // true when a row has been loaded via Edit
+
+            // Called by Edit button: warn if form has unsaved data, then scroll
+            function confirmEditWithUnsaved() {
+                if (excelFormDirty) {
+                    return confirm(
+                        'The form below still has data loaded from a previous Edit.\n' +
+                        'Clicking OK will DISCARD those unsaved changes and load this row instead.\n' +
+                        'Click Cancel to go back and save the previous data first.');
+                }
+                return true;
+            }
+
+            // Mark form as dirty when Edit is clicked (runs only if confirm passed)
+            function markFormDirty() {
+                excelFormDirty = true;
+            }
+
+            // Reset dirty flag when the form Save button is clicked
+            function clearFormDirty() {
+                excelFormDirty = false;
+                return true;
+            }
+
+            // Scroll to the expense form area
+            function scrollToForm() {
+                var el = document.getElementById('mainFormSection');
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }
             const fileUrls = {};
 
@@ -441,9 +474,9 @@
                                         style="margin: 12px 16px; border: 2px solid #3f418d; border-radius: 6px; overflow: hidden;">
                                         <div
                                             style="background-color:#3f418d; color:white; padding:8px 16px; font-weight:bold; font-size:13px; display:flex; align-items:center; justify-content:space-between;">
-                                            <span>&#128203; Excel Rows Ready to Fill &mdash; Click <strong>OK</strong>
-                                                to load a row into the form below, then click
-                                                <strong>Save</strong></span>
+                                            <span>&#128203; Excel Rows Ready &mdash; Click <strong>Save</strong>
+                                                to save directly to DB, or <strong>Edit</strong>
+                                                to adjust a row in the form below before saving</span>
                                         </div>
                                         <div style="overflow-x:auto; padding:8px;">
                                             <asp:GridView ID="gvExcelPreview" runat="server" AutoGenerateColumns="false"
@@ -473,35 +506,34 @@
                                                         ItemStyle-Width="45px" />
                                                     <asp:BoundField DataField="Amount" HeaderText="Amount (₹)"
                                                         ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Right" />
-                                                    <%-- OK button: fills the form --%>
-                                                        <asp:TemplateField HeaderText="" ItemStyle-Width="50px">
+                                                    <%-- Save button: saves row directly to DB --%>
+                                                        <asp:TemplateField HeaderText="Action" ItemStyle-Width="110px">
                                                             <ItemTemplate>
-                                                                <asp:Button runat="server" Text="OK"
-                                                                    CommandName="FillForm"
+                                                                <asp:Button runat="server" Text="Save"
+                                                                    CommandName="SaveRow"
                                                                     CommandArgument='<%# Eval("RowId") %>'
                                                                     CssClass="btn btn-success btn-sm"
-                                                                    style="min-width:42px; font-weight:bold;"
-                                                                    OnClientClick="return confirm('Fill the form with this row?');" />
+                                                                    style="min-width:46px; font-weight:bold; margin-right:4px;"
+                                                                    OnClientClick="return confirm('Save this row directly to DB?');" />
+                                                                <asp:Button runat="server" Text="Edit"
+                                                                    CommandName="FillForm"
+                                                                    CommandArgument='<%# Eval("RowId") %>'
+                                                                    CssClass="btn btn-warning btn-sm"
+                                                                    style="min-width:42px;"
+                                                                    OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
-                                                        <%-- Skip button: removes the row --%>
-                                                            <asp:TemplateField HeaderText="" ItemStyle-Width="55px">
-                                                                <ItemTemplate>
-                                                                    <asp:Button runat="server" Text="Skip"
-                                                                        CommandName="RemoveRow"
-                                                                        CommandArgument='<%# Eval("RowId") %>'
-                                                                        CssClass="btn btn-secondary btn-sm"
-                                                                        style="min-width:44px;"
-                                                                        OnClientClick="return confirm('Skip this row?');" />
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
                                                 </Columns>
                                             </asp:GridView>
                                         </div>
+                                        <%-- Grand Total from Excel --%>
+                                            <asp:Label ID="lblExcelTotal" runat="server"
+                                                style="display:block; padding:6px 16px 10px 16px; font-weight:bold; font-size:13px; color:#1a2a5e;"
+                                                Visible="false" />
                                     </asp:Panel>
                                     <%-- ═════════════════════════════════════════════ --%>
 
-                                        <section class="form-container">
+                                        <section class="form-container" id="mainFormSection">
                                             <asp:HiddenField ID="hdnEditRecordId" runat="server" />
                                             <asp:HiddenField ID="hdnEditCategory" runat="server" />
 
@@ -2710,7 +2742,7 @@ border:none;background:none;
                                                 <!-- Save Button -->
                                                 <asp:Button ID="btnSubmit" runat="server" Text="Save"
                                                     CssClass="custom-button" OnClick="btnSubmit_Click"
-                                                    OnClientClick="return confirmSubmission();" />
+                                                    OnClientClick="if(!confirmSubmission()) return false; clearFormDirty(); return true;" />
 
                                                 <!-- Submit Button -->
                                                 <asp:Button ID="btnChangeStatus" runat="server" Text="Submit"

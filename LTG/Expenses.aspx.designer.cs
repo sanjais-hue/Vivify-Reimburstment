@@ -2875,5 +2875,54 @@ namespace Vivify
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblStatusError;
+
+        /// <summary>
+        /// pnlExcelPreview control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlExcelPreview;
+
+        /// <summary>
+        /// gvExcelPreview control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvExcelPreview;
+
+        /// <summary>
+        /// fileUploadExcel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fileUploadExcel;
+
+        /// <summary>
+        /// lblExcelTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblExcelTotal;
+
+        /// <summary>
+        /// btnImportExcel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnImportExcel;
+
+        protected global::System.Web.UI.WebControls.Repeater rptIndividualSummaries;
+        protected global::System.Web.UI.WebControls.HiddenField hdnEditRecordId;
+        protected global::System.Web.UI.WebControls.HiddenField hdnEditCategory;
     }
 }
