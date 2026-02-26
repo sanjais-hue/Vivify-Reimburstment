@@ -3909,6 +3909,7 @@ END";
                                 gvExcelPreview.DataSource = dtDisplayData;
                                 gvExcelPreview.DataBind();
                                 gvExcelPreview.Visible = true;
+                                pnlExcelPreview.Visible = true;
 
 
                                 // Requirement #4: Display total from Excel
