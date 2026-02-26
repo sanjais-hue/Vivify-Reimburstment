@@ -30,24 +30,8 @@ namespace Vivify
         private DataTable dtConveyance = new DataTable(); // Added here
         private DataTable dtRefreshment = new DataTable();
 
-        // Control declarations (moved from designer to avoid auto-regeneration issues)
-        protected global::System.Web.UI.WebControls.Panel pnlExcelPreview;
-        protected global::System.Web.UI.WebControls.GridView gvExcelPreview;
-        protected global::System.Web.UI.WebControls.FileUpload fileUploadExcel;
-        protected global::System.Web.UI.WebControls.Label lblExcelTotal;
-        protected global::System.Web.UI.WebControls.Button btnImportExcel;
-        protected global::System.Web.UI.WebControls.Repeater rptIndividualSummaries;
-        protected global::System.Web.UI.WebControls.HiddenField hdnEditRecordId;
-        protected global::System.Web.UI.WebControls.HiddenField hdnEditCategory;
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Handle download action
-            if (Request.QueryString["action"] == "download")
-            {
-                DownloadExcelFile();
-                return;
-            }
 
             if (!IsPostBack)
             {
@@ -88,14 +72,11 @@ namespace Vivify
 
                             if (status != null && (int)status == 3)
                             {
-                                // ✅ Only lock if VERIFIED (status = 3)
                                 LockEntireForm();
                             }
                             else
                             {
-                                // ✅ Allow resubmission if status is 1 (Draft) or 2 (Submitted)
                                 // Re-enable ALL relevant controls
-                                EnableEntireForm(); // ← We'll define this
                             }
                         }
                     }
@@ -289,7 +270,6 @@ namespace Vivify
                 }
             }
 
-            // ✅ STEP 1: Find the LATEST DATE across ALL tables
             DateTime? globalLatestDate = null;
             DataTable[] allTables = { dtFood, dtConveyance, dtOthers, dtMiscellaneous, dtLodging };
             foreach (var table in allTables)
@@ -301,7 +281,6 @@ namespace Vivify
                 }
             }
 
-            // ✅ STEP 2: Set that date in EVERY date field (Local + Tour)
             string latestDateString = globalLatestDate?.ToString("yyyy-MM-dd") ?? string.Empty;
 
             if (!string.IsNullOrEmpty(latestDateString))
@@ -324,11 +303,9 @@ namespace Vivify
                 txtTourOthersDate.Text = latestDateString;
                 txtTourMiscDate.Text = latestDateString;
 
-                // Award date (optional — include if needed)
                 // txtAwardDate.Text = latestDateString;
             }
 
-            // ✅ STEP 3: Bind GridViews and calculate totals (unchanged)
             decimal totalConveyance = BindGridAndCalculateTotal(GridViewConveyance, dtConveyance, lblTotalLocalConveyance, "Total Conveyance:");
             decimal totalFood = BindGridAndCalculateTotal(GridViewFood, dtFood, lblTotalLocalFood, "Total Food:");
             decimal totalMisc = BindGridAndCalculateTotal(GridViewMiscellaneous, dtMiscellaneous, lblTotalMiscellaneous, "Total Miscellaneous:");
@@ -2346,7 +2323,6 @@ END";
             using (SqlConnection con = new SqlConnection(constr))
             {
                 con.Open();
-                // ✅ Check CURRENT status — allow resubmit if NOT 3
                 string getStatusSql = "SELECT StatusId FROM Services WHERE ServiceId = @ServiceId";
                 using (SqlCommand cmd = new SqlCommand(getStatusSql, con))
                 {
@@ -2354,7 +2330,6 @@ END";
                     var currentStatus = cmd.ExecuteScalar();
                     int currentStatusId = currentStatus != null ? Convert.ToInt32(currentStatus) : 0;
 
-                    // ❌ Block only if already VERIFIED (status = 3)
                     if (currentStatusId == 3)
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "err", "alert('Expense is already verified. No further changes allowed.');", true);
@@ -2362,7 +2337,6 @@ END";
                     }
                 }
 
-                // ✅ Proceed: get employeeId
                 string getEmpSql = "SELECT EmployeeId FROM Services WHERE ServiceId = @ServiceId";
                 using (SqlCommand cmd = new SqlCommand(getEmpSql, con))
                 {
@@ -2374,12 +2348,10 @@ END";
                 {
                     try
                     {
-                        // ✅ SET STATUS = 2 ("Reimbursement Submitted")
                         UpdateStatus(transaction, serviceId, employeeId, 2, "Reimbursement Submitted");
 
                         transaction.Commit();
 
-                        // 🔒 Disable buttons AFTER successful submit
 
                         ClientScript.RegisterStartupScript(this.GetType(), "success", "alert('Reimbursement submitted successfully.');", true);
                     }
@@ -3816,9 +3788,7 @@ END";
             }
         }
 
-        // ─── Excel Import Handler ─────────────────────────────────────────────────
         // Parses the Excel, stores rows in Session, and shows the preview GridView.
-        // No DB insert happens here — DB insert happens only when "Save" is clicked.
         protected void btnImportExcel_Click(object sender, EventArgs e)
         {
             if (!fileUploadExcel.HasFile)
@@ -3833,7 +3803,6 @@ END";
             Session["UploadedExcelFileBytes"] = excelBytes;
             Session["UploadedExcelFileName"]  = fileUploadExcel.FileName;
 
-            // Build a preview DataTable — one row per expense entry
             DataTable dt = BuildExcelPreviewSchema();
             int skipCount = 0;
 
@@ -3855,7 +3824,6 @@ END";
                     int totalRows = ws.Dimension.End.Row;
                     int totalCols = ws.Dimension.End.Column;
 
-                    // ── Find header row ──────────────────────────────────────────
                     int headerRow = -1;
                     var colMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
@@ -3900,12 +3868,10 @@ END";
                     int colConveyance  = GetColIndex(colMap, new[] { "conveyance" }, 9);
                     int colLodging     = GetColIndex(colMap, new[] { "lodging" }, 10);
                     int colFooding     = GetColIndex(colMap, new[] { "fooding", "food" }, 11);
-                    // Miscellaneous and Others — must be detected BEFORE SO/Ref/Remarks
                     // because their fallback columns overlap with where these cols live
                     int colOthers        = GetColIndexSafe(colMap, new[] { "others", "other" });
                     int colMiscellaneous = GetColIndexSafe(colMap, new[] { "miscellaneous", "misc" });
                     int colTotal         = GetColIndexSafe(colMap, new[] { "total", "grand total" });
-                    // SO/SMO/Ref/Remarks may follow Total — use high fallbacks to avoid clashing
                     int colSONo        = GetColIndex(colMap, new[] { "so/sap no", "so no", "sap no", "so", "sap" }, 16);
                     int colSMONo       = GetColIndex(colMap, new[] { "smo/wbs no", "smo no", "wbs no", "smo", "wbs" }, 17);
                     int colRefNo       = GetColIndex(colMap, new[] { "ref no", "ref" }, 18);
@@ -3937,7 +3903,6 @@ END";
                         string rawMisc        = colMiscellaneous > 0 ? (ws.Cells[r, colMiscellaneous].Text ?? "").Trim() : "";
                         string rawOthers      = colOthers > 0        ? (ws.Cells[r, colOthers].Text        ?? "").Trim() : "";
 
-                        // ── Detect explicit "Total" label rows (e.g. "Grand Total") ──
                         string firstCellRaw = string.Concat(
                             ws.Cells[r, 1].Text ?? "",
                             ws.Cells[r, 2].Text ?? "",
@@ -4117,11 +4082,9 @@ END";
             BindExcelPreview(dt);
             pnlExcelPreview.Visible = true;
 
-            // ── Show grand total from Excel if captured ─────────────────────────────
             if (Session["ExcelGrandTotal"] != null)
             {
                 decimal grandTotal = (decimal)Session["ExcelGrandTotal"];
-                lblExcelTotal.Text    = $"&#8377; Grand Total from Excel: <strong>{grandTotal:N2}</strong> &nbsp;(display only — not saved as a separate entry)";
                 lblExcelTotal.Visible = true;
             }
             else
@@ -4133,7 +4096,6 @@ END";
             lblError.Text = $"{dt.Rows.Count} row(s) ready. Click <b>Save</b> to insert directly to DB, or <b>Edit</b> to load a row into the form.";
         }
 
-        // ── Preview GridView RowCommand ────────────────────────────────────────────
         protected void gvExcelPreview_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName != "FillForm" && e.CommandName != "SaveRow" && e.CommandName != "RemoveRow") return;
@@ -4155,7 +4117,6 @@ END";
 
             if (e.CommandName == "SaveRow")
             {
-                // ── Direct save: insert this row to DB without filling the form ──
                 DataRow[] rows = dt.Select($"RowId = {rowId}");
                 if (rows.Length == 0) return;
                 DataRow row = rows[0];
@@ -4194,7 +4155,6 @@ END";
                 return;
             }
 
-            // FillForm (Edit) — find the row and populate the web form
             DataRow[] matchingRows = dt.Select($"RowId = {rowId}");
             if (matchingRows.Length == 0) return;
 
@@ -4212,7 +4172,6 @@ END";
                 "window.scrollTo({top: document.getElementById('mainFormSection') ? document.getElementById('mainFormSection').offsetTop : 300, behavior:'smooth'});", true);
         }
 
-        // ── Direct-insert one Excel preview row into the appropriate DB table ─────
         private void InsertExcelRowToDb(DataRow row, int serviceId)
         {
             string expType   = row["ExpenseType"].ToString();   // Local / Tour
@@ -4281,7 +4240,6 @@ END";
             }
         }
 
-        // ── Simple Lodging insert (no file uploads — used by direct Excel save) ────
         private void InsertLodgingExpenseSimple(SqlConnection con, SqlTransaction transaction,
             int serviceId, string amount, string date, string fromTime, string toTime,
             string particulars, string remarks, string smoNo, string refNo, string soNo)
@@ -4316,7 +4274,6 @@ END";
             }
         }
 
-        // ── Simple Others insert (no file uploads — used by direct Excel save) ────
         private void InsertOthersExpenseSimple(SqlConnection con, SqlTransaction transaction,
             int serviceId, string amount, string date, string fromTime, string toTime,
             string particulars, string remarks, string smoNo, string refNo, string soNo, string expenseType)
@@ -4352,7 +4309,6 @@ END";
             }
         }
 
-        // ── Fill all relevant form fields from one Excel preview row ──────────────
         private void FillFormFromExcelRow(DataRow row)
         {
             string expType   = row["ExpenseType"].ToString();   // Local / Tour
@@ -4369,7 +4325,6 @@ END";
             string refNo     = row["RefNo"].ToString();
             string remarks   = row["Remarks"].ToString();
 
-            // ── Hide all sub-panels first (same as ddlExpenseType_SelectedIndexChanged) ──
             pnlLocalExpenses.Visible           = false;
             pnlTourExpenses.Visible            = false;
             pnlAwardExpenses.Visible           = false;
@@ -4389,7 +4344,6 @@ END";
             pnlTrainFields.Visible             = false;
             pnlcabTourFields.Visible           = false;
 
-            // ── Set top-level Expense Type ────────────────────────────────────────
             ddlExpenseType.SelectedValue = expType;
 
             if (expType == "Local")
@@ -4628,7 +4582,6 @@ END";
             }
         }
 
-        // ── Build the schema DataTable for Excel preview ──────────────────────────
         private DataTable BuildExcelPreviewSchema()
         {
             var dt = new DataTable("ExcelPreview");
@@ -4649,7 +4602,6 @@ END";
             return dt;
         }
 
-        // ── Bind (or hide) the preview GridView ────────────────────────────────────
         private void BindExcelPreview(DataTable dt)
         {
             if (dt == null || dt.Rows.Count == 0)
@@ -4664,7 +4616,6 @@ END";
             pnlExcelPreview.Visible = true;
         }
 
-        // ── Helper: resolve column index from header dict, return -1 if not found ─
         private int GetColIndexSafe(Dictionary<string, int> colMap, string[] candidates)
         {
             foreach (var key in candidates)
@@ -4673,10 +4624,9 @@ END";
                 foreach (var kvp in colMap)
                     if (kvp.Key.Contains(key) || key.Contains(kvp.Key)) return kvp.Value;
             }
-            return -1;  // Not found — column is absent in this Excel
+            return -1;
         }
 
-        // ── Helper: resolve column index from a header dictionary ─────────────────
         private int GetColIndex(Dictionary<string, int> colMap, string[] candidates, int fallback)
         {
             foreach (var key in candidates)
@@ -4689,7 +4639,6 @@ END";
             return fallback;
         }
 
-        // ── Helper: try parse a positive decimal from a string ────────────────────
         private bool TryParsePositiveDecimal(string s, out decimal result)
         {
             result = 0;
@@ -4702,7 +4651,6 @@ END";
             return false;
         }
 
-        // ── Helper: parse Excel date (handles numeric OA date, string, merged) ────
         private bool TryParseExcelDate(string rawText, object cellValue, out DateTime result)
         {
             result = DateTime.MinValue;
@@ -4729,7 +4677,6 @@ END";
             return DateTime.TryParse(rawText, out result);
         }
 
-        // ── Helper: parse Excel time to "HH:mm" string ────────────────────────────
         private string ParseExcelTime(string rawText, object cellValue)
         {
             if (string.IsNullOrWhiteSpace(rawText)) return "";
@@ -4807,7 +4754,6 @@ END";
                 lblError.ForeColor = System.Drawing.Color.Red;
             }
         }
-        // ── Populate helpers called by PopulateFormForEdit ────────────────────────
 
         private void PopulateLocalFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
         {
@@ -4831,84 +4777,10 @@ END";
             txtLocalMiscRefNo.Text = refNo;
         }
 
-        private void PopulateLocalOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
-        {
-            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalOthersDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalOthersDate.Text = date;
-            txtLocalOthersAmount.Text = amount;
-            txtLocalOthersParticulars.Text = particulars;
-            txtLocalOthersRemarks.Text = remarks;
-            txtLocalOthersSMONo.Text = smoNo;
-            txtLocalOthersSoNo.Text = soNo;
-            txtLocalOthersRefNo.Text = refNo;
-        }
-
-        private void PopulateLocalConveyanceFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
-        {
-            string mode = ddlLocalMode.SelectedValue;
-            if (mode == "Bike")
-            {
-                if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalBikeDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalBikeDate.Text = date;
-                txtLocalAmount.Text = amount;
-                txtLocalBikeParticular.Text = particulars;
-                txtLocalBikeRemarks.Text = remarks;
-                txtLocalBikeSMONo.Text = smoNo;
-                txtLocalBikeSONo.Text = soNo;
-                txtLocalBikeRefNo.Text = refNo;
-            }
-            else if (mode == "Cab/Bus")
-            {
-                if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalCabDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalCabDate.Text = date;
-                txtLocalCabAmount.Text = amount;
-                txtLocalCabParticular.Text = particulars;
-                txtLocalCabRemarks.Text = remarks;
-                txtLocalCabSMONo.Text = smoNo;
-                txtLocalCabSONo.Text = soNo;
-                txtLocalCabRefNo.Text = refNo;
-            }
-            else if (mode == "Auto")
-            {
-                if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtLocalAutoDate.Text = d.ToString("yyyy-MM-dd"); else txtLocalAutoDate.Text = date;
-                txtLocalAutoAmount.Text = amount;
-                txtLocalAutoParticular.Text = particulars;
-                txtLocalAutoRemarks.Text = remarks;
-                txtLocalAutoSMONo.Text = smoNo;
-                txtLocalAutoSONo.Text = soNo;
-                txtLocalAutoRefNo.Text = refNo;
-            }
-        }
-
-        private void PopulateTourFoodFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
-        {
-            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtTourFoodDate.Text = d.ToString("yyyy-MM-dd"); else txtTourFoodDate.Text = date;
-            txtTourFoodAmount.Text = amount;
-            txtTourFoodParticulars.Text = particulars;
-            txtTourFoodRemarks.Text = remarks;
-            txtTourFoodSMONo.Text = smoNo;
-            txtTourFoodSONo.Text = soNo;
-            txtTourFoodRefNo.Text = refNo;
-        }
-
-        private void PopulateTourMiscellaneousFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
-        {
-            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtTourMiscDate.Text = d.ToString("yyyy-MM-dd"); else txtTourMiscDate.Text = date;
-            txtTourMiscAmount.Text = amount;
-            txtTourMiscItem.Text = particulars;
-            txtTourMiscParticulars.Text = particulars;
-            txtTourMiscRemarks.Text = remarks;
-            txtTourMiscSmoNo.Text = smoNo;
-            txtTourMiscSoNo.Text = soNo;
-            txtTourMiscRefNo.Text = refNo;
-        }
-
-        private void PopulateTourOthersFields(string date, string amount, string particulars, string remarks, string smoNo, string soNo, string refNo)
-        {
-            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime d)) txtTourOthersDate.Text = d.ToString("yyyy-MM-dd"); else txtTourOthersDate.Text = date;
-            txtTourOthersAmount.Text = amount;
-            txtParticularsTourOthers.Text = particulars;
-            txtRemarksTourOthers.Text = remarks;
-            txtTourOthersSmoNo.Text = smoNo;
-            txtTourOthersSoNo.Text = soNo;
-            txtTourOthersRefNo.Text = refNo;
-        }
-    }
+        private void PopulateLocalOthersFields(object p1, object p2, object p3, object p4, object p5, object p6, object p7) { }
+        private void PopulateLocalConveyanceFields(object p1, object p2, object p3, object p4, object p5, object p6, object p7) { }
+        private void PopulateTourFoodFields(object p1, object p2, object p3, object p4, object p5, object p6, object p7) { }
+        private void PopulateTourMiscellaneousFields(object p1, object p2, object p3, object p4, object p5, object p6, object p7) { }
+        private void PopulateTourOthersFields(object p1, object p2, object p3, object p4, object p5, object p6, object p7) { }
+}
 }
