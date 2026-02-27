@@ -4493,22 +4493,19 @@ END";
             {
                 if (e.CommandName == "FillForm")
                 {
-                    int rowIndex = Convert.ToInt32(e.CommandArgument) - 1; // rowId is 1-based in my logic
+                    int rowIndex = Convert.ToInt32(e.CommandArgument) - 1; 
                     FillFormFromExcel(rowIndex);
 
-                    // Requirement #2: Scroll to form
+                    // Scroll to form
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "ScrollToForm", "setTimeout(function() { scrollToForm(); }, 100);", true);
                 }
                 else if (e.CommandName == "SaveRow")
                 {
-                    int rowId = Convert.ToInt32(e.CommandArgument);
-                    int rowIndex = rowId - 1;
+                    int rowIndex = Convert.ToInt32(e.CommandArgument) - 1;
                     
                     try
                     {
                         FillFormFromExcel(rowIndex);
-                        
-                        // Trigger the main save logic (without redirect)
                         btnSubmit_ClickForGrid(rowIndex);
                     }
                     catch (Exception saveEx)
@@ -5002,7 +4999,7 @@ END";
                 }
                 int serviceId = Convert.ToInt32(Session["ServiceId"]);
 
-                DataTable dt = Session["UploadedExcelDisplayData"] as DataTable;
+                DataTable dt = Session["ImportedExcelData"] as DataTable;
                 if (dt == null || dt.Rows.Count == 0)
                 {
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "warn", "alert('No Excel rows to save.');", true);
@@ -5530,6 +5527,12 @@ END";
 
                 if (!string.IsNullOrEmpty(refNo))
                     txtLocalRefNo.Text = refNo;
+
+                if (!string.IsNullOrEmpty(fromTime))
+                    txtLocalFoodFromTime.Text = fromTime;
+
+                if (!string.IsNullOrEmpty(toTime))
+                    txtLocalFoodToTime.Text = toTime;
             }
             catch (Exception ex)
             {
@@ -5571,6 +5574,12 @@ END";
 
                 if (!string.IsNullOrEmpty(refNo))
                     txtLocalMiscRefNo.Text = refNo;
+
+                if (!string.IsNullOrEmpty(fromTime))
+                    txtLocalMiscFromTime.Text = fromTime;
+
+                if (!string.IsNullOrEmpty(toTime))
+                    txtLocalMiscToTime.Text = toTime;
             }
             catch (Exception ex)
             {
@@ -5612,6 +5621,12 @@ END";
 
                 if (!string.IsNullOrEmpty(refNo))
                     txtLocalOthersRefNo.Text = refNo;
+
+                if (!string.IsNullOrEmpty(fromTime))
+                    txtLocalOthersFromTime.Text = fromTime;
+
+                if (!string.IsNullOrEmpty(toTime))
+                    txtLocalOthersToTime.Text = toTime;
             }
             catch (Exception ex)
             {
@@ -5748,6 +5763,12 @@ END";
 
                 if (!string.IsNullOrEmpty(refNo))
                     txtTourFoodRefNo.Text = refNo;
+
+                if (!string.IsNullOrEmpty(fromTime))
+                    txtTourFoodFromTime.Text = fromTime;
+
+                if (!string.IsNullOrEmpty(toTime))
+                    txtTourFoodToTime.Text = toTime;
             }
             catch (Exception ex)
             {
