@@ -38,24 +38,21 @@ namespace Vivify
                 return;
             }
 
-            // ── Restore Excel preview grid from session on EVERY postback ──
-            if (IsPostBack)
+            // ── Restore Excel preview grid from session on EVERY page load ──
+            DataTable dtDisplay = Session["UploadedExcelDisplayData"] as DataTable;
+            if (dtDisplay != null && dtDisplay.Rows.Count > 0)
             {
-                DataTable dtDisplay = Session["UploadedExcelDisplayData"] as DataTable;
-                if (dtDisplay != null && dtDisplay.Rows.Count > 0)
-                {
-                    gvExcelPreview.DataSource = dtDisplay;
-                    gvExcelPreview.DataBind();
-                    gvExcelPreview.Visible = true;
-                    pnlExcelPreview.Visible = true;
+                gvExcelPreview.DataSource = dtDisplay;
+                gvExcelPreview.DataBind();
+                gvExcelPreview.Visible = true;
+                pnlExcelPreview.Visible = true;
 
-                    // Restore total label if stored
-                    string excelTotalText = Session["UploadedExcelTotal"] as string;
-                    if (!string.IsNullOrEmpty(excelTotalText))
-                    {
-                        lblExcelTotal.Text = excelTotalText;
-                        lblExcelTotal.Visible = true;
-                    }
+                // Restore total label if stored
+                string excelTotalText = Session["UploadedExcelTotal"] as string;
+                if (!string.IsNullOrEmpty(excelTotalText))
+                {
+                    lblExcelTotal.Text = excelTotalText;
+                    lblExcelTotal.Visible = true;
                 }
             }
 
@@ -77,9 +74,12 @@ namespace Vivify
                 txtTourMiscAmount.Text = string.Empty;
                 txtTourOthersAmount.Text = string.Empty;
 
-                // Clear localStorage when page first loads (fresh navigation)
-                ClientScript.RegisterStartupScript(this.GetType(), "ClearExcelStorage",
-                    "localStorage.removeItem('excelFileName'); localStorage.removeItem('excelFileRemoveBtn');", true);
+                // Only clear localStorage when there is NO active Excel session (truly fresh navigation)
+                if (dtDisplay == null || dtDisplay.Rows.Count == 0)
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "ClearExcelStorage",
+                        "localStorage.removeItem('excelFileName'); localStorage.removeItem('excelFileRemoveBtn');", true);
+                }
 
                 if (Session["ServiceId"] != null)
                 {
