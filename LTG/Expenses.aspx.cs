@@ -4992,6 +4992,148 @@ END";
             }
         }
 
+        protected void btnSaveAllExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Session["ServiceId"] == null)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "err", "alert('Invalid Service ID.');", true);
+                    return;
+                }
+                int serviceId = Convert.ToInt32(Session["ServiceId"]);
+
+                DataTable dt = Session["UploadedExcelDisplayData"] as DataTable;
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "warn", "alert('No Excel rows to save.');", true);
+                    return;
+                }
+
+                string constr = ConfigurationManager.ConnectionStrings["vivify"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(constr))
+                {
+                    con.Open();
+                    using (SqlTransaction transaction = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            int savedCount = 0;
+                            int skippedCount = 0;
+
+                            foreach (DataRow dr in dt.Rows)
+                            {
+                                string subCategory  = dr["SubCategory"]?.ToString() ?? "";
+                                string mainCategory = dr["MainCategory"]?.ToString() ?? "Local";
+                                string date         = dr["Date"]?.ToString() ?? "";
+                                string amount       = dr["Amount"]?.ToString() ?? "";
+                                string particulars  = dr["Particulars"]?.ToString() ?? "";
+                                string remarks      = dr["Remarks"]?.ToString() ?? "";
+                                string smoNo        = dr["SMONo"]?.ToString() ?? "";
+                                string soNo         = dr["SONo"]?.ToString() ?? "";
+                                string refNo        = dr["RefNo"]?.ToString() ?? "";
+                                string fromTime     = dr["FromTime"]?.ToString() ?? "";
+                                string toTime       = dr["ToTime"]?.ToString() ?? "";
+                                string distance     = dr["Distance"]?.ToString() ?? "";
+                                string transportMode = dr["TransportMode"]?.ToString() ?? "";
+
+                                // Skip rows with no amount or invalid date
+                                if (string.IsNullOrWhiteSpace(amount) || !decimal.TryParse(amount, out _))
+                                { skippedCount++; continue; }
+                                if (string.IsNullOrWhiteSpace(date) || !DateTime.TryParse(date, out _))
+                                { skippedCount++; continue; }
+
+                                switch (subCategory)
+                                {
+                                    case "Food":
+                                        TimeSpan? ft = TimeSpan.TryParse(fromTime, out TimeSpan parsedFt) ? parsedFt : (TimeSpan?)null;
+                                        TimeSpan? tt = TimeSpan.TryParse(toTime,   out TimeSpan parsedTt) ? parsedTt : (TimeSpan?)null;
+                                        InsertFoodExpense(con, transaction, serviceId, mainCategory,
+                                            amount, date, null, ft, tt, particulars, remarks, smoNo, refNo, soNo);
+                                        savedCount++; break;
+
+                                    case "Miscellaneous":
+                                        TimeSpan fromTs = TimeSpan.TryParse(fromTime, out TimeSpan mft) ? mft : TimeSpan.Zero;
+                                        TimeSpan toTs   = TimeSpan.TryParse(toTime,   out TimeSpan mtt) ? mtt : TimeSpan.Zero;
+                                        InsertMiscellaneousExpense(con, transaction, serviceId,
+                                            particulars, amount, date, null, mainCategory,
+                                            fromTs, toTs, particulars, remarks, smoNo, refNo, soNo);
+                                        savedCount++; break;
+
+                                    case "Others":
+                                        string safeFrom = TimeSpan.TryParse(fromTime, out _) ? fromTime : "00:00";
+                                        string safeTo   = TimeSpan.TryParse(toTime,   out _) ? toTime   : "00:00";
+                                        InsertOthersExpense(con, transaction, serviceId,
+                                            amount, date, safeFrom, safeTo, particulars, remarks,
+                                            null, othersfileUploadApproval, smoNo, refNo, soNo, null);
+                                        savedCount++; break;
+
+                                    case "Lodging":
+                                        InsertLodgingExpense(con, transaction, serviceId,
+                                            amount, date, fromTime, toTime, particulars, remarks,
+                                            fileUploadTourOthers, fileUploadTourApproval, smoNo, refNo, soNo, null);
+                                        savedCount++; break;
+
+                                    case "Conveyance":
+                                        // Map Cab/Bus for Local conveyance; keep as-is for Tour
+                                        string transport = transportMode;
+                                        if (mainCategory == "Local")
+                                        {
+                                            // Local only supports: Bike, Cab/Bus, Auto
+                                            if (transport.Equals("Cab", StringComparison.OrdinalIgnoreCase) ||
+                                                transport.Equals("Bus", StringComparison.OrdinalIgnoreCase) ||
+                                                transport.Equals("Cab/Bus", StringComparison.OrdinalIgnoreCase))
+                                                transport = "Cab/Bus";
+                                            else if (!transport.Equals("Bike", StringComparison.OrdinalIgnoreCase) &&
+                                                     !transport.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+                                                transport = "Cab/Bus"; // default fallback for Local
+                                        }
+                                        InsertConveyanceExpense(con, transaction, serviceId,
+                                            transport, amount, date, fromTime, toTime,
+                                            particulars, remarks, null, mainCategory, distance, smoNo, refNo, soNo);
+                                        savedCount++; break;
+
+                                    default:
+                                        skippedCount++; break;
+                                }
+                            }
+
+                            transaction.Commit();
+
+                            // Clear the Excel session data after successful save
+                            Session.Remove("UploadedExcelDisplayData");
+                            Session.Remove("UploadedExcelTotal");
+                            Session.Remove("UploadedExcelFileBytes");
+                            Session.Remove("UploadedExcelFileName");
+
+                            // Refresh expenses display
+                            DisplayExpenses(serviceId);
+
+                            string msg = $"{savedCount} row(s) saved successfully.";
+                            if (skippedCount > 0) msg += $" {skippedCount} row(s) skipped (missing amount/date).";
+
+                            string redirectUrl = Request.Url.ToString();
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllDone",
+                                $"alert('{msg}'); window.location.href = '{redirectUrl}';", true);
+                        }
+                        catch (Exception ex)
+                        {
+                            try { transaction.Rollback(); } catch { }
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllErr",
+                                $"alert('Error saving Excel rows: {ex.Message.Replace("'", "\\'")}');", true);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllErrOuter",
+                    $"alert('Unexpected error: {ex.Message.Replace("'", "\\'")}');", true);
+            }
+        }
+
+
+
         private int FindHeaderRow(OfficeOpenXml.ExcelWorksheet worksheet, int rowCount)
         {
             // Look for row containing common header keywords

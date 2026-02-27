@@ -483,10 +483,13 @@
                                             style="margin: 12px 16px; border: 2px solid #3f418d; border-radius: 6px; overflow: hidden;">
                                             <div
                                                 style="background-color:#3f418d; color:white; padding:8px 16px; font-weight:bold; font-size:13px; display:flex; align-items:center; justify-content:space-between;">
-                                                <span>&#128203; Excel Rows Ready &mdash; Click
-                                                    <strong>&#10004;</strong>
-                                                    to save directly to DB, or <strong>&#9998;</strong>
-                                                    to adjust a row in the form below before saving</span>
+                                                <span>&#128203; Excel Rows Ready &mdash; Click <strong>Save All</strong>
+                                                    to save all rows to DB, or <strong>&#9998;</strong> to adjust a row
+                                                    in the form below before saving</span>
+                                                <asp:Button ID="btnSaveAllExcel" runat="server"
+                                                    Text="&#128190; Save All to DB" OnClick="btnSaveAllExcel_Click"
+                                                    OnClientClick="return confirm('Save ALL Excel rows to database?');"
+                                                    style="background-color:#28a745; color:white; border:none; border-radius:5px; padding:6px 14px; font-size:13px; font-weight:bold; cursor:pointer; white-space:nowrap;" />
                                             </div>
                                             <div style="overflow-x:auto; padding:8px;">
                                                 <asp:GridView ID="gvExcelPreview" runat="server"
@@ -516,27 +519,19 @@
                                                             ItemStyle-Width="45px" />
                                                         <asp:BoundField DataField="Amount" HeaderText="Amount (&#8377;)"
                                                             ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Right" />
-                                                        <%-- Action buttons --%>
+                                                        <%-- Action button: Edit only --%>
                                                             <asp:TemplateField HeaderText="Action"
-                                                                ItemStyle-Width="70px"
+                                                                ItemStyle-Width="45px"
                                                                 ItemStyle-HorizontalAlign="Center">
                                                                 <ItemTemplate>
-                                                                    <%-- Green tick=Save --%>
-                                                                        <asp:Button runat="server" Text="&#10004;"
-                                                                            CommandName="SaveRow"
+                                                                    <%-- Red pencil=Edit --%>
+                                                                        <asp:Button runat="server" Text="&#9998;"
+                                                                            CommandName="FillForm"
                                                                             CommandArgument='<%# Eval("RowId") %>'
                                                                             CssClass="btn btn-sm"
-                                                                            style="background:none; border:none; color:#28a745; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
-                                                                            ToolTip="Save this row to DB"
-                                                                            OnClientClick="return confirm('Save this row to database?');" />
-                                                                        <%-- Red pencil=Edit --%>
-                                                                            <asp:Button runat="server" Text="&#9998;"
-                                                                                CommandName="FillForm"
-                                                                                CommandArgument='<%# Eval("RowId") %>'
-                                                                                CssClass="btn btn-sm"
-                                                                                style="background:none; border:none; color:#dc3545; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
-                                                                                ToolTip="Edit this row in the form"
-                                                                                OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
+                                                                            style="background:none; border:none; color:#dc3545; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
+                                                                            ToolTip="Edit this row in the form"
+                                                                            OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
                                                     </Columns>
@@ -2964,6 +2959,7 @@ border:none;background:none;
                             <asp:PostBackTrigger ControlID="btnSubmit" />
                             <asp:PostBackTrigger ControlID="btnChangeStatus" />
                             <asp:PostBackTrigger ControlID="btnCancel" />
+                            <asp:PostBackTrigger ControlID="btnSaveAllExcel" />
                         </Triggers>
                     </asp:UpdatePanel>
             </div>
