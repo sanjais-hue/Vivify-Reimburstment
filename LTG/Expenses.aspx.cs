@@ -2218,14 +2218,13 @@ END";
                             // Display the expenses (calculate and show the overall total)
                             DisplayExpenses(serviceId);
 
-                            // Show success message in an alert
-                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "showAlert", "alert('" + scriptMessage + "');", true);
-
                             // Clear fields after success
                             ClearExpenseFields();
 
-                            // Refresh page to reset everything
-                            Response.Redirect(Request.Url.ToString());
+                            // Show success alert then redirect — done in JS so the alert actually shows
+                            string redirectUrl = Request.Url.ToString();
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showAlertAndRedirect",
+                                $"alert('{scriptMessage}'); window.location.href = '{redirectUrl}';", true);
                         }
                         catch (SqlException sqlEx)
                         {
