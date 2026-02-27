@@ -434,6 +434,9 @@
             <div class="formarea">
                 <section class="section dashboard">
                     <asp:UpdatePanel ID="upMainContent" runat="server" UpdateMode="Always">
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
+                        </Triggers>
                         <ContentTemplate>
                             <div class="row">
                                 <div class="col">
