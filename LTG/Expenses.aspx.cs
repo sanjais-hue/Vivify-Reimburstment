@@ -4249,7 +4249,7 @@ END";
                         headerLower.Contains("date") || headerLower.Contains("total") ||
                         headerLower.Contains("time") || headerLower.Contains("remark") ||
                         headerLower.Contains("smo") || headerLower.Contains("so") || headerLower.Contains("ref") ||
-                        headerLower.Contains("particulars") || headerLower.Contains("detail"))
+                        headerLower.Contains("particulars") || headerLower.Contains("detail") || headerLower.Contains("serial"))
                     {
                         continue;
                     }
@@ -4545,7 +4545,7 @@ END";
                         headerLower.Contains("date") || headerLower.Contains("total") ||
                         headerLower.Contains("time") || headerLower.Contains("remark") ||
                         headerLower.Contains("smo") || headerLower.Contains("so") || headerLower.Contains("ref") ||
-                        headerLower.Contains("particulars") || headerLower.Contains("detail"))
+                        headerLower.Contains("particulars") || headerLower.Contains("detail") || headerLower.Contains("serial"))
                     {
                         continue;
                     }
@@ -5314,6 +5314,12 @@ END";
                         if (!string.IsNullOrEmpty(cleanAmount))
                             txtLocalCabAmount.Text = cleanAmount;
                     }
+
+                    if (!string.IsNullOrEmpty(fromTime))
+                        txtLocalCabFromTime.Text = fromTime;
+
+                    if (!string.IsNullOrEmpty(toTime))
+                        txtLocalCabToTime.Text = toTime;
                 }
                 else if (selectedMode == "Auto")
                 {
@@ -5331,6 +5337,12 @@ END";
                         if (!string.IsNullOrEmpty(cleanAmount))
                             txtLocalAutoAmount.Text = cleanAmount;
                     }
+
+                    if (!string.IsNullOrEmpty(fromTime))
+                        txtLocalAutoFromTime.Text = fromTime;
+
+                    if (!string.IsNullOrEmpty(toTime))
+                        txtLocalAutoToTime.Text = toTime;
                 }
             }
             catch (Exception ex)
