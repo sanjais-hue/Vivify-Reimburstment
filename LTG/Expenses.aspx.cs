@@ -3808,39 +3808,25 @@ END";
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
             string fileName = "Reimbursement_Template.xlsx";
-            // Try multiple possible paths
-            string[] possiblePaths = {
-                Server.MapPath("~/Reimbursement_Template.xlsx"),
-                Server.MapPath("~/LTG/Reimbursement_Template.xlsx"),
-                Server.MapPath("~/../Reimbursement_Template.xlsx"),
-                @"z:\My Folders\Vivify Reimburstment\Reimbursement_Template.xlsx",
-                @"z:\My Folders\Vivify Reimburstment\LTG\Reimbursement_Template.xlsx"
-            };
+            // The file is in the web root (LTG folder)
+            string filePath = Server.MapPath("~/Reimbursement_Template.xlsx");
 
-            string filePath = null;
-            foreach (var p in possiblePaths)
+            if (!System.IO.File.Exists(filePath))
             {
-                if (System.IO.File.Exists(p))
-                {
-                    filePath = p;
-                    break;
-                }
-            }
-
-            if (filePath != null)
-            {
-                Response.Clear();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-                Response.TransmitFile(filePath);
-                Response.End();
-            }
-            else
-            {
-                lblError.Text = "Template file not found on server. Please contact administrator.";
-                lblError.ForeColor = System.Drawing.Color.Red;
                 lblError.Visible = true;
+                lblError.Text = "Template file not found. Please contact administrator.";
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
             }
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            Response.AddHeader("Content-Length", new System.IO.FileInfo(filePath).Length.ToString());
+            Response.TransmitFile(filePath);
+            Response.Flush();
+            Response.End();
         }
 
         // Save a single Excel row to DB without page redirect
@@ -4412,7 +4398,22 @@ END";
                         dr["RowId"] = displayRowId++;
                         dr["Date"] = dateStr;
                         dr["Category"] = mainCategory; // Default to mainCategory detected earlier
-                        dr["ExpenseType"] = combinedHeader;
+                        
+                        // Map the raw Excel column header to a clean expense sub-category name
+                        string cleanExpenseType = "Others";
+                        if (headerLower.Contains("food") || headerLower.Contains("meal") || headerLower.Contains("lunch") || headerLower.Contains("dinner") || headerLower.Contains("breakfast"))
+                            cleanExpenseType = "Food";
+                        else if (headerLower.Contains("misc"))
+                            cleanExpenseType = "Miscellaneous";
+                        else if (headerLower.Contains("conveyance") || headerLower.Contains("bike") || headerLower.Contains("cab") || headerLower.Contains("auto") || headerLower.Contains("transport") || headerLower.Contains("vehicle"))
+                            cleanExpenseType = "Conveyance";
+                        else if (headerLower.Contains("lodg") || headerLower.Contains("hotel") || headerLower.Contains("stay") || headerLower.Contains("accommod"))
+                            cleanExpenseType = "Lodging";
+                        else if (headerLower.Contains("other"))
+                            cleanExpenseType = "Others";
+                        else if (headerLower.Contains("flight") || headerLower.Contains("train") || headerLower.Contains("bus"))
+                            cleanExpenseType = "Conveyance";
+                        dr["ExpenseType"] = cleanExpenseType;
                         
                         // Shared fields from original Excel row
                         dr["FromTime"] = ExtractFromTime(worksheet, row, columnMap);
