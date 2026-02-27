@@ -535,7 +535,7 @@ namespace Vivify
                         {
                             ddlLocalExpenseType.SelectedValue = "Food";
                             ddlLocalExpenseType_SelectedIndexChanged(null, null);
-                            PopulateLocalFoodFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateLocalFoodFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtLocalFoodFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtLocalFoodToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                         }
@@ -543,7 +543,7 @@ namespace Vivify
                         {
                             ddlLocalExpenseType.SelectedValue = "Miscellaneous";
                             ddlLocalExpenseType_SelectedIndexChanged(null, null);
-                            PopulateLocalMiscellaneousFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateLocalMiscellaneousFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtLocalMiscFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtLocalMiscToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                         }
@@ -551,7 +551,7 @@ namespace Vivify
                         {
                             ddlLocalExpenseType.SelectedValue = "Others";
                             ddlLocalExpenseType_SelectedIndexChanged(null, null);
-                            PopulateLocalOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateLocalOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtLocalOthersFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtLocalOthersToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                         }
@@ -562,7 +562,7 @@ namespace Vivify
                             string transportType = reader["TransportType"]?.ToString();
                             ddlLocalMode.SelectedValue = transportType;
                             ddlLocalMode_SelectedIndexChanged(null, null);
-                            PopulateLocalConveyanceFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateLocalConveyanceFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             
                             if (transportType == "Bike")
                             {
@@ -604,7 +604,7 @@ namespace Vivify
                         {
                             ddlTourExpenseType.SelectedValue = "Food";
                             ddlTourExpenseType_SelectedIndexChanged(null, null);
-                            PopulateTourFoodFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateTourFoodFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtTourFoodFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtTourFoodToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                             if (reader["Designation"] != DBNull.Value) txtTourFoodDesignation.SelectedValue = reader["Designation"].ToString();
@@ -613,7 +613,7 @@ namespace Vivify
                         {
                             ddlTourExpenseType.SelectedValue = "Miscellaneous";
                             ddlTourExpenseType_SelectedIndexChanged(null, null);
-                            PopulateTourMiscellaneousFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateTourMiscellaneousFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtTourMiscFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtTourMiscToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                         }
@@ -621,7 +621,7 @@ namespace Vivify
                         {
                             ddlTourExpenseType.SelectedValue = "Lodging"; // This seems to be mapped to Lodging in UI for Tour
                             ddlTourExpenseType_SelectedIndexChanged(null, null);
-                            PopulateTourOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateTourOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtFromTimeTourOthers.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtToTimeTourOthers.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                         }
@@ -630,7 +630,7 @@ namespace Vivify
                             ddlTourExpenseType.SelectedValue = "Lodging";
                             ddlTourExpenseType_SelectedIndexChanged(null, null);
                             // Lodging use same fields as Others in Tour
-                            PopulateTourOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo);
+                            PopulateTourOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtFromTimeTourOthers.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtToTimeTourOthers.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                         }
@@ -4234,8 +4234,6 @@ END";
                 }
 
                 // Sub-category detection - DIRECT APPROACH
-                string subCategory = "Miscellaneous"; // Default
-                string matchedHeader = ""; // Capture actual header for display
                 System.Diagnostics.Debug.WriteLine($"ROW {row}: Starting category detection");
 
                 // Find all amounts in this row and create separate entries for each
@@ -4260,19 +4258,6 @@ END";
                     string amountStr = ExtractAmountFromCell(worksheet, row, col);
                     if (decimal.TryParse(amountStr, out decimal val) && val > 0)
                     {
-                        // Determine category from header
-                        string currentSubCategory = "Miscellaneous";
-                        if (headerLower.Contains("conveyance") || headerLower.Contains("train") || headerLower.Contains("bus") || headerLower.Contains("flight") || headerLower.Contains("taxi") || headerLower.Contains("cab") || headerLower.Contains("auto"))
-                            currentSubCategory = "Conveyance";
-                        else if (headerLower.Contains("food") || headerLower.Contains("fooding"))
-                            currentSubCategory = "Food";
-                        else if (headerLower.Contains("lodg"))
-                            currentSubCategory = "Lodging";
-                        else if (headerLower.Contains("other"))
-                            currentSubCategory = "Others";
-                        else if (headerLower.Contains("misc"))
-                            currentSubCategory = "Miscellaneous";
-
                         // Create the row
                         DataRow dr = dt.NewRow();
                         dr["RowId"] = displayRowId++;
@@ -4545,8 +4530,6 @@ END";
                 }
 
                 // Sub-category detection - DIRECT APPROACH (same as ExtractAllExpenseData)
-                string subCategory = "Miscellaneous"; // Default
-                string matchedHeader = ""; // Capture actual header for display
                 System.Diagnostics.Debug.WriteLine($"ExtractAllExpenseDataFull ROW {row}: Starting category detection");
 
                 // Determine all category amounts in this row and create separate entries
@@ -5301,19 +5284,19 @@ END";
                         txtLocalDistance.Text = distance;
 
                     if (!string.IsNullOrEmpty(particulars))
-                        txtLocalParticulars.Text = particulars;
+                        txtLocalBikeParticular.Text = particulars;
 
                     if (!string.IsNullOrEmpty(remarks))
-                        txtLocalRemarks.Text = remarks;
+                        txtLocalBikeRemarks.Text = remarks;
 
                     if (!string.IsNullOrEmpty(smoNo))
-                        txtLocalSMONo.Text = smoNo;
+                        txtLocalBikeSMONo.Text = smoNo;
 
                     if (!string.IsNullOrEmpty(soNo))
-                        txtLocalSONo.Text = soNo;
+                        txtLocalBikeSONo.Text = soNo;
 
                     if (!string.IsNullOrEmpty(refNo))
-                        txtLocalRefNo.Text = refNo;
+                        txtLocalBikeRefNo.Text = refNo;
                 }
                 else if (selectedMode == "Cab/Bus")
                 {
@@ -5549,8 +5532,8 @@ END";
                 {
                     if (!string.IsNullOrEmpty(date)) txtTourAutoDate.Text = date;
                     if (!string.IsNullOrEmpty(amount)) txtTourAutoAmount.Text = amount;
-                    if (!string.IsNullOrEmpty(particulars)) txtTourAutoParticulars.Text = particulars;
-                    if (!string.IsNullOrEmpty(remarks)) txtTourAutoRemarks.Text = remarks;
+                    if (!string.IsNullOrEmpty(particulars)) txtTourAutoParticular.Text = particulars;
+                    if (!string.IsNullOrEmpty(remarks)) txTourAutoRemarks.Text = remarks;
                     if (!string.IsNullOrEmpty(smoNo)) txtTourAutoSmoNo.Text = smoNo;
                     if (!string.IsNullOrEmpty(soNo)) txtTourAutoSoNo.Text = soNo;
                     if (!string.IsNullOrEmpty(refNo)) txtTourAutoRefNo.Text = refNo;
