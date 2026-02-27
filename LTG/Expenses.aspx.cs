@@ -3106,18 +3106,9 @@ END";
                 throw new Exception("Invalid date format.");
             }
 
-            // Convert FromTime and ToTime to TimeSpan
-            TimeSpan parsedFromTime;
-            if (!TimeSpan.TryParse(fromTime, out parsedFromTime))
-            {
-                throw new Exception("Invalid 'FromTime' format.");
-            }
-
-            TimeSpan parsedToTime;
-            if (!TimeSpan.TryParse(toTime, out parsedToTime))
-            {
-                throw new Exception("Invalid 'ToTime' format.");
-            }
+            // Convert FromTime and ToTime to TimeSpan (graceful fallback)
+            object parsedFromTime = TimeSpan.TryParse(fromTime, out TimeSpan fto) ? (object)fto : DBNull.Value;
+            object parsedToTime = TimeSpan.TryParse(toTime, out TimeSpan tto) ? (object)tto : DBNull.Value;
 
             // Add CreatedDate and CreatedBy
             DateTime createdDate = DateTime.Now;
@@ -3224,8 +3215,8 @@ END";
                 cmdLodging.Parameters.AddWithValue("@ServiceId", serviceId);
                 cmdLodging.Parameters.AddWithValue("@Date", string.IsNullOrEmpty(date) ? (object)DBNull.Value : DateTime.Parse(date));
                 cmdLodging.Parameters.AddWithValue("@Amount", string.IsNullOrEmpty(amount) ? (object)DBNull.Value : Convert.ToDecimal(amount));
-                cmdLodging.Parameters.AddWithValue("@FromTime", TimeSpan.Parse(fromTime));
-                cmdLodging.Parameters.AddWithValue("@ToTime", TimeSpan.Parse(toTime));
+                cmdLodging.Parameters.AddWithValue("@FromTime", TimeSpan.TryParse(fromTime, out TimeSpan ftl) ? (object)ftl : DBNull.Value);
+                cmdLodging.Parameters.AddWithValue("@ToTime", TimeSpan.TryParse(toTime, out TimeSpan ttl) ? (object)ttl : DBNull.Value);
                 cmdLodging.Parameters.AddWithValue("@Particulars", string.IsNullOrEmpty(particulars) ? (object)DBNull.Value : particulars);
                 cmdLodging.Parameters.AddWithValue("@Remarks", string.IsNullOrEmpty(remarks) ? (object)DBNull.Value : remarks);
 
@@ -3403,8 +3394,8 @@ END";
                 cmdConveyance.Parameters.AddWithValue("@TransportType", transportType);
                 cmdConveyance.Parameters.AddWithValue("@Amount", string.IsNullOrEmpty(amount) ? (object)DBNull.Value : Convert.ToDecimal(amount));
                 cmdConveyance.Parameters.AddWithValue("@Date", string.IsNullOrEmpty(date) ? (object)DBNull.Value : DateTime.Parse(date));
-                cmdConveyance.Parameters.AddWithValue("@FromTime", string.IsNullOrEmpty(fromTime) ? (object)DBNull.Value : TimeSpan.Parse(fromTime));
-                cmdConveyance.Parameters.AddWithValue("@ToTime", string.IsNullOrEmpty(toTime) ? (object)DBNull.Value : TimeSpan.Parse(toTime));
+                cmdConveyance.Parameters.AddWithValue("@FromTime", TimeSpan.TryParse(fromTime, out TimeSpan ft) ? (object)ft : DBNull.Value);
+                cmdConveyance.Parameters.AddWithValue("@ToTime", TimeSpan.TryParse(toTime, out TimeSpan tt) ? (object)tt : DBNull.Value);
                 cmdConveyance.Parameters.AddWithValue("@Particulars", string.IsNullOrEmpty(particulars) ? (object)DBNull.Value : particulars);
                 cmdConveyance.Parameters.AddWithValue("@Remarks", string.IsNullOrEmpty(remarks) ? (object)DBNull.Value : remarks);
                 cmdConveyance.Parameters.AddWithValue("@ExpenseType", expenseType); // Ensure this is set
