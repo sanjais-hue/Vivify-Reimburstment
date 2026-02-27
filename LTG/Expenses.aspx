@@ -2960,6 +2960,7 @@ border:none;background:none;
                         </ContentTemplate>
                         <Triggers>
                             <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
+                            <asp:PostBackTrigger ControlID="btnImportExcel" />
                         </Triggers>
                     </asp:UpdatePanel>
             </div>

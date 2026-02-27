@@ -38,6 +38,27 @@ namespace Vivify
                 return;
             }
 
+            // ── Restore Excel preview grid from session on EVERY postback ──
+            if (IsPostBack)
+            {
+                DataTable dtDisplay = Session["UploadedExcelDisplayData"] as DataTable;
+                if (dtDisplay != null && dtDisplay.Rows.Count > 0)
+                {
+                    gvExcelPreview.DataSource = dtDisplay;
+                    gvExcelPreview.DataBind();
+                    gvExcelPreview.Visible = true;
+                    pnlExcelPreview.Visible = true;
+
+                    // Restore total label if stored
+                    string excelTotalText = Session["UploadedExcelTotal"] as string;
+                    if (!string.IsNullOrEmpty(excelTotalText))
+                    {
+                        lblExcelTotal.Text = excelTotalText;
+                        lblExcelTotal.Visible = true;
+                    }
+                }
+            }
+
             if (!IsPostBack)
             {
                 GridViewFood.Visible = true;
@@ -3883,6 +3904,10 @@ END";
                             {
                                 // Re-extract display data from remaining session rows
                                 DataTable dtNewDisplay = BuildDisplayDataFromFull(dtCurrent);
+
+                                // Update session so grid persists on next postback too
+                                Session["UploadedExcelDisplayData"] = dtNewDisplay;
+
                                 if (dtNewDisplay.Rows.Count > 0)
                                 {
                                     gvExcelPreview.DataSource = dtNewDisplay;
@@ -3894,6 +3919,9 @@ END";
                                 {
                                     gvExcelPreview.Visible = false;
                                     pnlExcelPreview.Visible = false;
+                                    // Clear session when all rows are done
+                                    Session.Remove("UploadedExcelDisplayData");
+                                    Session.Remove("UploadedExcelTotal");
                                 }
                             }
 
@@ -4078,6 +4106,10 @@ END";
 
                                 // Store FULL data in session for row selection
                                 Session["ImportedExcelData"] = dtFullData;
+
+                                // Store DISPLAY data in session so it can be re-bound on future postbacks
+                                Session["UploadedExcelDisplayData"] = dtDisplayData;
+                                Session["UploadedExcelTotal"] = $"Excel File Total: {excelTotal:N2}";
 
                                 lblError.Text = "";
                                 lblError.ForeColor = System.Drawing.Color.Green;
