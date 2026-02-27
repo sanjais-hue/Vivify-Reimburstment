@@ -3590,6 +3590,7 @@ END";
         {
             // Clear the fields
             ClearExpenseFields1();
+            ClearExpenseFields();
 
             // Hide GridViews if required
             GridViewFood.Visible = false;
@@ -3598,8 +3599,7 @@ END";
             GridViewLodging.Visible = false;
             GridViewConveyance.Visible = false;
 
-            // Refresh the page
-            Response.Redirect(Request.Url.ToString(), true);
+            // Page does NOT refresh via redirect now, just clears and stays
         }
         private void ClearExpenseFields1(Control parent = null)
         {
@@ -3802,6 +3802,43 @@ END";
             if (!string.IsNullOrEmpty(selectedExpenseType))
             {
                 ddlExpenseType.SelectedValue = selectedExpenseType; // Set the previously selected value
+            }
+        }
+
+        protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
+        {
+            string fileName = "Reimbursement_Template.xlsx";
+            string filePath = Server.MapPath("~/Reimbursement_Template.xlsx"); // Assuming it's in the root or a known path
+
+            if (!File.Exists(filePath))
+            {
+                // Try searching in common locations if not in root
+                string[] possiblePaths = {
+                    Server.MapPath("~/Template/Reimbursement_Template.xlsx"),
+                    Server.MapPath("~/App_Data/Reimbursement_Template.xlsx")
+                };
+                foreach (var p in possiblePaths)
+                {
+                    if (File.Exists(p))
+                    {
+                        filePath = p;
+                        break;
+                    }
+                }
+            }
+
+            if (File.Exists(filePath))
+            {
+                Response.Clear();
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
+                Response.TransmitFile(filePath);
+                Response.End();
+            }
+            else
+            {
+                lblError.Text = "Template file not found on server.";
+                lblError.ForeColor = System.Drawing.Color.Red;
             }
         }
 
@@ -4299,6 +4336,14 @@ END";
 
                     // Requirement #2: Scroll to form
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "ScrollToForm", "setTimeout(function() { scrollToForm(); }, 100);", true);
+                }
+                else if (e.CommandName == "SaveRow")
+                {
+                    int rowIndex = Convert.ToInt32(e.CommandArgument) - 1;
+                    FillFormFromExcel(rowIndex);
+                    
+                    // Trigger the main save logic
+                    btnSubmit_Click(null, null);
                 }
             }
             catch (Exception ex)

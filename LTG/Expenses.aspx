@@ -446,13 +446,19 @@
                                         <label for="fileUploadExcel"
                                             style="margin: 0; font-size: 16px; font-weight: 700; color: white;">Upload
                                             Excel:</label>
+                                        <!-- Template Download Link -->
+                                        <asp:LinkButton ID="lnkDownloadTemplate" runat="server"
+                                            OnClick="lnkDownloadTemplate_Click" Text="Download Template"
+                                            Style="color: #FFD700; font-weight: bold; font-size: 12px; margin-right: 5px; text-decoration: underline;"
+                                            ToolTip="Download the Excel Reimbursement Template" />
+
                                         <!-- Hidden ASP.NET FileUpload -->
                                         <asp:FileUpload ID="fileUploadExcel" runat="server" accept=".xlsx,.xls"
                                             style="display:none;"
                                             onchange="handleExcelFileSelect(this, 'txtExcelFileName', 'btnRemoveExcelFile')" />
                                         <!-- Display field (click = download and open) -->
                                         <input type="text" id="txtExcelFileName"
-                                            style="padding: 4px 6px; border: 1px solid white; border-radius: 3px; font-size: 11px; width: 250px; cursor: pointer; background-color: white; color: #333;"
+                                            style="padding: 4px 6px; border: 1px solid white; border-radius: 3px; font-size: 11px; width: 200px; cursor: pointer; background-color: white; color: #333;"
                                             readonly placeholder="Choose file..." onclick="downloadExcelFile()" />
                                         <!-- Remove button -->
                                         <button type="button" id="btnRemoveExcelFile"
