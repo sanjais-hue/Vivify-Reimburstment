@@ -3808,25 +3808,49 @@ END";
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
             string fileName = "Reimbursement_Template.xlsx";
-            // The file is in the web root (LTG folder)
-            string filePath = Server.MapPath("~/Reimbursement_Template.xlsx");
+            // Check several likely locations for the template file
+            string[] possiblePaths = {
+                Server.MapPath("~/Reimbursement_Template.xlsx"),
+                Server.MapPath("~/LTG/Reimbursement_Template.xlsx"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reimbursement_Template.xlsx"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LTG", "Reimbursement_Template.xlsx"),
+                @"Z:\My Folders\Vivify Reimburstment\Reimbursement_Template.xlsx",
+                @"Z:\My Folders\Vivify Reimburstment\LTG\Reimbursement_Template.xlsx"
+            };
 
-            if (!System.IO.File.Exists(filePath))
+            string filePath = possiblePaths.FirstOrDefault(p => System.IO.File.Exists(p));
+
+            if (string.IsNullOrEmpty(filePath))
             {
                 lblError.Visible = true;
-                lblError.Text = "Template file not found. Please contact administrator.";
+                lblError.Text = "Template file not found. Checked: " + string.Join(", ", possiblePaths.Take(2));
                 lblError.ForeColor = System.Drawing.Color.Red;
                 return;
             }
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-            Response.AddHeader("Content-Length", new System.IO.FileInfo(filePath).Length.ToString());
-            Response.TransmitFile(filePath);
-            Response.Flush();
-            Response.End();
+            try
+            {
+                Response.Clear();
+                Response.Buffer = true;
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                Response.AddHeader("Content-Length", new System.IO.FileInfo(filePath).Length.ToString());
+                Response.TransmitFile(filePath);
+                Response.Flush();
+            }
+            catch (Exception ex)
+            {
+                lblError.Visible = true;
+                lblError.Text = "Error downloading template: " + ex.Message;
+                lblError.ForeColor = System.Drawing.Color.Red;
+            }
+            finally
+            {
+                if (Response.IsClientConnected)
+                {
+                    Response.End();
+                }
+            }
         }
 
         // Save a single Excel row to DB without page redirect
