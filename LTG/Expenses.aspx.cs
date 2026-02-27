@@ -3588,18 +3588,13 @@ END";
         }
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            // Clear the fields
+            // Clear the form fields only
             ClearExpenseFields1();
             ClearExpenseFields();
 
-            // Hide GridViews if required
-            GridViewFood.Visible = false;
-            GridViewMiscellaneous.Visible = false;
-            GridViewOthers.Visible = false;
-            GridViewLodging.Visible = false;
-            GridViewConveyance.Visible = false;
-
-            // Page does NOT refresh via redirect now, just clears and stays
+            // DO NOT hide the summary grids or the Excel preview grid. 
+            // This ensures the user doesn't lose visibility of their data.
+            // pnlExcelPreview and GridViews will remain visible if they were already visible.
         }
         private void ClearExpenseFields1(Control parent = null)
         {
@@ -3907,14 +3902,14 @@ END";
                             ClearExpenseFields();
 
                             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "gridSaveAlert",
-                                "alert('Row saved successfully!');", true);
+                                "alert('row is saved to database');", true);
                         }
                         catch (Exception ex)
                         {
                             try { transaction.Rollback(); } catch { }
                             string msg = ex.Message;
-                            if (msg.Contains("TimeSpan") || msg.Contains("was not recognized") || msg.Contains("time"))
-                                msg = "Please fill the required columns (Date, From Time, To Time, Amount) before saving.";
+                            if (msg.Contains("TimeSpan") || msg.Contains("was not recognized") || msg.Contains("time") || msg.Contains("required"))
+                                msg = "Fill the required fields";
                             throw new Exception(msg);
                         }
                     }
@@ -4489,8 +4484,8 @@ END";
                     catch (Exception saveEx)
                     {
                         string msg = saveEx.Message;
-                        if (msg.Contains("TimeSpan") || msg.Contains("time") || msg.Contains("format"))
-                            msg = "Please fill the required columns (Date, From Time, To Time, Amount) before saving.";
+                        if (msg.Contains("TimeSpan") || msg.Contains("time") || msg.Contains("format") || msg.Contains("required"))
+                            msg = "Fill the required fields";
                         lblError.Text = msg;
                         lblError.ForeColor = System.Drawing.Color.Red;
                         lblError.Visible = true;

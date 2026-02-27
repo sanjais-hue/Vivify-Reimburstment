@@ -25,9 +25,8 @@
             function confirmEditWithUnsaved() {
                 if (excelFormDirty) {
                     return confirm(
-                        'The form below still has data loaded from a previous Edit.\n' +
-                        'Clicking OK will DISCARD those unsaved changes and load this row instead.\n' +
-                        'Click Cancel to go back and save the previous data first.');
+                        'Fill the required fields.\n' +
+                        'Clicking OK will DISCARD those unsaved changes and load this row instead.');
                 }
                 return true;
             }
