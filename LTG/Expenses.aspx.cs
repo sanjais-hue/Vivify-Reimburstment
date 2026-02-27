@@ -3871,7 +3871,6 @@ END";
         // Save a single Excel row to DB without page redirect
         private void btnSubmit_ClickForGrid(int savedRowIndex)
         {
-            string scriptMessage = "";
             try
             {
                 if (Session["ServiceId"] == null)
