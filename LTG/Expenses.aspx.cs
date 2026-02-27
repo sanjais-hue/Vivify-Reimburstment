@@ -3808,38 +3808,150 @@ END";
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
             string fileName = "Reimbursement_Template.xlsx";
-            string filePath = Server.MapPath("~/Reimbursement_Template.xlsx"); // Assuming it's in the root or a known path
+            // Try multiple possible paths
+            string[] possiblePaths = {
+                Server.MapPath("~/Reimbursement_Template.xlsx"),
+                Server.MapPath("~/LTG/Reimbursement_Template.xlsx"),
+                Server.MapPath("~/../Reimbursement_Template.xlsx"),
+                @"z:\My Folders\Vivify Reimburstment\Reimbursement_Template.xlsx",
+                @"z:\My Folders\Vivify Reimburstment\LTG\Reimbursement_Template.xlsx"
+            };
 
-            if (!File.Exists(filePath))
+            string filePath = null;
+            foreach (var p in possiblePaths)
             {
-                // Try searching in common locations if not in root
-                string[] possiblePaths = {
-                    Server.MapPath("~/Template/Reimbursement_Template.xlsx"),
-                    Server.MapPath("~/App_Data/Reimbursement_Template.xlsx")
-                };
-                foreach (var p in possiblePaths)
+                if (System.IO.File.Exists(p))
                 {
-                    if (File.Exists(p))
-                    {
-                        filePath = p;
-                        break;
-                    }
+                    filePath = p;
+                    break;
                 }
             }
 
-            if (File.Exists(filePath))
+            if (filePath != null)
             {
                 Response.Clear();
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
+                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
                 Response.TransmitFile(filePath);
                 Response.End();
             }
             else
             {
-                lblError.Text = "Template file not found on server.";
+                lblError.Text = "Template file not found on server. Please contact administrator.";
                 lblError.ForeColor = System.Drawing.Color.Red;
+                lblError.Visible = true;
             }
+        }
+
+        // Save a single Excel row to DB without page redirect
+        private void btnSubmit_ClickForGrid(int savedRowIndex)
+        {
+            string scriptMessage = "";
+            try
+            {
+                if (Session["ServiceId"] == null)
+                    throw new Exception("Invalid Service ID.");
+
+                int serviceId = (int)Session["ServiceId"];
+                string constr = ConfigurationManager.ConnectionStrings["vivify"].ConnectionString;
+
+                using (SqlConnection con = new SqlConnection(constr))
+                {
+                    con.Open();
+                    using (SqlTransaction transaction = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            InsertExpenses(con, transaction, serviceId);
+                            transaction.Commit();
+
+                            // Remove this row from the session DataTable and rebind grid
+                            if (Session["ImportedExcelData"] is DataTable dtFull && savedRowIndex >= 0 && savedRowIndex < dtFull.Rows.Count)
+                                dtFull.Rows.RemoveAt(savedRowIndex);
+
+                            if (Session["UploadedExcelDisplayData"] is DataTable dtDisplay && savedRowIndex >= 0 && savedRowIndex < dtDisplay.Rows.Count)
+                                dtDisplay.Rows.RemoveAt(savedRowIndex);
+
+                            // Rebuild RowIds so they remain sequential
+                            DataTable dtCurrent = Session["ImportedExcelData"] as DataTable;
+                            if (dtCurrent != null)
+                            {
+                                // Re-extract display data from remaining session rows
+                                DataTable dtNewDisplay = BuildDisplayDataFromFull(dtCurrent);
+                                if (dtNewDisplay.Rows.Count > 0)
+                                {
+                                    gvExcelPreview.DataSource = dtNewDisplay;
+                                    gvExcelPreview.DataBind();
+                                    gvExcelPreview.Visible = true;
+                                    pnlExcelPreview.Visible = true;
+                                }
+                                else
+                                {
+                                    gvExcelPreview.Visible = false;
+                                    pnlExcelPreview.Visible = false;
+                                }
+                            }
+
+                            // Refresh displayed expense summary
+                            DisplayExpenses(serviceId);
+                            ClearExpenseFields();
+
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "gridSaveAlert",
+                                "alert('Row saved successfully!');", true);
+                        }
+                        catch (Exception ex)
+                        {
+                            try { transaction.Rollback(); } catch { }
+                            string msg = ex.Message;
+                            if (msg.Contains("TimeSpan") || msg.Contains("was not recognized") || msg.Contains("time"))
+                                msg = "Please fill the required columns (Date, From Time, To Time, Amount) before saving.";
+                            throw new Exception(msg);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+                if (msg.Contains("TimeSpan") || msg.Contains("was not recognized") || msg.Contains("time"))
+                    msg = "Please fill the required columns (Date, From Time, To Time, Amount) before saving.";
+                lblError.Text = msg;
+                lblError.ForeColor = System.Drawing.Color.Red;
+                lblError.Visible = true;
+            }
+        }
+
+        private DataTable BuildDisplayDataFromFull(DataTable dtFull)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("RowId");
+            dt.Columns.Add("Date");
+            dt.Columns.Add("Category");
+            dt.Columns.Add("ExpenseType");
+            dt.Columns.Add("FromTime");
+            dt.Columns.Add("ToTime");
+            dt.Columns.Add("Particulars");
+            dt.Columns.Add("TransportType");
+            dt.Columns.Add("Distance");
+            dt.Columns.Add("Amount");
+
+            int id = 1;
+            foreach (DataRow row in dtFull.Rows)
+            {
+                DataRow dr = dt.NewRow();
+                dr["RowId"] = id++;
+                dr["Date"] = row["Date"];
+                dr["Category"] = row["MainCategory"];
+                dr["ExpenseType"] = row["SubCategory"];
+                dr["FromTime"] = row["FromTime"];
+                dr["ToTime"] = row["ToTime"];
+                dr["Particulars"] = row["Particulars"];
+                dr["TransportType"] = row["TransportMode"];
+                dr["Distance"] = row["Distance"];
+                dr["Amount"] = row["Amount"];
+                dt.Rows.Add(dr);
+            }
+            return dt;
         }
 
         protected void btnImportExcel_Click(object sender, EventArgs e)
@@ -4339,11 +4451,25 @@ END";
                 }
                 else if (e.CommandName == "SaveRow")
                 {
-                    int rowIndex = Convert.ToInt32(e.CommandArgument) - 1;
-                    FillFormFromExcel(rowIndex);
+                    int rowId = Convert.ToInt32(e.CommandArgument);
+                    int rowIndex = rowId - 1;
                     
-                    // Trigger the main save logic
-                    btnSubmit_Click(null, null);
+                    try
+                    {
+                        FillFormFromExcel(rowIndex);
+                        
+                        // Trigger the main save logic (without redirect)
+                        btnSubmit_ClickForGrid(rowIndex);
+                    }
+                    catch (Exception saveEx)
+                    {
+                        string msg = saveEx.Message;
+                        if (msg.Contains("TimeSpan") || msg.Contains("time") || msg.Contains("format"))
+                            msg = "Please fill the required columns (Date, From Time, To Time, Amount) before saving.";
+                        lblError.Text = msg;
+                        lblError.ForeColor = System.Drawing.Color.Red;
+                        lblError.Visible = true;
+                    }
                 }
             }
             catch (Exception ex)

@@ -495,10 +495,8 @@
                                                 <Columns>
                                                     <asp:BoundField DataField="RowId" HeaderText="#"
                                                         ItemStyle-Width="30px" />
-                                                    <asp:BoundField DataField="SerialNumber" HeaderText="S.No"
-                                                        ItemStyle-Width="40px" />
                                                     <asp:BoundField DataField="ExpenseType" HeaderText="Type"
-                                                        ItemStyle-Width="55px" />
+                                                        ItemStyle-Width="80px" />
                                                     <asp:BoundField DataField="Category" HeaderText="Category"
                                                         ItemStyle-Width="80px" />
                                                     <asp:BoundField DataField="Date" HeaderText="Date"
@@ -515,21 +513,26 @@
                                                         ItemStyle-Width="45px" />
                                                     <asp:BoundField DataField="Amount" HeaderText="Amount (₹)"
                                                         ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Right" />
-                                                    <%-- Save button: saves row directly to DB --%>
-                                                        <asp:TemplateField HeaderText="Action" ItemStyle-Width="110px">
+                                                    <%-- Action buttons --%>
+                                                        <asp:TemplateField HeaderText="Action" ItemStyle-Width="70px"
+                                                            ItemStyle-HorizontalAlign="Center">
                                                             <ItemTemplate>
-                                                                <asp:Button runat="server" Text="Save"
-                                                                    CommandName="SaveRow"
-                                                                    CommandArgument='<%# Eval("RowId") %>'
-                                                                    CssClass="btn btn-success btn-sm"
-                                                                    style="min-width:46px; font-weight:bold; margin-right:4px;"
-                                                                    OnClientClick="return confirm('Save this row directly to DB?');" />
-                                                                <asp:Button runat="server" Text="Edit"
-                                                                    CommandName="FillForm"
-                                                                    CommandArgument='<%# Eval("RowId") %>'
-                                                                    CssClass="btn btn-warning btn-sm"
-                                                                    style="min-width:42px;"
-                                                                    OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
+                                                                <%-- Green tick=Save --%>
+                                                                    <asp:Button runat="server" Text="✔"
+                                                                        CommandName="SaveRow"
+                                                                        CommandArgument='<%# Eval("RowId") %>'
+                                                                        CssClass="btn btn-sm"
+                                                                        style="background:none; border:none; color:#28a745; font-size:18px; font-weight:bold; padding:0 6px; cursor:pointer;"
+                                                                        ToolTip="Save this row to DB"
+                                                                        OnClientClick="return confirm('Save this row directly to DB?');" />
+                                                                    <%-- Red pencil=Edit --%>
+                                                                        <asp:Button runat="server" Text="✎"
+                                                                            CommandName="FillForm"
+                                                                            CommandArgument='<%# Eval("RowId") %>'
+                                                                            CssClass="btn btn-sm"
+                                                                            style="background:none; border:none; color:#dc3545; font-size:18px; font-weight:bold; padding:0 6px; cursor:pointer;"
+                                                                            ToolTip="Edit this row in the form"
+                                                                            OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
                                                             </ItemTemplate>
                                                         </asp:TemplateField>
                                                 </Columns>
