@@ -3854,7 +3854,7 @@ END";
             {
                 if (Response.IsClientConnected)
                 {
-                    Response.End();
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
             }
         }
