@@ -476,2482 +476,2352 @@
                                     </div>
                                 </div>
 
-                                <%-- ScriptManager is required for UpdatePanel --%>
-                                    <asp:ScriptManager ID="ScriptManager1" runat="server"
-                                        EnablePartialRendering="true" />
-
-                                    <%-- ═══ Excel Import Preview Panel (inside UpdatePanel for no-refresh Save) ═══
-                                        --%>
-                                        <asp:UpdatePanel ID="upExcelPreview" runat="server" UpdateMode="Conditional">
-                                            <ContentTemplate>
-                                                <asp:Panel ID="pnlExcelPreview" runat="server" Visible="false"
-                                                    style="margin: 12px 16px; border: 2px solid #3f418d; border-radius: 6px; overflow: hidden;">
-                                                    <div
-                                                        style="background-color:#3f418d; color:white; padding:8px 16px; font-weight:bold; font-size:13px; display:flex; align-items:center; justify-content:space-between;">
-                                                        <span>&#128203; Excel Rows Ready &mdash; Click
-                                                            <strong>&#10004;</strong>
-                                                            to save directly to DB, or <strong>&#9998;</strong>
-                                                            to adjust a row in the form below before saving</span>
-                                                    </div>
-                                                    <div style="overflow-x:auto; padding:8px;">
-                                                        <asp:GridView ID="gvExcelPreview" runat="server"
-                                                            AutoGenerateColumns="false"
-                                                            OnRowCommand="gvExcelPreview_RowCommand"
-                                                            CssClass="table table-sm table-bordered table-hover"
-                                                            HeaderStyle-BackColor="#eef0ff"
-                                                            HeaderStyle-ForeColor="#3f418d" HeaderStyle-Font-Bold="true"
-                                                            RowStyle-VerticalAlign="Middle" GridLines="Both">
-                                                            <Columns>
-                                                                <asp:BoundField DataField="RowId" HeaderText="#"
-                                                                    ItemStyle-Width="30px" />
-                                                                <asp:BoundField DataField="ExpenseType"
-                                                                    HeaderText="Type" ItemStyle-Width="90px" />
-                                                                <asp:BoundField DataField="Category"
-                                                                    HeaderText="Category" ItemStyle-Width="70px" />
-                                                                <asp:BoundField DataField="Date" HeaderText="Date"
-                                                                    ItemStyle-Width="90px" />
-                                                                <asp:BoundField DataField="FromTime" HeaderText="From"
-                                                                    ItemStyle-Width="55px" />
-                                                                <asp:BoundField DataField="ToTime" HeaderText="To"
-                                                                    ItemStyle-Width="55px" />
-                                                                <asp:BoundField DataField="Particulars"
-                                                                    HeaderText="Particulars" ItemStyle-Width="160px" />
-                                                                <asp:BoundField DataField="TransportType"
-                                                                    HeaderText="Transport" ItemStyle-Width="70px" />
-                                                                <asp:BoundField DataField="Distance" HeaderText="Km"
-                                                                    ItemStyle-Width="45px" />
-                                                                <asp:BoundField DataField="Amount"
-                                                                    HeaderText="Amount (&#8377;)" ItemStyle-Width="80px"
-                                                                    ItemStyle-HorizontalAlign="Right" />
-                                                                <%-- Action buttons --%>
-                                                                    <asp:TemplateField HeaderText="Action"
-                                                                        ItemStyle-Width="70px"
-                                                                        ItemStyle-HorizontalAlign="Center">
-                                                                        <ItemTemplate>
-                                                                            <%-- Green tick=Save --%>
+                                <%-- ═══ Excel Import Preview Panel (inside UpdatePanel for no-refresh Save) ═══ --%>
+                                    <asp:UpdatePanel ID="upExcelPreview" runat="server" UpdateMode="Conditional">
+                                        <ContentTemplate>
+                                            <asp:Panel ID="pnlExcelPreview" runat="server" Visible="false"
+                                                style="margin: 12px 16px; border: 2px solid #3f418d; border-radius: 6px; overflow: hidden;">
+                                                <div
+                                                    style="background-color:#3f418d; color:white; padding:8px 16px; font-weight:bold; font-size:13px; display:flex; align-items:center; justify-content:space-between;">
+                                                    <span>&#128203; Excel Rows Ready &mdash; Click
+                                                        <strong>&#10004;</strong>
+                                                        to save directly to DB, or <strong>&#9998;</strong>
+                                                        to adjust a row in the form below before saving</span>
+                                                </div>
+                                                <div style="overflow-x:auto; padding:8px;">
+                                                    <asp:GridView ID="gvExcelPreview" runat="server"
+                                                        AutoGenerateColumns="false"
+                                                        OnRowCommand="gvExcelPreview_RowCommand"
+                                                        CssClass="table table-sm table-bordered table-hover"
+                                                        HeaderStyle-BackColor="#eef0ff" HeaderStyle-ForeColor="#3f418d"
+                                                        HeaderStyle-Font-Bold="true" RowStyle-VerticalAlign="Middle"
+                                                        GridLines="Both">
+                                                        <Columns>
+                                                            <asp:BoundField DataField="RowId" HeaderText="#"
+                                                                ItemStyle-Width="30px" />
+                                                            <asp:BoundField DataField="ExpenseType" HeaderText="Type"
+                                                                ItemStyle-Width="90px" />
+                                                            <asp:BoundField DataField="Category" HeaderText="Category"
+                                                                ItemStyle-Width="70px" />
+                                                            <asp:BoundField DataField="Date" HeaderText="Date"
+                                                                ItemStyle-Width="90px" />
+                                                            <asp:BoundField DataField="FromTime" HeaderText="From"
+                                                                ItemStyle-Width="55px" />
+                                                            <asp:BoundField DataField="ToTime" HeaderText="To"
+                                                                ItemStyle-Width="55px" />
+                                                            <asp:BoundField DataField="Particulars"
+                                                                HeaderText="Particulars" ItemStyle-Width="160px" />
+                                                            <asp:BoundField DataField="TransportType"
+                                                                HeaderText="Transport" ItemStyle-Width="70px" />
+                                                            <asp:BoundField DataField="Distance" HeaderText="Km"
+                                                                ItemStyle-Width="45px" />
+                                                            <asp:BoundField DataField="Amount"
+                                                                HeaderText="Amount (&#8377;)" ItemStyle-Width="80px"
+                                                                ItemStyle-HorizontalAlign="Right" />
+                                                            <%-- Action buttons --%>
+                                                                <asp:TemplateField HeaderText="Action"
+                                                                    ItemStyle-Width="70px"
+                                                                    ItemStyle-HorizontalAlign="Center">
+                                                                    <ItemTemplate>
+                                                                        <%-- Green tick=Save --%>
+                                                                            <asp:Button runat="server" Text="&#10004;"
+                                                                                CommandName="SaveRow"
+                                                                                CommandArgument='<%# Eval("RowId") %>'
+                                                                                CssClass="btn btn-sm"
+                                                                                style="background:none; border:none; color:#28a745; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
+                                                                                ToolTip="Save this row to DB"
+                                                                                OnClientClick="return confirm('Save this row to database?');" />
+                                                                            <%-- Red pencil=Edit --%>
                                                                                 <asp:Button runat="server"
-                                                                                    Text="&#10004;"
-                                                                                    CommandName="SaveRow"
+                                                                                    Text="&#9998;"
+                                                                                    CommandName="FillForm"
                                                                                     CommandArgument='<%# Eval("RowId") %>'
                                                                                     CssClass="btn btn-sm"
-                                                                                    style="background:none; border:none; color:#28a745; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
-                                                                                    ToolTip="Save this row to DB"
-                                                                                    OnClientClick="return confirm('Save this row to database?');" />
-                                                                                <%-- Red pencil=Edit --%>
-                                                                                    <asp:Button runat="server"
-                                                                                        Text="&#9998;"
-                                                                                        CommandName="FillForm"
-                                                                                        CommandArgument='<%# Eval("RowId") %>'
-                                                                                        CssClass="btn btn-sm"
-                                                                                        style="background:none; border:none; color:#dc3545; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
-                                                                                        ToolTip="Edit this row in the form"
-                                                                                        OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
-                                                                        </ItemTemplate>
-                                                                    </asp:TemplateField>
-                                                            </Columns>
-                                                        </asp:GridView>
-                                                    </div>
-                                                    <%-- Grand Total from Excel --%>
-                                                        <asp:Label ID="lblExcelTotal" runat="server"
-                                                            style="display:block; padding:6px 16px 10px 16px; font-weight:bold; font-size:13px; color:#1a2a5e;"
-                                                            Visible="false" />
-                                                </asp:Panel>
-                                            </ContentTemplate>
-                                            <Triggers>
-                                                <%-- Template download needs full postback to stream the file --%>
-                                                    <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
-                                            </Triggers>
-                                        </asp:UpdatePanel>
+                                                                                    style="background:none; border:none; color:#dc3545; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
+                                                                                    ToolTip="Edit this row in the form"
+                                                                                    OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+                                                        </Columns>
+                                                    </asp:GridView>
+                                                </div>
+                                                <%-- Grand Total from Excel --%>
+                                                    <asp:Label ID="lblExcelTotal" runat="server"
+                                                        style="display:block; padding:6px 16px 10px 16px; font-weight:bold; font-size:13px; color:#1a2a5e;"
+                                                        Visible="false" />
+                                            </asp:Panel>
+                                        </ContentTemplate>
+                                        <Triggers>
+                                            <%-- Template download needs full postback to stream the file --%>
+                                                <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
+                                        </Triggers>
+                                    </asp:UpdatePanel>
 
-                                        <%-- ═════════════════════════════════════════════ --%>
+                                    <%-- ═════════════════════════════════════════════ --%>
 
-                                            <section class="form-container" id="mainFormSection">
-                                                <asp:HiddenField ID="hdnEditRecordId" runat="server" />
-                                                <asp:HiddenField ID="hdnEditCategory" runat="server" />
+                                        <section class="form-container" id="mainFormSection">
+                                            <asp:HiddenField ID="hdnEditRecordId" runat="server" />
+                                            <asp:HiddenField ID="hdnEditCategory" runat="server" />
 
 
-                                                <div class="col-12 mb-1">
-                                                    <label for="ddlExpenseType" class="form-label">Expense Type</label>
-                                                    <asp:DropDownList ID="ddlExpenseType" runat="server"
+                                            <div class="col-12 mb-1">
+                                                <label for="ddlExpenseType" class="form-label">Expense Type</label>
+                                                <asp:DropDownList ID="ddlExpenseType" runat="server" AutoPostBack="true"
+                                                    OnSelectedIndexChanged="ddlExpenseType_SelectedIndexChanged"
+                                                    CssClass="form-control">
+                                                    <asp:ListItem Text="Select Expense Type" Value="" />
+                                                    <asp:ListItem Text="Local" Value="Local" />
+                                                    <asp:ListItem Text="Tour" Value="Tour" />
+                                                    <asp:ListItem Text="Award" Value="Award" />
+                                                </asp:DropDownList>
+                                            </div>
+
+                                            <!-- Local Expenses Panel -->
+                                            <asp:Panel ID="pnlLocalExpenses" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <div class="col-12">
+                                                    <label for="ddlLocalExpenseType" class="form-label">Expense
+                                                        Details</label>
+                                                    <asp:DropDownList ID="ddlLocalExpenseType" runat="server"
                                                         AutoPostBack="true"
-                                                        OnSelectedIndexChanged="ddlExpenseType_SelectedIndexChanged"
+                                                        OnSelectedIndexChanged="ddlLocalExpenseType_SelectedIndexChanged"
                                                         CssClass="form-control">
-                                                        <asp:ListItem Text="Select Expense Type" Value="" />
-                                                        <asp:ListItem Text="Local" Value="Local" />
-                                                        <asp:ListItem Text="Tour" Value="Tour" />
-                                                        <asp:ListItem Text="Award" Value="Award" />
+                                                        <asp:ListItem Text="Select Local Expense Type" Value="" />
+                                                        <asp:ListItem Text="Conveyance" Value="Conveyance" />
+                                                        <asp:ListItem Text="Food" Value="Food" />
+                                                        <asp:ListItem Text="Others" Value="Others" />
+                                                        <asp:ListItem Text="Miscellaneous" Value="Miscellaneous" />
                                                     </asp:DropDownList>
                                                 </div>
 
-                                                <!-- Local Expenses Panel -->
-                                                <asp:Panel ID="pnlLocalExpenses" runat="server" Visible="false"
+                                                <asp:Panel ID="pnlLocalFoodFields" runat="server" Visible="false"
                                                     CssClass="panel-fields">
                                                     <div class="col-12">
-                                                        <label for="ddlLocalExpenseType" class="form-label">Expense
-                                                            Details</label>
-                                                        <asp:DropDownList ID="ddlLocalExpenseType" runat="server"
-                                                            AutoPostBack="true"
-                                                            OnSelectedIndexChanged="ddlLocalExpenseType_SelectedIndexChanged"
-                                                            CssClass="form-control">
-                                                            <asp:ListItem Text="Select Local Expense Type" Value="" />
-                                                            <asp:ListItem Text="Conveyance" Value="Conveyance" />
-                                                            <asp:ListItem Text="Food" Value="Food" />
-                                                            <asp:ListItem Text="Others" Value="Others" />
-                                                            <asp:ListItem Text="Miscellaneous" Value="Miscellaneous" />
-                                                        </asp:DropDownList>
-                                                    </div>
-
-                                                    <asp:Panel ID="pnlLocalFoodFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <div class="col-12">
-                                                            <label for="txtLocalFoodDate"
-                                                                class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtLocalFoodDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date"
-                                                                autocomplete="off" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalFoodDate"
-                                                                runat="server" ControlToValidate="txtLocalFoodDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalFoodFromTime" class="form-label">From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalFoodFromTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time"
-                                                                AutoPostBack="true"
-                                                                OnTextChanged="txtFromTime_TextChanged"
-                                                                autocomplete="off" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalFoodFromTime"
-                                                                runat="server" ControlToValidate="txtLocalFoodFromTime"
-                                                                ErrorMessage="From time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalFoodToTime" class="form-label">To
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalFoodToTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time"
-                                                                AutoPostBack="true"
-                                                                OnTextChanged="txtToTime_TextChanged"
-                                                                autocomplete="off" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalFoodToTime"
-                                                                runat="server" ControlToValidate="txtLocalFoodToTime"
-                                                                ErrorMessage="To time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalFoodAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtLocalFoodAmount" runat="server"
-                                                                CssClass="form-control" ReadOnly="true"
-                                                                autocomplete="off" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalFoodAmount"
-                                                                runat="server" ControlToValidate="txtLocalFoodAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalFoodParticulars"
-                                                                class="form-label">Particulars</label>
-                                                            <asp:TextBox ID="txtLocalFoodParticulars" runat="server"
-                                                                CssClass="form-control" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalFoodRemarks"
-                                                                class="form-label">Remarks</label>
-                                                            <asp:TextBox ID="txtLocalFoodRemarks" runat="server"
-                                                                CssClass="form-control" />
-                                                        </div>
-
-
-                                                        <!-- New SMO No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalSMONo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalSMONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalSMONo"
-                                                                runat="server" ControlToValidate="txtLocalSMONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New SONO Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalFoodSONo" class="form-label">SO/SAP
-                                                                NO</label>
-                                                            <asp:TextBox ID="txtLocalFoodSONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalSONo" runat="server"
-                                                                ControlToValidate="txtLocalFoodSONo"
-                                                                ErrorMessage="SONO is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New Ref No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalRefNo" class="form-label">Ref No</label>
-                                                            <asp:TextBox ID="txtLocalRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalRefNo"
-                                                                runat="server" ControlToValidate="txtLocalRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                    </asp:Panel>
-                                                </asp:Panel>
-
-
-                                                <asp:Panel ID="pnlLocalMiscellaneousFields" runat="server"
-                                                    Visible="false" CssClass="panel-fields">
-                                                    <div class="col-12">
-                                                        <label for="txtLocalMiscDate" class="form-label">Date</label>
-                                                        <asp:TextBox ID="txtLocalMiscDate" runat="server"
-                                                            CssClass="form-control" TextMode="Date" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalMiscDate" runat="server"
-                                                            ControlToValidate="txtLocalMiscDate"
+                                                        <label for="txtLocalFoodDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtLocalFoodDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date"
+                                                            autocomplete="off" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalFoodDate" runat="server"
+                                                            ControlToValidate="txtLocalFoodDate"
                                                             ErrorMessage="Date is required" CssClass="text-danger" />
                                                     </div>
 
+                                                    <div class="col-12">
+                                                        <label for="txtLocalFoodFromTime" class="form-label">From
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalFoodFromTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" AutoPostBack="true"
+                                                            OnTextChanged="txtFromTime_TextChanged"
+                                                            autocomplete="off" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalFoodFromTime"
+                                                            runat="server" ControlToValidate="txtLocalFoodFromTime"
+                                                            ErrorMessage="From time is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
 
                                                     <div class="col-12">
-                                                        <label for="txtLocalMiscAmount"
+                                                        <label for="txtLocalFoodToTime" class="form-label">To
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalFoodToTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" AutoPostBack="true"
+                                                            OnTextChanged="txtToTime_TextChanged" autocomplete="off" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalFoodToTime"
+                                                            runat="server" ControlToValidate="txtLocalFoodToTime"
+                                                            ErrorMessage="To time is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalFoodAmount"
                                                             class="form-label">Amount</label>
-                                                        <asp:TextBox ID="txtLocalMiscAmount" runat="server"
-                                                            CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalMiscAmount"
-                                                            runat="server" ControlToValidate="txtLocalMiscAmount"
+                                                        <asp:TextBox ID="txtLocalFoodAmount" runat="server"
+                                                            CssClass="form-control" ReadOnly="true"
+                                                            autocomplete="off" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalFoodAmount"
+                                                            runat="server" ControlToValidate="txtLocalFoodAmount"
                                                             ErrorMessage="Amount is required" CssClass="text-danger" />
                                                     </div>
-                                                    <div class="col-12">
-                                                        <label for="txtLocalMiscItem" class="form-label">Purchased
-                                                            Item</label>
-                                                        <asp:TextBox ID="txtLocalMiscItem" runat="server"
-                                                            CssClass="form-control"
-                                                            OnTextChanged="txtLocalMiscItem_TextChanged" />
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="fileUploadLocalMiscellaneous"
-                                                            class="form-label">Upload
-                                                            Bill</label>
-                                                        <div class="custom-file-upload position-relative">
-                                                            <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="fileUploadLocalMiscellaneous"
-                                                                runat="server" style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtFileName', 'btnRemoveFile')"
-                                                                accept="image/*,application/pdf" />
-
-                                                            <!-- Fake input (click = browse OR open) -->
-                                                            <input type="text" id="txtFileName" class="form-control"
-                                                                readonly placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileUploadLocalMiscellaneous.ClientID %>', 'txtFileName')" />
-
-                                                            <!-- Remove button -->
-                                                            <button type="button" id="btnRemoveFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= fileUploadLocalMiscellaneous.ClientID %>', 'txtFileName', 'btnRemoveFile')">
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="txtLocalMiscFromTime" class="form-label">From
-                                                            Time</label>
-                                                        <asp:TextBox ID="txtLocalMiscFromTime" runat="server"
-                                                            CssClass="form-control" TextMode="Time" />
-                                                    </div>
 
                                                     <div class="col-12">
-                                                        <label for="txtLocalMiscToTime" class="form-label">To
-                                                            Time</label>
-                                                        <asp:TextBox ID="txtLocalMiscToTime" runat="server"
-                                                            CssClass="form-control" TextMode="Time" />
-                                                    </div>
-
-                                                    <div class="col-12">
-                                                        <label for="txtLocalMiscParticulars"
+                                                        <label for="txtLocalFoodParticulars"
                                                             class="form-label">Particulars</label>
-                                                        <asp:TextBox ID="txtLocalMiscParticulars" runat="server"
+                                                        <asp:TextBox ID="txtLocalFoodParticulars" runat="server"
                                                             CssClass="form-control" />
                                                     </div>
 
                                                     <div class="col-12">
-                                                        <label for="txtLocalMiscRemarks"
+                                                        <label for="txtLocalFoodRemarks"
                                                             class="form-label">Remarks</label>
-                                                        <asp:TextBox ID="txtLocalMiscRemarks" runat="server"
+                                                        <asp:TextBox ID="txtLocalFoodRemarks" runat="server"
                                                             CssClass="form-control" />
                                                     </div>
+
 
                                                     <!-- New SMO No Field -->
                                                     <div class="col-12">
-                                                        <label for="txtLocalMiscSMONo" class="form-label">SMO/WBS
+                                                        <label for="txtLocalSMONo" class="form-label">SMO/WBS
                                                             No</label>
-                                                        <asp:TextBox ID="txtLocalMiscSMONo" runat="server"
+                                                        <asp:TextBox ID="txtLocalSMONo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalMiscSMONo"
-                                                            runat="server" ControlToValidate="txtLocalMiscSMONo"
+                                                        <asp:RequiredFieldValidator ID="rfvLocalSMONo" runat="server"
+                                                            ControlToValidate="txtLocalSMONo"
                                                             ErrorMessage="SMO No is required" CssClass="text-danger" />
                                                     </div>
 
-                                                    <!-- New SO No Field -->
+                                                    <!-- New SONO Field -->
                                                     <div class="col-12">
-                                                        <label for="txtLocalMiscSONo" class="form-label">SO/SAP
-                                                            No</label>
-                                                        <asp:TextBox ID="txtLocalMiscSONo" runat="server"
+                                                        <label for="txtLocalFoodSONo" class="form-label">SO/SAP
+                                                            NO</label>
+                                                        <asp:TextBox ID="txtLocalFoodSONo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalMiscSONo" runat="server"
-                                                            ControlToValidate="txtLocalMiscSONo"
-                                                            ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalSONo" runat="server"
+                                                            ControlToValidate="txtLocalFoodSONo"
+                                                            ErrorMessage="SONO is required" CssClass="text-danger" />
                                                     </div>
 
                                                     <!-- New Ref No Field -->
                                                     <div class="col-12">
-                                                        <label for="txtLocalMiscRefNo" class="form-label">Ref No</label>
-                                                        <asp:TextBox ID="txtLocalMiscRefNo" runat="server"
+                                                        <label for="txtLocalRefNo" class="form-label">Ref No</label>
+                                                        <asp:TextBox ID="txtLocalRefNo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalMiscRefNo"
-                                                            runat="server" ControlToValidate="txtLocalMiscRefNo"
+                                                        <asp:RequiredFieldValidator ID="rfvLocalRefNo" runat="server"
+                                                            ControlToValidate="txtLocalRefNo"
                                                             ErrorMessage="Ref No is required" CssClass="text-danger" />
                                                     </div>
-
-
                                                 </asp:Panel>
+                                            </asp:Panel>
 
-                                                <asp:Panel ID="pnlLocalOthersFields" runat="server" Visible="false"
-                                                    CssClass="panel-fields">
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersDate" class="form-label">Date</label>
-                                                        <asp:TextBox ID="txtLocalOthersDate" runat="server"
-                                                            CssClass="form-control" TextMode="Date" />
 
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersAmount"
-                                                            class="form-label">Amount</label>
-                                                        <asp:TextBox ID="txtLocalOthersAmount" runat="server"
-                                                            CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalOthersAmount"
-                                                            runat="server" ControlToValidate="txtLocalOthersAmount"
-                                                            ErrorMessage="Amount is required" CssClass="text-danger" />
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="fileUploadLocalBill" class="form-label">Upload
-                                                            Bill</label>
+                                            <asp:Panel ID="pnlLocalMiscellaneousFields" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscDate" class="form-label">Date</label>
+                                                    <asp:TextBox ID="txtLocalMiscDate" runat="server"
+                                                        CssClass="form-control" TextMode="Date" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalMiscDate" runat="server"
+                                                        ControlToValidate="txtLocalMiscDate"
+                                                        ErrorMessage="Date is required" CssClass="text-danger" />
+                                                </div>
 
-                                                        <div class="custom-file-upload position-relative">
-                                                            <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="fileUploadLocalBill" runat="server"
-                                                                style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtBillFileName', 'btnRemoveBillFile')"
-                                                                accept="image/*,application/pdf" />
 
-                                                            <!-- Fake textbox (click ? browse or open) -->
-                                                            <input type="text" id="txtBillFileName" class="form-control"
-                                                                readonly placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileUploadLocalBill.ClientID %>', 'txtBillFileName')"
-                                                                style="padding-right:35px;" />
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscAmount" class="form-label">Amount</label>
+                                                    <asp:TextBox ID="txtLocalMiscAmount" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalMiscAmount" runat="server"
+                                                        ControlToValidate="txtLocalMiscAmount"
+                                                        ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscItem" class="form-label">Purchased
+                                                        Item</label>
+                                                    <asp:TextBox ID="txtLocalMiscItem" runat="server"
+                                                        CssClass="form-control"
+                                                        OnTextChanged="txtLocalMiscItem_TextChanged" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="fileUploadLocalMiscellaneous" class="form-label">Upload
+                                                        Bill</label>
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="fileUploadLocalMiscellaneous" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtFileName', 'btnRemoveFile')"
+                                                            accept="image/*,application/pdf" />
 
-                                                            <!-- Remove button inside input -->
-                                                            <button type="button" id="btnRemoveBillFile" style="position:absolute; right:6px; top:4px; display:none;
+                                                        <!-- Fake input (click = browse OR open) -->
+                                                        <input type="text" id="txtFileName" class="form-control"
+                                                            readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= fileUploadLocalMiscellaneous.ClientID %>', 'txtFileName')" />
+
+                                                        <!-- Remove button -->
+                                                        <button type="button" id="btnRemoveFile" style="position:absolute; right:6px; top:4px; display:none;
    
 border:none;background:none;
    font-size:30px; font-weight:bold; line-height:24px;
    text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= fileUploadLocalBill.ClientID %>', 'txtBillFileName', 'btnRemoveBillFile')">
-                                                            </button>
-                                                        </div>
+                                                            onclick="removeFile('<%= fileUploadLocalMiscellaneous.ClientID %>', 'txtFileName', 'btnRemoveFile')">
+                                                        </button>
                                                     </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscFromTime" class="form-label">From
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtLocalMiscFromTime" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscToTime" class="form-label">To
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtLocalMiscToTime" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscParticulars"
+                                                        class="form-label">Particulars</label>
+                                                    <asp:TextBox ID="txtLocalMiscParticulars" runat="server"
+                                                        CssClass="form-control" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscRemarks" class="form-label">Remarks</label>
+                                                    <asp:TextBox ID="txtLocalMiscRemarks" runat="server"
+                                                        CssClass="form-control" />
+                                                </div>
+
+                                                <!-- New SMO No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscSMONo" class="form-label">SMO/WBS
+                                                        No</label>
+                                                    <asp:TextBox ID="txtLocalMiscSMONo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalMiscSMONo" runat="server"
+                                                        ControlToValidate="txtLocalMiscSMONo"
+                                                        ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <!-- New SO No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscSONo" class="form-label">SO/SAP
+                                                        No</label>
+                                                    <asp:TextBox ID="txtLocalMiscSONo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalMiscSONo" runat="server"
+                                                        ControlToValidate="txtLocalMiscSONo"
+                                                        ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <!-- New Ref No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtLocalMiscRefNo" class="form-label">Ref No</label>
+                                                    <asp:TextBox ID="txtLocalMiscRefNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalMiscRefNo" runat="server"
+                                                        ControlToValidate="txtLocalMiscRefNo"
+                                                        ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                </div>
 
 
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersFromTime" class="form-label">From
-                                                            Time</label>
-                                                        <asp:TextBox ID="txtLocalOthersFromTime" runat="server"
-                                                            CssClass="form-control" TextMode="Time" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalOthersFromTime"
-                                                            runat="server" ControlToValidate="txtLocalOthersFromTime"
-                                                            ErrorMessage="From Time is required"
-                                                            CssClass="text-danger" />
+                                            </asp:Panel>
 
+                                            <asp:Panel ID="pnlLocalOthersFields" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersDate" class="form-label">Date</label>
+                                                    <asp:TextBox ID="txtLocalOthersDate" runat="server"
+                                                        CssClass="form-control" TextMode="Date" />
+
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersAmount" class="form-label">Amount</label>
+                                                    <asp:TextBox ID="txtLocalOthersAmount" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalOthersAmount" runat="server"
+                                                        ControlToValidate="txtLocalOthersAmount"
+                                                        ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="fileUploadLocalBill" class="form-label">Upload
+                                                        Bill</label>
+
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="fileUploadLocalBill" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtBillFileName', 'btnRemoveBillFile')"
+                                                            accept="image/*,application/pdf" />
+
+                                                        <!-- Fake textbox (click ? browse or open) -->
+                                                        <input type="text" id="txtBillFileName" class="form-control"
+                                                            readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= fileUploadLocalBill.ClientID %>', 'txtBillFileName')"
+                                                            style="padding-right:35px;" />
+
+                                                        <!-- Remove button inside input -->
+                                                        <button type="button" id="btnRemoveBillFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                            onclick="removeFile('<%= fileUploadLocalBill.ClientID %>', 'txtBillFileName', 'btnRemoveBillFile')">
+                                                        </button>
                                                     </div>
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersToTime" class="form-label">To
-                                                            Time</label>
-                                                        <asp:TextBox ID="txtLocalOthersToTime" runat="server"
-                                                            CssClass="form-control" TextMode="Time" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalOthersToTime"
-                                                            runat="server" ControlToValidate="txtLocalOthersToTime"
-                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                </div>
 
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersParticulars"
-                                                            class="form-label">Particulars</label>
-                                                        <asp:TextBox ID="txtLocalOthersParticulars" runat="server"
-                                                            CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalOthersParticulars"
-                                                            runat="server" ControlToValidate="txtLocalOthersParticulars"
-                                                            ErrorMessage="Particulars are required"
-                                                            CssClass="text-danger" />
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersRemarks"
-                                                            class="form-label">Remarks</label>
-                                                        <asp:TextBox ID="txtLocalOthersRemarks" runat="server"
-                                                            CssClass="form-control" TextMode="MultiLine" />
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="fileServiceReport" class="form-label">Service
-                                                            Report</label>
 
-                                                        <div class="custom-file-upload position-relative">
-                                                            <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="fileServiceReport" runat="server"
-                                                                style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtServiceReportFileName', 'btnRemoveServiceReportFile')"
-                                                                accept="image/*,application/pdf" />
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersFromTime" class="form-label">From
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtLocalOthersFromTime" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalOthersFromTime"
+                                                        runat="server" ControlToValidate="txtLocalOthersFromTime"
+                                                        ErrorMessage="From Time is required" CssClass="text-danger" />
 
-                                                            <!-- Fake textbox -->
-                                                            <input type="text" id="txtServiceReportFileName"
-                                                                class="form-control" readonly
-                                                                placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileServiceReport.ClientID %>', 'txtServiceReportFileName')" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersToTime" class="form-label">To
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtLocalOthersToTime" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalOthersToTime" runat="server"
+                                                        ControlToValidate="txtLocalOthersToTime"
+                                                        ErrorMessage="To Time is required" CssClass="text-danger" />
 
-                                                            <!-- Remove button -->
-                                                            <button type="button" id="btnRemoveServiceReportFile" style="position:absolute; right:6px; top:4px; display:none;
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersParticulars"
+                                                        class="form-label">Particulars</label>
+                                                    <asp:TextBox ID="txtLocalOthersParticulars" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalOthersParticulars"
+                                                        runat="server" ControlToValidate="txtLocalOthersParticulars"
+                                                        ErrorMessage="Particulars are required"
+                                                        CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersRemarks"
+                                                        class="form-label">Remarks</label>
+                                                    <asp:TextBox ID="txtLocalOthersRemarks" runat="server"
+                                                        CssClass="form-control" TextMode="MultiLine" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="fileServiceReport" class="form-label">Service
+                                                        Report</label>
+
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="fileServiceReport" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtServiceReportFileName', 'btnRemoveServiceReportFile')"
+                                                            accept="image/*,application/pdf" />
+
+                                                        <!-- Fake textbox -->
+                                                        <input type="text" id="txtServiceReportFileName"
+                                                            class="form-control" readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= fileServiceReport.ClientID %>', 'txtServiceReportFileName')" />
+
+                                                        <!-- Remove button -->
+                                                        <button type="button" id="btnRemoveServiceReportFile" style="position:absolute; right:6px; top:4px; display:none;
    
     border:none;background:none;
        font-size:30px; font-weight:bold; line-height:24px;
        text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= fileServiceReport.ClientID %>', 'txtServiceReportFileName', 'btnRemoveServiceReportFile')">
-                                                            </button>
-                                                        </div>
-
-
+                                                            onclick="removeFile('<%= fileServiceReport.ClientID %>', 'txtServiceReportFileName', 'btnRemoveServiceReportFile')">
+                                                        </button>
                                                     </div>
 
 
+                                                </div>
 
-                                                    <!-- New SMO No Field -->
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersSMONo" class="form-label">SMO/WBS
-                                                            No</label>
-                                                        <asp:TextBox ID="txtLocalOthersSMONo" runat="server"
-                                                            CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalOthersSMONo"
-                                                            runat="server" ControlToValidate="txtLocalOthersSMONo"
-                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
-                                                    </div>
 
-                                                    <!-- New SO No Field -->
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersSoNo" class="form-label">SO/SAP
-                                                            No</label>
-                                                        <asp:TextBox ID="txtLocalOthersSoNo" runat="server"
-                                                            CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalOthersSoNo"
-                                                            runat="server" ControlToValidate="txtLocalOthersSoNo"
-                                                            ErrorMessage="SO No is required" CssClass="text-danger" />
-                                                    </div>
 
-                                                    <!-- New Ref No Field -->
-                                                    <div class="col-12">
-                                                        <label for="txtLocalOthersRefNo" class="form-label">Ref
-                                                            No</label>
-                                                        <asp:TextBox ID="txtLocalOthersRefNo" runat="server"
-                                                            CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvLocalOthersRefNo"
-                                                            runat="server" ControlToValidate="txtLocalOthersRefNo"
-                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="othersfileUploadApproval"
-                                                            class="form-label">Approval
-                                                            Mail</label>
+                                                <!-- New SMO No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersSMONo" class="form-label">SMO/WBS
+                                                        No</label>
+                                                    <asp:TextBox ID="txtLocalOthersSMONo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalOthersSMONo" runat="server"
+                                                        ControlToValidate="txtLocalOthersSMONo"
+                                                        ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                </div>
 
-                                                        <div class="custom-file-upload position-relative">
-                                                            <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="othersfileUploadApproval" runat="server"
-                                                                style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtOthersApprovalFileName', 'btnRemoveOthersApprovalFile')"
-                                                                accept="image/*,application/pdf" />
+                                                <!-- New SO No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersSoNo" class="form-label">SO/SAP
+                                                        No</label>
+                                                    <asp:TextBox ID="txtLocalOthersSoNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalOthersSoNo" runat="server"
+                                                        ControlToValidate="txtLocalOthersSoNo"
+                                                        ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                </div>
 
-                                                            <!-- Fake textbox -->
-                                                            <input type="text" id="txtOthersApprovalFileName"
-                                                                class="form-control" readonly
-                                                                placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= othersfileUploadApproval.ClientID %>', 'txtOthersApprovalFileName')" />
+                                                <!-- New Ref No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtLocalOthersRefNo" class="form-label">Ref
+                                                        No</label>
+                                                    <asp:TextBox ID="txtLocalOthersRefNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvLocalOthersRefNo" runat="server"
+                                                        ControlToValidate="txtLocalOthersRefNo"
+                                                        ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="othersfileUploadApproval" class="form-label">Approval
+                                                        Mail</label>
 
-                                                            <!-- Remove button -->
-                                                            <button type="button" id="btnRemoveOthersApprovalFile"
-                                                                style="position:absolute; right:6px; top:4px; display:none;
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="othersfileUploadApproval" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtOthersApprovalFileName', 'btnRemoveOthersApprovalFile')"
+                                                            accept="image/*,application/pdf" />
+
+                                                        <!-- Fake textbox -->
+                                                        <input type="text" id="txtOthersApprovalFileName"
+                                                            class="form-control" readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= othersfileUploadApproval.ClientID %>', 'txtOthersApprovalFileName')" />
+
+                                                        <!-- Remove button -->
+                                                        <button type="button" id="btnRemoveOthersApprovalFile" style="position:absolute; right:6px; top:4px; display:none;
                
                 border:none;background:none;
                    font-size:30px; font-weight:bold; line-height:24px;
                    text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= othersfileUploadApproval.ClientID %>', 'txtOthersApprovalFileName', 'btnRemoveOthersApprovalFile')">
-                                                            </button>
-                                                        </div>
-
-                                                        <!-- Required validator -->
-                                                        <asp:RequiredFieldValidator ID="rfvOthersApprovalUpload"
-                                                            runat="server" ControlToValidate="othersfileUploadApproval"
-                                                            ErrorMessage="Approval Mail upload is required"
-                                                            CssClass="text-danger" />
+                                                            onclick="removeFile('<%= othersfileUploadApproval.ClientID %>', 'txtOthersApprovalFileName', 'btnRemoveOthersApprovalFile')">
+                                                        </button>
                                                     </div>
 
-                                                </asp:Panel>
+                                                    <!-- Required validator -->
+                                                    <asp:RequiredFieldValidator ID="rfvOthersApprovalUpload"
+                                                        runat="server" ControlToValidate="othersfileUploadApproval"
+                                                        ErrorMessage="Approval Mail upload is required"
+                                                        CssClass="text-danger" />
+                                                </div>
 
-                                                <asp:Panel ID="pnlLocalConvenience" runat="server" Visible="false"
+                                            </asp:Panel>
+
+                                            <asp:Panel ID="pnlLocalConvenience" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+
+                                                <div class="col-12">
+                                                    <label for="ddlLocalMode" class="form-label">Mode of
+                                                        Transport</label>
+                                                    <asp:DropDownList ID="ddlLocalMode" runat="server"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlLocalMode_SelectedIndexChanged"
+                                                        CssClass="form-control">
+                                                        <asp:ListItem Text="Select Mode of Transport" Value="" />
+                                                        <asp:ListItem Text="Bike" Value="Bike" />
+                                                        <asp:ListItem Text="Cab/Bus" Value="Cab/Bus" />
+                                                        <asp:ListItem Text="Auto" Value="Auto" />
+                                                    </asp:DropDownList>
+                                                </div>
+
+
+                                                <!-- Bike Panel -->
+                                                <asp:Panel ID="pnlBikeFields" runat="server" Visible="false"
                                                     CssClass="panel-fields">
 
                                                     <div class="col-12">
-                                                        <label for="ddlLocalMode" class="form-label">Mode of
-                                                            Transport</label>
-                                                        <asp:DropDownList ID="ddlLocalMode" runat="server"
-                                                            AutoPostBack="true"
-                                                            OnSelectedIndexChanged="ddlLocalMode_SelectedIndexChanged"
-                                                            CssClass="form-control">
-                                                            <asp:ListItem Text="Select Mode of Transport" Value="" />
-                                                            <asp:ListItem Text="Bike" Value="Bike" />
-                                                            <asp:ListItem Text="Cab/Bus" Value="Cab/Bus" />
-                                                            <asp:ListItem Text="Auto" Value="Auto" />
-                                                        </asp:DropDownList>
-                                                    </div>
-
-
-                                                    <!-- Bike Panel -->
-                                                    <asp:Panel ID="pnlBikeFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeDate"
-                                                                class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtLocalBikeDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalBikeDate"
-                                                                runat="server" ControlToValidate="txtLocalBikeDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalDistance" class="form-label">Distance
-                                                                (in
-                                                                km)</label>
-                                                            <asp:TextBox ID="txtLocalDistance" runat="server"
-                                                                CssClass="form-control" AutoPostBack="true"
-                                                                OnTextChanged="txtLocalDistance_TextChanged" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalDistance"
-                                                                runat="server" ControlToValidate="txtLocalDistance"
-                                                                ErrorMessage="Distance is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtLocalAmount" runat="server"
-                                                                CssClass="form-control" ReadOnly="true" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeFromTime" class="form-label">From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalBikeFromTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator7"
-                                                                runat="server" ControlToValidate="txtLocalBikeFromTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeToTime" class="form-label">To
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalBikeToTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator12"
-                                                                runat="server" ControlToValidate="txtLocalBikeToTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeParticular"
-                                                                class="form-label">Particulars</label>
-                                                            <asp:TextBox ID="txtLocalBikeParticular" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalBikeParticular"
-                                                                runat="server"
-                                                                ControlToValidate="txtLocalBikeParticular"
-                                                                ErrorMessage="Particular is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeRemarks"
-                                                                class="form-label">Remarks</label>
-                                                            <asp:TextBox ID="txtLocalBikeRemarks" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvtxtLocalBikeRemarks"
-                                                                runat="server" ControlToValidate="txtLocalBikeRemarks"
-                                                                ErrorMessage="Remarks is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <!-- New SMO No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeSMONo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalBikeSMONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalBikeSMONo"
-                                                                runat="server" ControlToValidate="txtLocalBikeSMONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeSONo" class="form-label">SO/SAP
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalBikeSONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator2"
-                                                                runat="server" ControlToValidate="txtLocalBikeSONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New Ref No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalBikeRefNo" class="form-label">Ref
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalBikeRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalBikeRefNo"
-                                                                runat="server" ControlToValidate="txtLocalBikeRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                    </asp:Panel>
-
-                                                    <!-- Cab Panel -->
-                                                    <asp:Panel ID="pnlCabFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <asp:Image ID="Image1" runat="server"
-                                                            ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabDate" class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtLocalCabDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalCabDate"
-                                                                runat="server" ControlToValidate="txtLocalCabDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtLocalCabAmount" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalCabAmount"
-                                                                runat="server" ControlToValidate="txtLocalCabAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="fileUploadLocalCab" class="form-label">Upload
-                                                                Bill</label>
-
-                                                            <div class="custom-file-upload position-relative">
-                                                                <!-- Hidden ASP.NET FileUpload -->
-                                                                <asp:FileUpload ID="fileUploadLocalCab" runat="server"
-                                                                    style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtCabFileName', 'btnRemoveCabFile')"
-                                                                    accept="image/*,application/pdf" />
-
-                                                                <!-- Fake textbox (click ? browse or open) -->
-                                                                <input type="text" id="txtCabFileName"
-                                                                    class="form-control" readonly
-                                                                    placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= fileUploadLocalCab.ClientID %>', 'txtCabFileName')" />
-
-                                                                <!-- Remove button -->
-                                                                <button type="button" id="btnRemoveCabFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= fileUploadLocalCab.ClientID %>', 'txtCabFileName', 'btnRemoveCabFile')">
-                                                                </button>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabFromTime" class="form-label"> From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalCabFromTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator13"
-                                                                runat="server" ControlToValidate="txtLocalCabFromTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabToTime" class="form-label"> To
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalCabToTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator14"
-                                                                runat="server" ControlToValidate="txtLocalCabToTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabParticular" class="form-label">
-                                                                Particular</label>
-                                                            <asp:TextBox ID="txtLocalCabParticular" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalCabParticular"
-                                                                runat="server" ControlToValidate="txtLocalCabParticular"
-                                                                ErrorMessage="Particular is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabRemarks" class="form-label">
-                                                                Remarks</label>
-                                                            <asp:TextBox ID="txtLocalCabRemarks" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalCabRemarks"
-                                                                runat="server" ControlToValidate="txtLocalCabRemarks"
-                                                                ErrorMessage="Remarks are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <!-- New SMO No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabSMONo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalCabSMONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalCabSMONo"
-                                                                runat="server" ControlToValidate="txtLocalCabSMONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New SMO No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabSONo" class="form-label">SO/SAP
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalCabSONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator4"
-                                                                runat="server" ControlToValidate="txtLocalCabSONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New Ref No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalCabRefNo" class="form-label">Ref
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalCabRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalCabRefNo"
-                                                                runat="server" ControlToValidate="txtLocalCabRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                    </asp:Panel>
-
-
-                                                    <!-- Auto Panel -->
-                                                    <asp:Panel ID="pnlAutoFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <asp:Image ID="txtLocalAutoImage" runat="server"
-                                                            ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoDate"
-                                                                class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtLocalAutoDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoDate"
-                                                                runat="server" ControlToValidate="txtLocalAutoDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoDistance"
-                                                                class="form-label">Distance
-                                                                (in
-                                                                km)</label>
-                                                            <asp:TextBox ID="txtLocalAutoDistance" runat="server"
-                                                                CssClass="form-control" AutoPostBack="true"
-                                                                OnTextChanged="txtLocalDistance_TextChanged" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoDistance"
-                                                                runat="server" ControlToValidate="txtLocalAutoDistance"
-                                                                ErrorMessage="Distance is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtLocalAutoAmount" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoAmount"
-                                                                runat="server" ControlToValidate="txtLocalAutoAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtfileUploadLocalAuto"
-                                                                class="form-label">Upload
-                                                                Bill</label>
-
-                                                            <div class="custom-file-upload position-relative">
-                                                                <!-- Hidden ASP.NET FileUpload -->
-                                                                <asp:FileUpload ID="txtfileUploadLocalAuto"
-                                                                    runat="server" style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtAutoFileName', 'btnRemoveAutoFile')"
-                                                                    accept="image/*,application/pdf" />
-
-                                                                <!-- Fake textbox -->
-                                                                <input type="text" id="txtAutoFileName"
-                                                                    class="form-control" readonly
-                                                                    placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= txtfileUploadLocalAuto.ClientID %>', 'txtAutoFileName')" />
-
-                                                                <!-- Remove button -->
-                                                                <button type="button" id="btnRemoveAutoFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= txtfileUploadLocalAuto.ClientID %>', 'txtAutoFileName', 'btnRemoveAutoFile')">
-                                                                </button>
-                                                            </div>
-
-
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoFromTime" class="form-label"> From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalAutoFromTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoFromTime"
-                                                                runat="server" ControlToValidate="txtLocalAutoFromTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoToTime" class="form-label"> To
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtLocalAutoToTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoToTime"
-                                                                runat="server" ControlToValidate="txtLocalAutoToTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoParticular" class="form-label">
-                                                                Particular</label>
-                                                            <asp:TextBox ID="txtLocalAutoParticular" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoParticulars"
-                                                                runat="server"
-                                                                ControlToValidate="txtLocalAutoParticular"
-                                                                ErrorMessage="Particular is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoRemarks" class="form-label">
-                                                                Remarks</label>
-                                                            <asp:TextBox ID="txtLocalAutoRemarks" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutRemarks"
-                                                                runat="server" ControlToValidate="txtLocalAutoRemarks"
-                                                                ErrorMessage="Remarks are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <!-- New SMO No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoSMONo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalAutoSMONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoSMONo"
-                                                                runat="server" ControlToValidate="txtLocalAutoSMONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <!-- New SMO No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoSONo" class="form-label">SO/SAP
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalAutoSONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator6"
-                                                                runat="server" ControlToValidate="txtLocalAutoSONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <!-- New Ref No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtLocalAutoRefNo" class="form-label">Ref
-                                                                No</label>
-                                                            <asp:TextBox ID="txtLocalAutoRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvLocalAutoRefNo"
-                                                                runat="server" ControlToValidate="txtLocalAutoRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                    </asp:Panel>
-                                                </asp:Panel>
-                                                <asp:Panel ID="pnlAwardExpenses" runat="server" Visible="false"
-                                                    CssClass="panel-fields">
-                                                    <div class="col-12">
-                                                        <label for="ddlAwardExpenseType" class="form-label">Award
-                                                            Type</label>
-                                                        <asp:DropDownList ID="ddlAwardExpenseType" runat="server"
-                                                            AutoPostBack="true"
-                                                            OnSelectedIndexChanged="ddlAwardExpenseType_SelectedIndexChanged"
-                                                            CssClass="form-control">
-                                                            <asp:ListItem Text="Select Award Type" Value="" />
-                                                            <asp:ListItem Text="Star Award" Value="Star Award" />
-                                                            <asp:ListItem Text="Spot Award" Value="Spot Award" />
-                                                        </asp:DropDownList>
-                                                    </div>
-
-                                                    <div class="col-12 mt-3">
-                                                        <label for="txtAwardAmount" class="form-label">Amount</label>
-                                                        <asp:TextBox ID="txtAwardAmount" runat="server"
-                                                            CssClass="form-control" ReadOnly="true"></asp:TextBox>
-                                                    </div>
-
-
-                                                    <div class="col-12">
-                                                        <label for="txtAwardDate" class="form-label">Award Date</label>
-                                                        <asp:TextBox ID="txtAwardDate" runat="server"
+                                                        <label for="txtLocalBikeDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtLocalBikeDate" runat="server"
                                                             CssClass="form-control" TextMode="Date" />
-                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator18"
-                                                            runat="server" ControlToValidate="txtAwardDate"
-                                                            ErrorMessage="Date is required" CssClass="text-danger" />
-                                                    </div>
-                                                </asp:Panel>
-                                                <asp:GridView ID="GridViewSpotAward" runat="server" Visible="false"
-                                                    CssClass="grid-view"></asp:GridView>
-                                                <asp:GridView ID="GridViewStarAward" runat="server" Visible="false"
-                                                    CssClass="grid-view"></asp:GridView>
-                                                <!-- Tour Expenses Panel -->
-                                                <asp:Panel ID="pnlTourExpenses" runat="server" Visible="false"
-                                                    CssClass="panel-fields">
-                                                    <div class="col-12">
-                                                        <label for="ddlTourExpenseType" class="form-label">Expense
-                                                            Details</label>
-                                                        <asp:DropDownList ID="ddlTourExpenseType" runat="server"
-                                                            AutoPostBack="true"
-                                                            OnSelectedIndexChanged="ddlTourExpenseType_SelectedIndexChanged"
-                                                            CssClass="form-control">
-                                                            <asp:ListItem Text="Select Tour Expense Type" Value="" />
-                                                            <asp:ListItem Text="Conveyance" Value="Conveyance" />
-                                                            <asp:ListItem Text="Food" Value="Food" />
-                                                            <asp:ListItem Text="Lodging" Value="Lodging" />
-                                                            <asp:ListItem Text="Miscellaneous" Value="Miscellaneous" />
-                                                        </asp:DropDownList>
-                                                    </div>
-
-                                                    <asp:Panel ID="pnlTourFoodFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodDate" class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtTourFoodDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1"
-                                                                runat="server" ControlToValidate="txtTourFoodDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="ddlTourFoodDesignation"
-                                                                class="form-label">Designation</label>
-                                                            <asp:DropDownList ID="txtTourFoodDesignation" runat="server"
-                                                                CssClass="form-control" AutoPostBack="true"
-                                                                OnSelectedIndexChanged="ddlTourFoodDesignation_SelectedIndexChanged">
-                                                                <asp:ListItem Value="">Select Designation</asp:ListItem>
-                                                                <asp:ListItem Value="FSE">FSE</asp:ListItem>
-                                                                <asp:ListItem Value="FST">FST</asp:ListItem>
-                                                            </asp:DropDownList>
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodFromTime" class="form-label">From
-                                                                Time
-                                                            </label>
-                                                            <asp:TextBox ID="txtTourFoodFromTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time"
-                                                                AutoPostBack="true"
-                                                                OnTextChanged="txtTourFoodFromTime_TextChanged" />
-                                                            <asp:RequiredFieldValidator
-                                                                ID="RequiredFieldValidatorFromTime" runat="server"
-                                                                ControlToValidate="txtTourFoodFromTime"
-                                                                ErrorMessage="From time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodToTime" class="form-label">To Time
-                                                            </label>
-                                                            <asp:TextBox ID="txtTourFoodToTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time"
-                                                                AutoPostBack="true"
-                                                                OnTextChanged="txtTourFoodToTime_TextChanged" />
-                                                            <asp:RequiredFieldValidator
-                                                                ID="RequiredFieldValidatorToTime" runat="server"
-                                                                ControlToValidate="txtTourFoodToTime"
-                                                                ErrorMessage="To time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtTourFoodAmount" runat="server"
-                                                                CssClass="form-control" ReadOnly="true" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator5"
-                                                                runat="server" ControlToValidate="txtTourFoodAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodParticulars"
-                                                                class="form-label">Particulars</label>
-                                                            <asp:TextBox ID="txtTourFoodParticulars" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator10"
-                                                                runat="server"
-                                                                ControlToValidate="txtTourFoodParticulars"
-                                                                ErrorMessage="Particulars is required"
-                                                                CssClass="text-danger" />
-
-                                                        </div>
-                                                        <div>
-                                                            <label for="txtTourFoodRemarks"
-                                                                class="form-label">Remarks</label>
-                                                            <asp:TextBox ID="txtTourFoodRemarks" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator11"
-                                                                runat="server" ControlToValidate="txtTourFoodRemarks"
-                                                                ErrorMessage="Remarks is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New SMO No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodSMONo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTourFoodSMONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourFoodSMONo"
-                                                                runat="server" ControlToValidate="txtTourFoodSMONo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodSONo" class="form-label">SO/SAP
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTourFoodSONo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourFoodSONo"
-                                                                runat="server" ControlToValidate="txtTourFoodSONo"
-                                                                ErrorMessage="SO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <!-- New Ref No Field -->
-                                                        <div class="col-12">
-                                                            <label for="txtTourFoodRefNo" class="form-label">Ref
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTourFoodRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourFoodRefNo"
-                                                                runat="server" ControlToValidate="txtTourFoodRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                    </asp:Panel>
-
-                                                    <!-- Add additional panels and ensure IDs match correctly and all required attributes are set. -->
-                                                </asp:Panel>
-
-
-
-
-
-                                                <asp:Panel ID="pnlTourMiscellaneousFields" runat="server"
-                                                    Visible="false" CssClass="panel-fields">
-                                                    <div class="col-12">
-                                                        <label for="txtTourMiscDate" class="form-label">Date</label>
-                                                        <asp:TextBox ID="txtTourMiscDate" runat="server"
-                                                            CssClass="form-control" TextMode="Date" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscDate" runat="server"
-                                                            ControlToValidate="txtTourMiscDate"
+                                                        <asp:RequiredFieldValidator ID="rfvLocalBikeDate" runat="server"
+                                                            ControlToValidate="txtLocalBikeDate"
                                                             ErrorMessage="Date is required" CssClass="text-danger" />
                                                     </div>
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscItem" class="form-label">Purchased
-                                                            Item</label>
-                                                        <asp:TextBox ID="txtTourMiscItem" runat="server"
-                                                            CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscItem" runat="server"
-                                                            ControlToValidate="txtTourMiscItem"
-                                                            ErrorMessage="Purchased item is required"
+                                                        <label for="txtLocalDistance" class="form-label">Distance
+                                                            (in
+                                                            km)</label>
+                                                        <asp:TextBox ID="txtLocalDistance" runat="server"
+                                                            CssClass="form-control" AutoPostBack="true"
+                                                            OnTextChanged="txtLocalDistance_TextChanged" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalDistance" runat="server"
+                                                            ControlToValidate="txtLocalDistance"
+                                                            ErrorMessage="Distance is required"
                                                             CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtLocalAmount" runat="server"
+                                                            CssClass="form-control" ReadOnly="true" />
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalBikeFromTime" class="form-label">From
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalBikeFromTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator7"
+                                                            runat="server" ControlToValidate="txtLocalBikeFromTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalBikeToTime" class="form-label">To
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalBikeToTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator12"
+                                                            runat="server" ControlToValidate="txtLocalBikeToTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalBikeParticular"
+                                                            class="form-label">Particulars</label>
+                                                        <asp:TextBox ID="txtLocalBikeParticular" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalBikeParticular"
+                                                            runat="server" ControlToValidate="txtLocalBikeParticular"
+                                                            ErrorMessage="Particular is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalBikeRemarks"
+                                                            class="form-label">Remarks</label>
+                                                        <asp:TextBox ID="txtLocalBikeRemarks" runat="server"
+                                                            CssClass="form-control" TextMode="MultiLine" />
+                                                        <asp:RequiredFieldValidator ID="rfvtxtLocalBikeRemarks"
+                                                            runat="server" ControlToValidate="txtLocalBikeRemarks"
+                                                            ErrorMessage="Remarks is required" CssClass="text-danger" />
+                                                    </div>
+
+
+                                                    <!-- New SMO No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalBikeSMONo" class="form-label">SMO/WBS
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalBikeSMONo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalBikeSMONo"
+                                                            runat="server" ControlToValidate="txtLocalBikeSMONo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
                                                     </div>
 
 
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscAmount" class="form-label">Amount</label>
-                                                        <asp:TextBox ID="txtTourMiscAmount" runat="server"
+                                                        <label for="txtLocalBikeSONo" class="form-label">SO/SAP
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalBikeSONo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscAmount"
-                                                            runat="server" ControlToValidate="txtTourMiscAmount"
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2"
+                                                            runat="server" ControlToValidate="txtLocalBikeSONo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                    <!-- New Ref No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalBikeRefNo" class="form-label">Ref
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalBikeRefNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalBikeRefNo"
+                                                            runat="server" ControlToValidate="txtLocalBikeRefNo"
+                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                    </div>
+                                                </asp:Panel>
+
+                                                <!-- Cab Panel -->
+                                                <asp:Panel ID="pnlCabFields" runat="server" Visible="false"
+                                                    CssClass="panel-fields">
+                                                    <asp:Image ID="Image1" runat="server"
+                                                        ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtLocalCabDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalCabDate" runat="server"
+                                                            ControlToValidate="txtLocalCabDate"
+                                                            ErrorMessage="Date is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtLocalCabAmount" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalCabAmount"
+                                                            runat="server" ControlToValidate="txtLocalCabAmount"
                                                             ErrorMessage="Amount is required" CssClass="text-danger" />
                                                     </div>
-
                                                     <div class="col-12">
-                                                        <label for="fileUploadTourMiscellaneous"
-                                                            class="form-label">Upload
+                                                        <label for="fileUploadLocalCab" class="form-label">Upload
                                                             Bill</label>
 
                                                         <div class="custom-file-upload position-relative">
                                                             <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="fileUploadTourMiscellaneous"
-                                                                runat="server" style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtTourMiscFileName', 'btnRemoveTourMiscFile')"
+                                                            <asp:FileUpload ID="fileUploadLocalCab" runat="server"
+                                                                style="display:none;"
+                                                                onchange="handleFileSelect(this, 'txtCabFileName', 'btnRemoveCabFile')"
                                                                 accept="image/*,application/pdf" />
 
-                                                            <!-- Fake textbox -->
-                                                            <input type="text" id="txtTourMiscFileName"
-                                                                class="form-control" readonly
-                                                                placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileUploadTourMiscellaneous.ClientID %>', 'txtTourMiscFileName')" />
+                                                            <!-- Fake textbox (click ? browse or open) -->
+                                                            <input type="text" id="txtCabFileName" class="form-control"
+                                                                readonly placeholder="Choose file..."
+                                                                onclick="triggerOrOpen('<%= fileUploadLocalCab.ClientID %>', 'txtCabFileName')" />
 
                                                             <!-- Remove button -->
-                                                            <button type="button" id="btnRemoveTourMiscFile" style="position:absolute; right:6px; top:4px; display:none;
+                                                            <button type="button" id="btnRemoveCabFile" style="position:absolute; right:6px; top:4px; display:none;
    
 border:none;background:none;
    font-size:30px; font-weight:bold; line-height:24px;
    text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= fileUploadTourMiscellaneous.ClientID %>', 'txtTourMiscFileName', 'btnRemoveTourMiscFile')">
+                                                                onclick="removeFile('<%= fileUploadLocalCab.ClientID %>', 'txtCabFileName', 'btnRemoveCabFile')">
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabFromTime" class="form-label"> From
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalCabFromTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator13"
+                                                            runat="server" ControlToValidate="txtLocalCabFromTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabToTime" class="form-label"> To
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalCabToTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator14"
+                                                            runat="server" ControlToValidate="txtLocalCabToTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabParticular" class="form-label">
+                                                            Particular</label>
+                                                        <asp:TextBox ID="txtLocalCabParticular" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalCabParticular"
+                                                            runat="server" ControlToValidate="txtLocalCabParticular"
+                                                            ErrorMessage="Particular is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabRemarks" class="form-label">
+                                                            Remarks</label>
+                                                        <asp:TextBox ID="txtLocalCabRemarks" runat="server"
+                                                            CssClass="form-control" TextMode="MultiLine" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalCabRemarks"
+                                                            runat="server" ControlToValidate="txtLocalCabRemarks"
+                                                            ErrorMessage="Remarks are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <!-- New SMO No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabSMONo" class="form-label">SMO/WBS
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalCabSMONo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalCabSMONo" runat="server"
+                                                            ControlToValidate="txtLocalCabSMONo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                    <!-- New SMO No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabSONo" class="form-label">SO/SAP
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalCabSONo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator4"
+                                                            runat="server" ControlToValidate="txtLocalCabSONo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                    <!-- New Ref No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalCabRefNo" class="form-label">Ref
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalCabRefNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalCabRefNo" runat="server"
+                                                            ControlToValidate="txtLocalCabRefNo"
+                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                </asp:Panel>
+
+
+                                                <!-- Auto Panel -->
+                                                <asp:Panel ID="pnlAutoFields" runat="server" Visible="false"
+                                                    CssClass="panel-fields">
+                                                    <asp:Image ID="txtLocalAutoImage" runat="server"
+                                                        ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtLocalAutoDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoDate" runat="server"
+                                                            ControlToValidate="txtLocalAutoDate"
+                                                            ErrorMessage="Date is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoDistance" class="form-label">Distance
+                                                            (in
+                                                            km)</label>
+                                                        <asp:TextBox ID="txtLocalAutoDistance" runat="server"
+                                                            CssClass="form-control" AutoPostBack="true"
+                                                            OnTextChanged="txtLocalDistance_TextChanged" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoDistance"
+                                                            runat="server" ControlToValidate="txtLocalAutoDistance"
+                                                            ErrorMessage="Distance is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+
+
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoAmount"
+                                                            class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtLocalAutoAmount" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoAmount"
+                                                            runat="server" ControlToValidate="txtLocalAutoAmount"
+                                                            ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtfileUploadLocalAuto" class="form-label">Upload
+                                                            Bill</label>
+
+                                                        <div class="custom-file-upload position-relative">
+                                                            <!-- Hidden ASP.NET FileUpload -->
+                                                            <asp:FileUpload ID="txtfileUploadLocalAuto" runat="server"
+                                                                style="display:none;"
+                                                                onchange="handleFileSelect(this, 'txtAutoFileName', 'btnRemoveAutoFile')"
+                                                                accept="image/*,application/pdf" />
+
+                                                            <!-- Fake textbox -->
+                                                            <input type="text" id="txtAutoFileName" class="form-control"
+                                                                readonly placeholder="Choose file..."
+                                                                onclick="triggerOrOpen('<%= txtfileUploadLocalAuto.ClientID %>', 'txtAutoFileName')" />
+
+                                                            <!-- Remove button -->
+                                                            <button type="button" id="btnRemoveAutoFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                                onclick="removeFile('<%= txtfileUploadLocalAuto.ClientID %>', 'txtAutoFileName', 'btnRemoveAutoFile')">
                                                             </button>
                                                         </div>
 
 
                                                     </div>
 
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoFromTime" class="form-label"> From
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalAutoFromTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoFromTime"
+                                                            runat="server" ControlToValidate="txtLocalAutoFromTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoToTime" class="form-label"> To
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtLocalAutoToTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoToTime"
+                                                            runat="server" ControlToValidate="txtLocalAutoToTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoParticular" class="form-label">
+                                                            Particular</label>
+                                                        <asp:TextBox ID="txtLocalAutoParticular" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoParticulars"
+                                                            runat="server" ControlToValidate="txtLocalAutoParticular"
+                                                            ErrorMessage="Particular is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
 
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscFromTime" class="form-label">From
+                                                        <label for="txtLocalAutoRemarks" class="form-label">
+                                                            Remarks</label>
+                                                        <asp:TextBox ID="txtLocalAutoRemarks" runat="server"
+                                                            CssClass="form-control" TextMode="MultiLine" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutRemarks"
+                                                            runat="server" ControlToValidate="txtLocalAutoRemarks"
+                                                            ErrorMessage="Remarks are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <!-- New SMO No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoSMONo" class="form-label">SMO/WBS
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalAutoSMONo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoSMONo"
+                                                            runat="server" ControlToValidate="txtLocalAutoSMONo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
+
+                                                    <!-- New SMO No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoSONo" class="form-label">SO/SAP
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalAutoSONo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator6"
+                                                            runat="server" ControlToValidate="txtLocalAutoSONo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <!-- New Ref No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtLocalAutoRefNo" class="form-label">Ref
+                                                            No</label>
+                                                        <asp:TextBox ID="txtLocalAutoRefNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvLocalAutoRefNo"
+                                                            runat="server" ControlToValidate="txtLocalAutoRefNo"
+                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                    </div>
+
+
+                                                </asp:Panel>
+                                            </asp:Panel>
+                                            <asp:Panel ID="pnlAwardExpenses" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <div class="col-12">
+                                                    <label for="ddlAwardExpenseType" class="form-label">Award
+                                                        Type</label>
+                                                    <asp:DropDownList ID="ddlAwardExpenseType" runat="server"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlAwardExpenseType_SelectedIndexChanged"
+                                                        CssClass="form-control">
+                                                        <asp:ListItem Text="Select Award Type" Value="" />
+                                                        <asp:ListItem Text="Star Award" Value="Star Award" />
+                                                        <asp:ListItem Text="Spot Award" Value="Spot Award" />
+                                                    </asp:DropDownList>
+                                                </div>
+
+                                                <div class="col-12 mt-3">
+                                                    <label for="txtAwardAmount" class="form-label">Amount</label>
+                                                    <asp:TextBox ID="txtAwardAmount" runat="server"
+                                                        CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                                </div>
+
+
+                                                <div class="col-12">
+                                                    <label for="txtAwardDate" class="form-label">Award Date</label>
+                                                    <asp:TextBox ID="txtAwardDate" runat="server"
+                                                        CssClass="form-control" TextMode="Date" />
+                                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator18"
+                                                        runat="server" ControlToValidate="txtAwardDate"
+                                                        ErrorMessage="Date is required" CssClass="text-danger" />
+                                                </div>
+                                            </asp:Panel>
+                                            <asp:GridView ID="GridViewSpotAward" runat="server" Visible="false"
+                                                CssClass="grid-view"></asp:GridView>
+                                            <asp:GridView ID="GridViewStarAward" runat="server" Visible="false"
+                                                CssClass="grid-view"></asp:GridView>
+                                            <!-- Tour Expenses Panel -->
+                                            <asp:Panel ID="pnlTourExpenses" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <div class="col-12">
+                                                    <label for="ddlTourExpenseType" class="form-label">Expense
+                                                        Details</label>
+                                                    <asp:DropDownList ID="ddlTourExpenseType" runat="server"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlTourExpenseType_SelectedIndexChanged"
+                                                        CssClass="form-control">
+                                                        <asp:ListItem Text="Select Tour Expense Type" Value="" />
+                                                        <asp:ListItem Text="Conveyance" Value="Conveyance" />
+                                                        <asp:ListItem Text="Food" Value="Food" />
+                                                        <asp:ListItem Text="Lodging" Value="Lodging" />
+                                                        <asp:ListItem Text="Miscellaneous" Value="Miscellaneous" />
+                                                    </asp:DropDownList>
+                                                </div>
+
+                                                <asp:Panel ID="pnlTourFoodFields" runat="server" Visible="false"
+                                                    CssClass="panel-fields">
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtTourFoodDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1"
+                                                            runat="server" ControlToValidate="txtTourFoodDate"
+                                                            ErrorMessage="Date is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="ddlTourFoodDesignation"
+                                                            class="form-label">Designation</label>
+                                                        <asp:DropDownList ID="txtTourFoodDesignation" runat="server"
+                                                            CssClass="form-control" AutoPostBack="true"
+                                                            OnSelectedIndexChanged="ddlTourFoodDesignation_SelectedIndexChanged">
+                                                            <asp:ListItem Value="">Select Designation</asp:ListItem>
+                                                            <asp:ListItem Value="FSE">FSE</asp:ListItem>
+                                                            <asp:ListItem Value="FST">FST</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodFromTime" class="form-label">From
+                                                            Time
+                                                        </label>
+                                                        <asp:TextBox ID="txtTourFoodFromTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" AutoPostBack="true"
+                                                            OnTextChanged="txtTourFoodFromTime_TextChanged" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidatorFromTime"
+                                                            runat="server" ControlToValidate="txtTourFoodFromTime"
+                                                            ErrorMessage="From time is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodToTime" class="form-label">To Time
+                                                        </label>
+                                                        <asp:TextBox ID="txtTourFoodToTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" AutoPostBack="true"
+                                                            OnTextChanged="txtTourFoodToTime_TextChanged" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidatorToTime"
+                                                            runat="server" ControlToValidate="txtTourFoodToTime"
+                                                            ErrorMessage="To time is required" CssClass="text-danger" />
+                                                    </div>
+
+
+
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtTourFoodAmount" runat="server"
+                                                            CssClass="form-control" ReadOnly="true" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator5"
+                                                            runat="server" ControlToValidate="txtTourFoodAmount"
+                                                            ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                    </div>
+
+
+
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodParticulars"
+                                                            class="form-label">Particulars</label>
+                                                        <asp:TextBox ID="txtTourFoodParticulars" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator10"
+                                                            runat="server" ControlToValidate="txtTourFoodParticulars"
+                                                            ErrorMessage="Particulars is required"
+                                                            CssClass="text-danger" />
+
+                                                    </div>
+                                                    <div>
+                                                        <label for="txtTourFoodRemarks"
+                                                            class="form-label">Remarks</label>
+                                                        <asp:TextBox ID="txtTourFoodRemarks" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator11"
+                                                            runat="server" ControlToValidate="txtTourFoodRemarks"
+                                                            ErrorMessage="Remarks is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                    <!-- New SMO No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodSMONo" class="form-label">SMO/WBS
+                                                            No</label>
+                                                        <asp:TextBox ID="txtTourFoodSMONo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvTourFoodSMONo" runat="server"
+                                                            ControlToValidate="txtTourFoodSMONo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodSONo" class="form-label">SO/SAP
+                                                            No</label>
+                                                        <asp:TextBox ID="txtTourFoodSONo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvTourFoodSONo" runat="server"
+                                                            ControlToValidate="txtTourFoodSONo"
+                                                            ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                    </div>
+
+
+                                                    <!-- New Ref No Field -->
+                                                    <div class="col-12">
+                                                        <label for="txtTourFoodRefNo" class="form-label">Ref
+                                                            No</label>
+                                                        <asp:TextBox ID="txtTourFoodRefNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvTourFoodRefNo" runat="server"
+                                                            ControlToValidate="txtTourFoodRefNo"
+                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                </asp:Panel>
+
+                                                <!-- Add additional panels and ensure IDs match correctly and all required attributes are set. -->
+                                            </asp:Panel>
+
+
+
+
+
+                                            <asp:Panel ID="pnlTourMiscellaneousFields" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscDate" class="form-label">Date</label>
+                                                    <asp:TextBox ID="txtTourMiscDate" runat="server"
+                                                        CssClass="form-control" TextMode="Date" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscDate" runat="server"
+                                                        ControlToValidate="txtTourMiscDate"
+                                                        ErrorMessage="Date is required" CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscItem" class="form-label">Purchased
+                                                        Item</label>
+                                                    <asp:TextBox ID="txtTourMiscItem" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscItem" runat="server"
+                                                        ControlToValidate="txtTourMiscItem"
+                                                        ErrorMessage="Purchased item is required"
+                                                        CssClass="text-danger" />
+                                                </div>
+
+
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscAmount" class="form-label">Amount</label>
+                                                    <asp:TextBox ID="txtTourMiscAmount" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscAmount" runat="server"
+                                                        ControlToValidate="txtTourMiscAmount"
+                                                        ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="fileUploadTourMiscellaneous" class="form-label">Upload
+                                                        Bill</label>
+
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="fileUploadTourMiscellaneous" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtTourMiscFileName', 'btnRemoveTourMiscFile')"
+                                                            accept="image/*,application/pdf" />
+
+                                                        <!-- Fake textbox -->
+                                                        <input type="text" id="txtTourMiscFileName" class="form-control"
+                                                            readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= fileUploadTourMiscellaneous.ClientID %>', 'txtTourMiscFileName')" />
+
+                                                        <!-- Remove button -->
+                                                        <button type="button" id="btnRemoveTourMiscFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                            onclick="removeFile('<%= fileUploadTourMiscellaneous.ClientID %>', 'txtTourMiscFileName', 'btnRemoveTourMiscFile')">
+                                                        </button>
+                                                    </div>
+
+
+                                                </div>
+
+
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscFromTime" class="form-label">From
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtTourMiscFromTime" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscFromTime" runat="server"
+                                                        ControlToValidate="txtTourMiscFromTime"
+                                                        ErrorMessage="From Time is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscToTime" class="form-label">To
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtTourMiscToTime" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscToTime" runat="server"
+                                                        ControlToValidate="txtTourMiscToTime"
+                                                        ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscParticulars"
+                                                        class="form-label">Particulars</label>
+                                                    <asp:TextBox ID="txtTourMiscParticulars" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscParticulars"
+                                                        runat="server" ControlToValidate="txtTourMiscParticulars"
+                                                        ErrorMessage="Particulars are required"
+                                                        CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscRemarks" class="form-label">Remarks</label>
+                                                    <asp:TextBox ID="txtTourMiscRemarks" runat="server"
+                                                        CssClass="form-control" TextMode="MultiLine" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscRemarks" runat="server"
+                                                        ControlToValidate="txtTourMiscRemarks"
+                                                        ErrorMessage="Remarks are required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscSmoNo" class="form-label">SMO/WBS
+                                                        No</label>
+                                                    <asp:TextBox ID="txtTourMiscSmoNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscSmoNo" runat="server"
+                                                        ControlToValidate="txtTourMiscSmoNo"
+                                                        ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <!-- New SO No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscSoNo" class="form-label">SO/SAP
+                                                        No</label>
+                                                    <asp:TextBox ID="txtTourMiscSoNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscSoNo" runat="server"
+                                                        ControlToValidate="txtTourMiscSoNo"
+                                                        ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtTourMiscRefNo" class="form-label">Ref No</label>
+                                                    <asp:TextBox ID="txtTourMiscRefNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourMiscRefNo" runat="server"
+                                                        ControlToValidate="txtTourMiscRefNo"
+                                                        ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                </div>
+
+
+                                            </asp:Panel>
+
+                                            <asp:Panel ID="pnlTourOthersFields" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <div class="col-12">
+                                                    <label for="txtTourOthersDate" class="form-label">Date</label>
+                                                    <asp:TextBox ID="txtTourOthersDate" runat="server"
+                                                        CssClass="form-control" TextMode="Date" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourOthersDate" runat="server"
+                                                        ControlToValidate="txtTourOthersDate"
+                                                        ErrorMessage="Date is required" CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="txtTourOthersAmount" class="form-label">Amount</label>
+                                                    <asp:TextBox ID="txtTourOthersAmount" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourOthersAmount" runat="server"
+                                                        ControlToValidate="txtTourOthersAmount"
+                                                        ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="fileUploadTourOthers" class="form-label">Upload
+                                                        Bill</label>
+
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="fileUploadTourOthers" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtTourOthersFileName', 'btnRemoveTourOthersFile')"
+                                                            accept="image/*,application/pdf" />
+
+                                                        <!-- Fake textbox -->
+                                                        <input type="text" id="txtTourOthersFileName"
+                                                            class="form-control" readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= fileUploadTourOthers.ClientID %>', 'txtTourOthersFileName')" />
+
+                                                        <!-- Remove button -->
+                                                        <button type="button" id="btnRemoveTourOthersFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                            onclick="removeFile('<%= fileUploadTourOthers.ClientID %>', 'txtTourOthersFileName', 'btnRemoveTourOthersFile')">
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="col-12">
+                                                    <label for="txtFromTimeTourOthers" class="form-label">From
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtFromTimeTourOthers" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                    <asp:RequiredFieldValidator ID="rfvFromTimeTourOthers"
+                                                        runat="server" ControlToValidate="txtFromTimeTourOthers"
+                                                        ErrorMessage="From Time is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtToTimeTourOthers" class="form-label">To
+                                                        Time</label>
+                                                    <asp:TextBox ID="txtToTimeTourOthers" runat="server"
+                                                        CssClass="form-control" TextMode="Time" />
+                                                    <asp:RequiredFieldValidator ID="rfvToTimeTourOthers" runat="server"
+                                                        ControlToValidate="txtToTimeTourOthers"
+                                                        ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtParticularsTourOthers"
+                                                        class="form-label">Particulars</label>
+                                                    <asp:TextBox ID="txtParticularsTourOthers" runat="server"
+                                                        CssClass="form-control" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtRemarksTourOthers" class="form-label">Remarks</label>
+                                                    <asp:TextBox ID="txtRemarksTourOthers" runat="server"
+                                                        CssClass="form-control" TextMode="MultiLine" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="fileUploadServiceReport" class="form-label">Service
+                                                        Report</label>
+
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="fileUploadServiceReport" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtServiceReportFileName', 'btnRemoveServiceReportFile')"
+                                                            accept="image/*,application/pdf" />
+
+                                                        <!-- Fake textbox -->
+                                                        <input type="text" id="txtServiceReportFileName"
+                                                            class="form-control" readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= fileUploadServiceReport.ClientID %>', 'txtServiceReportFileName')" />
+
+                                                        <!-- Remove button -->
+                                                        <button type="button" id="btnRemoveServiceReportFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+    border:none;background:none;
+       font-size:30px; font-weight:bold; line-height:24px;
+       text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                            onclick="removeFile('<%= fileUploadServiceReport.ClientID %>', 'txtServiceReportFileName', 'btnRemoveServiceReportFile')">
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-12">
+                                                    <label for="txtTourOthersSmoNo" class="form-label">SMO/WBS
+                                                        No</label>
+                                                    <asp:TextBox ID="txtTourOthersSmoNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourOthersSmoNo" runat="server"
+                                                        ControlToValidate="txtTourOthersSmoNo"
+                                                        ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <!-- New SO No Field -->
+                                                <div class="col-12">
+                                                    <label for="txtTourOthersSoNo" class="form-label">SO/SAP
+                                                        No</label>
+                                                    <asp:TextBox ID="txtTourOthersSoNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourOthersSoNo" runat="server"
+                                                        ControlToValidate="txtTourOthersSoNo"
+                                                        ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label for="txtTourOthersRefNo" class="form-label">Ref
+                                                        No</label>
+                                                    <asp:TextBox ID="txtTourOthersRefNo" runat="server"
+                                                        CssClass="form-control" />
+                                                    <asp:RequiredFieldValidator ID="rfvTourOthersRefNo" runat="server"
+                                                        ControlToValidate="txtTourOthersRefNo"
+                                                        ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="fileUploadTourApproval" class="form-label">Approval
+                                                        Mail</label>
+
+                                                    <div class="custom-file-upload position-relative">
+                                                        <!-- Hidden ASP.NET FileUpload -->
+                                                        <asp:FileUpload ID="fileUploadTourApproval" runat="server"
+                                                            style="display:none;"
+                                                            onchange="handleFileSelect(this, 'txtTourApprovalFileName', 'btnRemoveTourApprovalFile')"
+                                                            accept="image/*,application/pdf" />
+
+                                                        <!-- Fake textbox -->
+                                                        <input type="text" id="txtTourApprovalFileName"
+                                                            class="form-control" readonly placeholder="Choose file..."
+                                                            onclick="triggerOrOpen('<%= fileUploadTourApproval.ClientID %>', 'txtTourApprovalFileName')" />
+
+                                                        <!-- Remove button -->
+                                                        <button type="button" id="btnRemoveTourApprovalFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+    border:none;background:none;
+       font-size:30px; font-weight:bold; line-height:24px;
+       text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                            onclick="removeFile('<%= fileUploadTourApproval.ClientID %>', 'txtTourApprovalFileName', 'btnRemoveTourApprovalFile')">
+                                                        </button>
+                                                    </div>
+
+
+                                            </asp:Panel>
+
+
+                                            <asp:Panel ID="pnlTourConvenience" runat="server" Visible="false"
+                                                CssClass="panel-fields">
+                                                <asp:Image ID="imgConveyance" runat="server"
+                                                    ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
+
+                                                <div class="col-12">
+                                                    <label for="ddlTourTransportMode" class="form-label">Mode of
+                                                        Transport</label>
+                                                    <asp:DropDownList ID="ddlTourTransportMode" runat="server"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlTourTransportMode_SelectedIndexChanged"
+                                                        CssClass="form-control">
+                                                        <asp:ListItem Text="Select Transport Mode" Value="" />
+                                                        <asp:ListItem Text="Flight" Value="Flight" />
+                                                        <asp:ListItem Text="Bus" Value="Bus" />
+                                                        <asp:ListItem Text="Train" Value="Train" />
+                                                        <asp:ListItem Text="Cab" Value="Cab" />
+                                                        <asp:ListItem Text="Auto" Value="Auto" />
+
+                                                    </asp:DropDownList>
+                                                </div>
+
+                                                <!-- Flight Panel -->
+                                                <asp:Panel ID="pnlFlightFields" runat="server" Visible="false"
+                                                    CssClass="panel-fields">
+                                                    <div class="col-12">
+                                                        <label for="txtFlightDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtFlightDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date" />
+                                                        <asp:RequiredFieldValidator ID="rfvFlightDate" runat="server"
+                                                            ControlToValidate="txtFlightDate"
+                                                            ErrorMessage="Date is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtFlightAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtFlightAmount" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvFlightAmount" runat="server"
+                                                            ControlToValidate="txtFlightAmount"
+                                                            ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="fileUploadFlight" class="form-label">Upload
+                                                            Bill</label>
+
+                                                        <div class="custom-file-upload position-relative">
+                                                            <!-- Hidden ASP.NET FileUpload -->
+                                                            <asp:FileUpload ID="fileUploadFlight" runat="server"
+                                                                style="display:none;"
+                                                                onchange="handleFileSelect(this, 'txtFlightFileName', 'btnRemoveFlightFile')"
+                                                                accept="image/*,application/pdf" />
+
+                                                            <!-- Fake textbox -->
+                                                            <input type="text" id="txtFlightFileName"
+                                                                class="form-control" readonly
+                                                                placeholder="Choose file..."
+                                                                onclick="triggerOrOpen('<%= fileUploadFlight.ClientID %>', 'txtFlightFileName')" />
+
+                                                            <!-- Remove button -->
+                                                            <button type="button" id="btnRemoveFlightFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                                onclick="removeFile('<%= fileUploadFlight.ClientID %>', 'txtFlightFileName', 'btnRemoveFlightFile')">
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <!-- New fields for From Time, To Time, Particulars, and Remarks -->
+                                                    <div class="col-12">
+                                                        <label for="txtFlightFromTime" class="form-label">From
                                                             Time</label>
-                                                        <asp:TextBox ID="txtTourMiscFromTime" runat="server"
+                                                        <asp:TextBox ID="txtFlightFromTime" runat="server"
                                                             CssClass="form-control" TextMode="Time" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscFromTime"
-                                                            runat="server" ControlToValidate="txtTourMiscFromTime"
+                                                        <asp:RequiredFieldValidator ID="rfvFromTime" runat="server"
+                                                            ControlToValidate="txtFlightFromTime"
                                                             ErrorMessage="From Time is required"
                                                             CssClass="text-danger" />
                                                     </div>
-
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscToTime" class="form-label">To
+                                                        <label for="txtFlightToTime" class="form-label">To
                                                             Time</label>
-                                                        <asp:TextBox ID="txtTourMiscToTime" runat="server"
+                                                        <asp:TextBox ID="txtFlightToTime" runat="server"
                                                             CssClass="form-control" TextMode="Time" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscToTime"
-                                                            runat="server" ControlToValidate="txtTourMiscToTime"
+                                                        <asp:RequiredFieldValidator ID="rfvToTime" runat="server"
+                                                            ControlToValidate="txtFlightToTime"
                                                             ErrorMessage="To Time is required" CssClass="text-danger" />
                                                     </div>
-
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscParticulars"
+                                                        <label for="txtFlightParticulars"
                                                             class="form-label">Particulars</label>
-                                                        <asp:TextBox ID="txtTourMiscParticulars" runat="server"
+                                                        <asp:TextBox ID="txtFlightParticulars" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscParticulars"
-                                                            runat="server" ControlToValidate="txtTourMiscParticulars"
+                                                        <asp:RequiredFieldValidator ID="rfvParticulars" runat="server"
+                                                            ControlToValidate="txtFlightParticulars"
                                                             ErrorMessage="Particulars are required"
                                                             CssClass="text-danger" />
                                                     </div>
-
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscRemarks"
-                                                            class="form-label">Remarks</label>
-                                                        <asp:TextBox ID="txtTourMiscRemarks" runat="server"
+                                                        <label for="txtFlightRemarks" class="form-label">Remarks</label>
+                                                        <asp:TextBox ID="txtFlightRemarks" runat="server"
                                                             CssClass="form-control" TextMode="MultiLine" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscRemarks"
-                                                            runat="server" ControlToValidate="txtTourMiscRemarks"
+                                                        <asp:RequiredFieldValidator ID="rfvRemarks" runat="server"
+                                                            ControlToValidate="txtFlightRemarks"
                                                             ErrorMessage="Remarks are required"
                                                             CssClass="text-danger" />
                                                     </div>
 
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscSmoNo" class="form-label">SMO/WBS
+                                                        <label for="txtFlightSmoNo" class="form-label">SMO/WBS
                                                             No</label>
-                                                        <asp:TextBox ID="txtTourMiscSmoNo" runat="server"
+                                                        <asp:TextBox ID="txtFlightSmoNo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscSmoNo" runat="server"
-                                                            ControlToValidate="txtTourMiscSmoNo"
+                                                        <asp:RequiredFieldValidator ID="rfvFlightSmoNo" runat="server"
+                                                            ControlToValidate="txtFlightSmoNo"
                                                             ErrorMessage="SMO No is required" CssClass="text-danger" />
                                                     </div>
 
-                                                    <!-- New SO No Field -->
+
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscSoNo" class="form-label">SO/SAP
+                                                        <label for="txtFlightSoNo" class="form-label">SO/SAP
                                                             No</label>
-                                                        <asp:TextBox ID="txtTourMiscSoNo" runat="server"
+                                                        <asp:TextBox ID="txtFlightSoNo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscSoNo" runat="server"
-                                                            ControlToValidate="txtTourMiscSoNo"
-                                                            ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator8"
+                                                            runat="server" ControlToValidate="txtFlightSoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
                                                     </div>
 
                                                     <div class="col-12">
-                                                        <label for="txtTourMiscRefNo" class="form-label">Ref No</label>
-                                                        <asp:TextBox ID="txtTourMiscRefNo" runat="server"
+                                                        <label for="txtFlightRefNo" class="form-label">Ref
+                                                            No</label>
+                                                        <asp:TextBox ID="txtFlightRefNo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourMiscRefNo" runat="server"
-                                                            ControlToValidate="txtTourMiscRefNo"
+                                                        <asp:RequiredFieldValidator ID="rfvFlightRefNo" runat="server"
+                                                            ControlToValidate="txtFlightRefNo"
                                                             ErrorMessage="Ref No is required" CssClass="text-danger" />
                                                     </div>
-
-
                                                 </asp:Panel>
 
-                                                <asp:Panel ID="pnlTourOthersFields" runat="server" Visible="false"
+
+                                                <!-- Bus Panel -->
+                                                <asp:Panel ID="pnlBusFields" runat="server" Visible="false"
                                                     CssClass="panel-fields">
                                                     <div class="col-12">
-                                                        <label for="txtTourOthersDate" class="form-label">Date</label>
-                                                        <asp:TextBox ID="txtTourOthersDate" runat="server"
+                                                        <label for="txtBusDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtBusDate" runat="server"
                                                             CssClass="form-control" TextMode="Date" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourOthersDate"
-                                                            runat="server" ControlToValidate="txtTourOthersDate"
+                                                        <asp:RequiredFieldValidator ID="rfvBusDate" runat="server"
+                                                            ControlToValidate="txtBusDate"
                                                             ErrorMessage="Date is required" CssClass="text-danger" />
                                                     </div>
                                                     <div class="col-12">
-                                                        <label for="txtTourOthersAmount"
-                                                            class="form-label">Amount</label>
-                                                        <asp:TextBox ID="txtTourOthersAmount" runat="server"
+                                                        <label for="txtBusAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtBusAmount" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourOthersAmount"
-                                                            runat="server" ControlToValidate="txtTourOthersAmount"
+                                                        <asp:RequiredFieldValidator ID="rfvBusAmount" runat="server"
+                                                            ControlToValidate="txtBusAmount"
                                                             ErrorMessage="Amount is required" CssClass="text-danger" />
                                                     </div>
                                                     <div class="col-12">
-                                                        <label for="fileUploadTourOthers" class="form-label">Upload
+                                                        <label for="fileUploadBus" class="form-label">Upload
                                                             Bill</label>
 
                                                         <div class="custom-file-upload position-relative">
                                                             <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="fileUploadTourOthers" runat="server"
+                                                            <asp:FileUpload ID="fileUploadBus" runat="server"
                                                                 style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtTourOthersFileName', 'btnRemoveTourOthersFile')"
+                                                                onchange="handleFileSelect(this, 'txtBusFileName', 'btnRemoveBusFile')"
                                                                 accept="image/*,application/pdf" />
 
                                                             <!-- Fake textbox -->
-                                                            <input type="text" id="txtTourOthersFileName"
-                                                                class="form-control" readonly
-                                                                placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileUploadTourOthers.ClientID %>', 'txtTourOthersFileName')" />
+                                                            <input type="text" id="txtBusFileName" class="form-control"
+                                                                readonly placeholder="Choose file..."
+                                                                onclick="triggerOrOpen('<%= fileUploadBus.ClientID %>', 'txtBusFileName')" />
 
                                                             <!-- Remove button -->
-                                                            <button type="button" id="btnRemoveTourOthersFile" style="position:absolute; right:6px; top:4px; display:none;
+                                                            <button type="button" id="btnRemoveBusFile" style="position:absolute; right:6px; top:4px; display:none;
    
 border:none;background:none;
    font-size:30px; font-weight:bold; line-height:24px;
    text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= fileUploadTourOthers.ClientID %>', 'txtTourOthersFileName', 'btnRemoveTourOthersFile')">
+                                                                onclick="removeFile('<%= fileUploadBus.ClientID %>', 'txtBusFileName', 'btnRemoveBusFile')">
                                                             </button>
                                                         </div>
 
                                                     </div>
 
+                                                    <!-- New fields for From Time, To Time, Particulars, and Remarks -->
+                                                    <div class="col-12">
+                                                        <label for="txtFromTimeBus" class="form-label">From
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtFromTimeBus" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvFromTimeBus" runat="server"
+                                                            ControlToValidate="txtFromTimeBus"
+                                                            ErrorMessage="From Time is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtToTimeBus" class="form-label">To Time</label>
+                                                        <asp:TextBox ID="txtToTimeBus" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvToTimeBus" runat="server"
+                                                            ControlToValidate="txtToTimeBus"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtParticularsBus"
+                                                            class="form-label">Particulars</label>
+                                                        <asp:TextBox ID="txtParticularsBus" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvParticularsBus"
+                                                            runat="server" ControlToValidate="txtParticularsBus"
+                                                            ErrorMessage="Particulars are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtRemarksBus" class="form-label">Remarks</label>
+                                                        <asp:TextBox ID="txtRemarksBus" runat="server"
+                                                            CssClass="form-control" TextMode="MultiLine" />
+                                                        <asp:RequiredFieldValidator ID="rfvRemarksBus" runat="server"
+                                                            ControlToValidate="txtRemarksBus"
+                                                            ErrorMessage="Remarks are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+
+                                                    <!-- New fields for SMO No and Ref No -->
+                                                    <div class="col-12">
+                                                        <label for="txtBusSmoNo" class="form-label">SMO/WBS
+                                                            No</label>
+                                                        <asp:TextBox ID="txtBusSmoNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvBusSmoNo" runat="server"
+                                                            ControlToValidate="txtBusSmoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
 
                                                     <div class="col-12">
-                                                        <label for="txtFromTimeTourOthers" class="form-label">From
+                                                        <label for="txtBusSoNo" class="form-label">SO/SAP No</label>
+                                                        <asp:TextBox ID="txtBusSoNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator9"
+                                                            runat="server" ControlToValidate="txtBusSoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtBusRefNo" class="form-label">Ref No</label>
+                                                        <asp:TextBox ID="txtBusRefNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvBusRefNo" runat="server"
+                                                            ControlToValidate="txtBusRefNo"
+                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                    </div>
+                                                </asp:Panel>
+
+
+                                                <!-- Train Panel -->
+                                                <asp:Panel ID="pnlTrainFields" runat="server" Visible="false"
+                                                    CssClass="panel-fields">
+                                                    <div class="col-12">
+                                                        <label for="txtTrainDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtTrainDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date" />
+                                                        <asp:RequiredFieldValidator ID="rfvTrainDate" runat="server"
+                                                            ControlToValidate="txtTrainDate"
+                                                            ErrorMessage="Date is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtTrainAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtTrainAmount" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvTrainAmount" runat="server"
+                                                            ControlToValidate="txtTrainAmount"
+                                                            ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="fileUploadTrain" class="form-label">Upload
+                                                            Bill</label>
+
+                                                        <div class="custom-file-upload position-relative">
+                                                            <!-- Hidden ASP.NET FileUpload -->
+                                                            <asp:FileUpload ID="fileUploadTrain" runat="server"
+                                                                style="display:none;"
+                                                                onchange="handleFileSelect(this, 'txtTrainFileName', 'btnRemoveTrainFile')"
+                                                                accept="image/*,application/pdf" />
+
+                                                            <!-- Fake textbox -->
+                                                            <input type="text" id="txtTrainFileName"
+                                                                class="form-control" readonly
+                                                                placeholder="Choose file..."
+                                                                onclick="triggerOrOpen('<%= fileUploadTrain.ClientID %>', 'txtTrainFileName')" />
+
+                                                            <!-- Remove button -->
+                                                            <button type="button" id="btnRemoveTrainFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                                onclick="removeFile('<%= fileUploadTrain.ClientID %>', 'txtTrainFileName', 'btnRemoveTrainFile')">
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- New fields for From Time, To Time, Particulars, and Remarks -->
+                                                    <div class="col-12">
+                                                        <label for="txtFromTimeTrain" class="form-label">From
                                                             Time</label>
-                                                        <asp:TextBox ID="txtFromTimeTourOthers" runat="server"
+                                                        <asp:TextBox ID="txtFromTimeTrain" runat="server"
                                                             CssClass="form-control" TextMode="Time" />
-                                                        <asp:RequiredFieldValidator ID="rfvFromTimeTourOthers"
-                                                            runat="server" ControlToValidate="txtFromTimeTourOthers"
+                                                        <asp:RequiredFieldValidator ID="rfvFromTimeTrain" runat="server"
+                                                            ControlToValidate="txtFromTimeTrain"
                                                             ErrorMessage="From Time is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtToTimeTrain" class="form-label">To
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtToTimeTrain" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvToTimeTrain" runat="server"
+                                                            ControlToValidate="txtToTimeTrain"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtParticularsTrain"
+                                                            class="form-label">Particulars</label>
+                                                        <asp:TextBox ID="txtParticularsTrain" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvParticularsTrain"
+                                                            runat="server" ControlToValidate="txtParticularsTrain"
+                                                            ErrorMessage="Particulars are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtRemarksTrain" class="form-label">Remarks</label>
+                                                        <asp:TextBox ID="txtRemarksTrain" runat="server"
+                                                            CssClass="form-control" TextMode="MultiLine" />
+                                                        <asp:RequiredFieldValidator ID="rfvRemarksTrain" runat="server"
+                                                            ControlToValidate="txtRemarksTrain"
+                                                            ErrorMessage="Remarks are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+
+                                                    <!-- New fields for SMO No and Ref No -->
+                                                    <div class="col-12">
+                                                        <label for="txtTrainSmoNo" class="form-label">SMO/WBS
+                                                            No</label>
+                                                        <asp:TextBox ID="txtTrainSmoNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvTrainSmoNo" runat="server"
+                                                            ControlToValidate="txtTrainSmoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
+
+                                                    <div class="col-12">
+                                                        <label for="txtTrainSoNo" class="form-label">SO/SAP
+                                                            No</label>
+                                                        <asp:TextBox ID="txtTrainSoNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator15"
+                                                            runat="server" ControlToValidate="txtTrainSoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtTrainRefNo" class="form-label">Ref No</label>
+                                                        <asp:TextBox ID="txtTrainRefNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvTrainRefNo" runat="server"
+                                                            ControlToValidate="txtTrainRefNo"
+                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                    </div>
+                                                </asp:Panel>
+                                                <!-- Cab Panel -->
+                                                <asp:Panel ID="pnlcabTourFields" runat="server" Visible="false"
+                                                    CssClass="panel-fields">
+                                                    <div class="col-12">
+                                                        <label for="txtCabDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtCabDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date" />
+                                                        <asp:RequiredFieldValidator ID="rfvCabDate" runat="server"
+                                                            ControlToValidate="txtCabDate"
+                                                            ErrorMessage="Date is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtCabAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtCabAmount" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvCabAmount" runat="server"
+                                                            ControlToValidate="txtCabAmount"
+                                                            ErrorMessage="Amount is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="fileUploadCab" class="form-label">Upload
+                                                            Bill</label>
+
+                                                        <div class="custom-file-upload position-relative">
+                                                            <!-- Hidden ASP.NET FileUpload -->
+                                                            <asp:FileUpload ID="fileUploadCab" runat="server"
+                                                                style="display:none;"
+                                                                onchange="handleFileSelect(this, 'txtCabFileName', 'btnRemoveCabFile')"
+                                                                accept="image/*,application/pdf" />
+
+                                                            <!-- Fake textbox -->
+                                                            <input type="text" id="txtCabFileName" class="form-control"
+                                                                readonly placeholder="Choose file..."
+                                                                onclick="triggerOrOpen('<%= fileUploadCab.ClientID %>', 'txtCabFileName')" />
+
+                                                            <!-- Remove button -->
+                                                            <button type="button" id="btnRemoveCabFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                                onclick="removeFile('<%= fileUploadCab.ClientID %>', 'txtCabFileName', 'btnRemoveCabFile')">
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- New fields for From Time, To Time, Particulars, and Remarks -->
+                                                    <div class="col-12">
+                                                        <label for="txtFromTimeCab" class="form-label">From
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtFromTimeCab" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvFromTimeCab" runat="server"
+                                                            ControlToValidate="txtFromTimeCab"
+                                                            ErrorMessage="From Time is required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtToTimeCab" class="form-label">To Time</label>
+                                                        <asp:TextBox ID="txtToTimeCab" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvToTimeCab" runat="server"
+                                                            ControlToValidate="txtToTimeCab"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtParticularsCab"
+                                                            class="form-label">Particulars</label>
+                                                        <asp:TextBox ID="txtParticularsCab" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvParticularsCab"
+                                                            runat="server" ControlToValidate="txtParticularsCab"
+                                                            ErrorMessage="Particulars are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtRemarksCab" class="form-label">Remarks</label>
+                                                        <asp:TextBox ID="txtRemarksCab" runat="server"
+                                                            CssClass="form-control" TextMode="MultiLine" />
+                                                        <asp:RequiredFieldValidator ID="rfvRemarksCab" runat="server"
+                                                            ControlToValidate="txtRemarksCab"
+                                                            ErrorMessage="Remarks are required"
+                                                            CssClass="text-danger" />
+                                                    </div>
+
+                                                    <!-- New fields for SMO No and Ref No -->
+                                                    <div class="col-12">
+                                                        <label for="txtCabSmoNo" class="form-label">SMO/WBS
+                                                            No</label>
+                                                        <asp:TextBox ID="txtCabSmoNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvCabSmoNo" runat="server"
+                                                            ControlToValidate="txtCabSmoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+
+
+                                                    <div class="col-12">
+                                                        <label for="txtCabSoNo" class="form-label">SO/SAP No</label>
+                                                        <asp:TextBox ID="txtCabSoNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator16"
+                                                            runat="server" ControlToValidate="txtCabSoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtCabRefNo" class="form-label">Ref No</label>
+                                                        <asp:TextBox ID="txtCabRefNo" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvCabRefNo" runat="server"
+                                                            ControlToValidate="txtCabRefNo"
+                                                            ErrorMessage="Ref No is required" CssClass="text-danger" />
+                                                    </div>
+                                                </asp:Panel>
+
+
+                                                <!-- Auto Panel -->
+                                                <asp:Panel ID="pnlAutoTourFields" runat="server" Visible="false"
+                                                    CssClass="panel-fields">
+                                                    <asp:Image ID="fileUploadAuto" runat="server"
+                                                        ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
+
+                                                    <div class="col-12">
+                                                        <label for="txtTourAutoDate" class="form-label">Date</label>
+                                                        <asp:TextBox ID="txtTourAutoDate" runat="server"
+                                                            CssClass="form-control" TextMode="Date" />
+                                                        <asp:RequiredFieldValidator ID="rfvTourAutoDate" runat="server"
+                                                            ControlToValidate="txtTourAutoDate"
+                                                            CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtTourAutoDistance"
+                                                            class="form-label">Distance</label>
+                                                        <asp:TextBox ID="txtTourAutoDistance" runat="server"
+                                                            CssClass="form-control" AutoPostBack="true"
+                                                            OnTextChanged="txtAutoTourDistance_TextChanged" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtTourAutoAmount" class="form-label">Amount</label>
+                                                        <asp:TextBox ID="txtTourAutoAmount" runat="server"
+                                                            CssClass="form-control" ReadOnly="true" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="fileUploadTourAuto" class="form-label">Upload
+                                                            Bill</label>
+
+                                                        <div class="custom-file-upload position-relative">
+                                                            <!-- Hidden ASP.NET FileUpload -->
+                                                            <asp:FileUpload ID="fileUploadTourAuto" runat="server"
+                                                                style="display:none;"
+                                                                onchange="handleFileSelect(this, 'txtTourAutoFileName', 'btnRemoveTourAutoFile')"
+                                                                accept="image/*,application/pdf" />
+
+                                                            <!-- Fake textbox -->
+                                                            <input type="text" id="txtTourAutoFileName"
+                                                                class="form-control" readonly
+                                                                placeholder="Choose file..."
+                                                                onclick="triggerOrOpen('<%= fileUploadTourAuto.ClientID %>', 'txtTourAutoFileName')" />
+
+                                                            <!-- Remove button -->
+                                                            <button type="button" id="btnRemoveTourAutoFile" style="position:absolute; right:6px; top:4px; display:none;
+   
+border:none;background:none;
+   font-size:30px; font-weight:bold; line-height:24px;
+   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
+                                                                onclick="removeFile('<%= fileUploadTourAuto.ClientID %>', 'txtTourAutoFileName', 'btnRemoveTourAutoFile')">
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label for="txtTourAutoFromTime" class="form-label"> From
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtTourAutoFromTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvTourAutoFromTime"
+                                                            runat="server" ControlToValidate="txtTourAutoFromTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtTourAutoToTime" class="form-label"> To
+                                                            Time</label>
+                                                        <asp:TextBox ID="txtTourAutoToTime" runat="server"
+                                                            CssClass="form-control" TextMode="Time" />
+                                                        <asp:RequiredFieldValidator ID="rfvTourAutoToTime"
+                                                            runat="server" ControlToValidate="txtTourAutoToTime"
+                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="txtTourAutoParticular" class="form-label">
+                                                            Particular</label>
+                                                        <asp:TextBox ID="txtTourAutoParticular" runat="server"
+                                                            CssClass="form-control" />
+                                                        <asp:RequiredFieldValidator ID="rfvTourAutoParticulars"
+                                                            runat="server" ControlToValidate="txtTourAutoParticular"
+                                                            ErrorMessage="Particular is required"
                                                             CssClass="text-danger" />
                                                     </div>
 
                                                     <div class="col-12">
-                                                        <label for="txtToTimeTourOthers" class="form-label">To
-                                                            Time</label>
-                                                        <asp:TextBox ID="txtToTimeTourOthers" runat="server"
-                                                            CssClass="form-control" TextMode="Time" />
-                                                        <asp:RequiredFieldValidator ID="rfvToTimeTourOthers"
-                                                            runat="server" ControlToValidate="txtToTimeTourOthers"
-                                                            ErrorMessage="To Time is required" CssClass="text-danger" />
-                                                    </div>
-
-                                                    <div class="col-12">
-                                                        <label for="txtParticularsTourOthers"
-                                                            class="form-label">Particulars</label>
-                                                        <asp:TextBox ID="txtParticularsTourOthers" runat="server"
-                                                            CssClass="form-control" />
-                                                    </div>
-
-                                                    <div class="col-12">
-                                                        <label for="txtRemarksTourOthers"
-                                                            class="form-label">Remarks</label>
-                                                        <asp:TextBox ID="txtRemarksTourOthers" runat="server"
+                                                        <label for="txTourAutoRemarks" class="form-label">
+                                                            Remarks</label>
+                                                        <asp:TextBox ID="txTourAutoRemarks" runat="server"
                                                             CssClass="form-control" TextMode="MultiLine" />
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <label for="fileUploadServiceReport" class="form-label">Service
-                                                            Report</label>
-
-                                                        <div class="custom-file-upload position-relative">
-                                                            <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="fileUploadServiceReport" runat="server"
-                                                                style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtServiceReportFileName', 'btnRemoveServiceReportFile')"
-                                                                accept="image/*,application/pdf" />
-
-                                                            <!-- Fake textbox -->
-                                                            <input type="text" id="txtServiceReportFileName"
-                                                                class="form-control" readonly
-                                                                placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileUploadServiceReport.ClientID %>', 'txtServiceReportFileName')" />
-
-                                                            <!-- Remove button -->
-                                                            <button type="button" id="btnRemoveServiceReportFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-    border:none;background:none;
-       font-size:30px; font-weight:bold; line-height:24px;
-       text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= fileUploadServiceReport.ClientID %>', 'txtServiceReportFileName', 'btnRemoveServiceReportFile')">
-                                                            </button>
-                                                        </div>
+                                                        <asp:RequiredFieldValidator ID="rfvTourAutoRemarks"
+                                                            runat="server" ControlToValidate="txTourAutoRemarks"
+                                                            ErrorMessage="Remarks are required"
+                                                            CssClass="text-danger" />
                                                     </div>
 
-
-
+                                                    <!-- New fields for SMO No and Ref No -->
                                                     <div class="col-12">
-                                                        <label for="txtTourOthersSmoNo" class="form-label">SMO/WBS
+                                                        <label for="txtTourAutoSmoNo" class="form-label">SMO/WBS
                                                             No</label>
-                                                        <asp:TextBox ID="txtTourOthersSmoNo" runat="server"
+                                                        <asp:TextBox ID="txtTourAutoSmoNo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourOthersSmoNo"
-                                                            runat="server" ControlToValidate="txtTourOthersSmoNo"
+                                                        <asp:RequiredFieldValidator ID="rfvTourAutoSmoNo" runat="server"
+                                                            ControlToValidate="txtTourAutoSmoNo"
                                                             ErrorMessage="SMO No is required" CssClass="text-danger" />
                                                     </div>
-
-                                                    <!-- New SO No Field -->
                                                     <div class="col-12">
-                                                        <label for="txtTourOthersSoNo" class="form-label">SO/SAP
+                                                        <label for="txtTourAutoSoNo" class="form-label">SO/SAP
                                                             No</label>
-                                                        <asp:TextBox ID="txtTourOthersSoNo" runat="server"
+                                                        <asp:TextBox ID="txtTourAutoSoNo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourOthersSoNo"
-                                                            runat="server" ControlToValidate="txtTourOthersSoNo"
-                                                            ErrorMessage="SO No is required" CssClass="text-danger" />
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator17"
+                                                            runat="server" ControlToValidate="txtTourAutoSoNo"
+                                                            ErrorMessage="SMO No is required" CssClass="text-danger" />
                                                     </div>
-
                                                     <div class="col-12">
-                                                        <label for="txtTourOthersRefNo" class="form-label">Ref
+                                                        <label for="txtTourAutoRefNo" class="form-label">Ref
                                                             No</label>
-                                                        <asp:TextBox ID="txtTourOthersRefNo" runat="server"
+                                                        <asp:TextBox ID="txtTourAutoRefNo" runat="server"
                                                             CssClass="form-control" />
-                                                        <asp:RequiredFieldValidator ID="rfvTourOthersRefNo"
-                                                            runat="server" ControlToValidate="txtTourOthersRefNo"
+                                                        <asp:RequiredFieldValidator ID="rfvTourAutoRefNo" runat="server"
+                                                            ControlToValidate="txtTourAutoRefNo"
                                                             ErrorMessage="Ref No is required" CssClass="text-danger" />
                                                     </div>
-                                                    <div class="col-12">
-                                                        <label for="fileUploadTourApproval" class="form-label">Approval
-                                                            Mail</label>
-
-                                                        <div class="custom-file-upload position-relative">
-                                                            <!-- Hidden ASP.NET FileUpload -->
-                                                            <asp:FileUpload ID="fileUploadTourApproval" runat="server"
-                                                                style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtTourApprovalFileName', 'btnRemoveTourApprovalFile')"
-                                                                accept="image/*,application/pdf" />
-
-                                                            <!-- Fake textbox -->
-                                                            <input type="text" id="txtTourApprovalFileName"
-                                                                class="form-control" readonly
-                                                                placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileUploadTourApproval.ClientID %>', 'txtTourApprovalFileName')" />
-
-                                                            <!-- Remove button -->
-                                                            <button type="button" id="btnRemoveTourApprovalFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-    border:none;background:none;
-       font-size:30px; font-weight:bold; line-height:24px;
-       text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                onclick="removeFile('<%= fileUploadTourApproval.ClientID %>', 'txtTourApprovalFileName', 'btnRemoveTourApprovalFile')">
-                                                            </button>
-                                                        </div>
-
-
                                                 </asp:Panel>
 
 
-                                                <asp:Panel ID="pnlTourConvenience" runat="server" Visible="false"
-                                                    CssClass="panel-fields">
-                                                    <asp:Image ID="imgConveyance" runat="server"
-                                                        ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
+                                            </asp:Panel>
 
-                                                    <div class="col-12">
-                                                        <label for="ddlTourTransportMode" class="form-label">Mode of
-                                                            Transport</label>
-                                                        <asp:DropDownList ID="ddlTourTransportMode" runat="server"
-                                                            AutoPostBack="true"
-                                                            OnSelectedIndexChanged="ddlTourTransportMode_SelectedIndexChanged"
-                                                            CssClass="form-control">
-                                                            <asp:ListItem Text="Select Transport Mode" Value="" />
-                                                            <asp:ListItem Text="Flight" Value="Flight" />
-                                                            <asp:ListItem Text="Bus" Value="Bus" />
-                                                            <asp:ListItem Text="Train" Value="Train" />
-                                                            <asp:ListItem Text="Cab" Value="Cab" />
-                                                            <asp:ListItem Text="Auto" Value="Auto" />
 
-                                                        </asp:DropDownList>
+
+
+                                            <asp:Panel ID="pnlConveyanceSection" runat="server" Visible="false">
+                                                <h4 class="card-title underline">Conveyance</h4>
+
+                                                <asp:GridView ID="GridViewConveyance" runat="server"
+                                                    AutoGenerateColumns="False" DataKeyNames="Id"
+                                                    CssClass="custom-grid">
+                                                    <Columns>
+
+
+                                                        <asp:TemplateField HeaderText="Date">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
+                                                                </asp:Label>
+                                                                <asp:TextBox ID="txtDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
+                                                                    Visible="false" CssClass="form-control">
+                                                                </asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+
+                                                        <asp:TemplateField HeaderText="Amount">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>'></asp:Label>
+                                                                <asp:TextBox ID="txtAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>' Visible="false"
+                                                                    CssClass="form-control"></asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+
+                                                        <asp:TemplateField>
+                                                            <ItemTemplate>
+                                                                <asp:Button ID="btnEditConveyance" runat="server"
+                                                                    Text="Edit" CssClass="btn btn-secondary"
+                                                                    OnClick="btnEdit1_Click"
+                                                                    CommandArgument="Conveyance" />
+                                                                <asp:Button ID="btnDelete" runat="server"
+                                                                    CommandName="Conveyance" Text="Delete"
+                                                                    CssClass="btn btn-danger" OnClick="btnDelete_Click"
+                                                                    CommandArgument='<%# Eval("Id") %>' />
+
+
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                </asp:GridView>
+
+
+                                                <asp:Label ID="lblTotalLocalConveyance" runat="server"
+                                                    ForeColor="Green" />
+                                            </asp:Panel>
+                                            <asp:Panel ID="pnlFoodSection" runat="server" Visible="false">
+                                                <h4 class="card-title underline">Food</h4>
+                                                <asp:GridView ID="GridViewFood" runat="server"
+                                                    AutoGenerateColumns="False" DataKeyNames="Id"
+                                                    CssClass="custom-grid">
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="Date">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblFoodDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
+                                                                </asp:Label>
+                                                                <asp:TextBox ID="txtFoodDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
+                                                                    Visible="false" CssClass="form-control">
+                                                                </asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="Amount">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblFoodAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>'></asp:Label>
+                                                                <asp:TextBox ID="txtFoodAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>' Visible="false"
+                                                                    CssClass="form-control"></asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField>
+                                                            <ItemTemplate>
+                                                                <asp:Button ID="btnEditFood" runat="server" Text="Edit"
+                                                                    CssClass="btn btn-secondary" OnClick="btnEdit_Click"
+                                                                    CommandArgument="Food" />
+                                                                <asp:Button ID="btnDeleteFood" runat="server"
+                                                                    CommandName="Food" Text="Delete"
+                                                                    CssClass="btn btn-danger" OnClick="btnDelete_Click"
+                                                                    CommandArgument='<%# Eval("Id") %>' />
+
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                </asp:GridView>
+
+                                                <asp:Label ID="lblTotalLocalFood" runat="server" ForeColor="Green" />
+                                            </asp:Panel>
+                                            <asp:Panel ID="pnlOthersSection" runat="server" Visible="false">
+                                                <h4 class="card-title underline">Others</h4>
+                                                <asp:GridView ID="GridViewOthers" runat="server"
+                                                    AutoGenerateColumns="False" DataKeyNames="Id"
+                                                    CssClass="custom-grid">
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="Date">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblOthersDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
+                                                                </asp:Label>
+                                                                <asp:TextBox ID="txtOthersDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
+                                                                    Visible="false" CssClass="form-control">
+                                                                </asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="Amount">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblOthersAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>'></asp:Label>
+                                                                <asp:TextBox ID="txtOthersAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>' Visible="false"
+                                                                    CssClass="form-control"></asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField>
+                                                            <ItemTemplate>
+                                                                <asp:Button ID="btnEditOthers" runat="server"
+                                                                    Text="Edit" CssClass="btn btn-secondary"
+                                                                    OnClick="btnEdit1_Click" CommandArgument="Others" />
+                                                                <asp:Button ID="btnDeleteOthers" runat="server"
+                                                                    CommandName="Others" Text="Delete"
+                                                                    CssClass="btn btn-danger" OnClick="btnDelete_Click"
+                                                                    CommandArgument='<%# Eval("Id") %>' />
+
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                </asp:GridView>
+                                                <asp:Label ID="lblTotalOthers" runat="server" ForeColor="Green" />
+                                            </asp:Panel>
+                                            <asp:Panel ID="pnlMiscellaneousSection" runat="server" Visible="false">
+                                                <h4 class="card-title underline">Miscellaneous</h4>
+                                                <asp:GridView ID="GridViewMiscellaneous" runat="server"
+                                                    AutoGenerateColumns="False" DataKeyNames="Id"
+                                                    CssClass="custom-grid">
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="Date">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblMiscDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
+                                                                </asp:Label>
+                                                                <asp:TextBox ID="txtMiscDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
+                                                                    Visible="false" CssClass="form-control">
+                                                                </asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="Amount">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblMiscAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>'></asp:Label>
+                                                                <asp:TextBox ID="txtMiscAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>' Visible="false"
+                                                                    CssClass="form-control"></asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField>
+                                                            <ItemTemplate>
+                                                                <asp:Button ID="btnEditMiscellaneous" runat="server"
+                                                                    Text="Edit" CssClass="btn btn-secondary"
+                                                                    OnClick="btnEdit1_Click"
+                                                                    CommandArgument="Miscellaneous" />
+                                                                <asp:Button ID="btnDeleteMiscellaneous" runat="server"
+                                                                    CommandName="Miscellaneous" Text="Delete"
+                                                                    CssClass="btn btn-danger" OnClick="btnDelete_Click"
+                                                                    CommandArgument='<%# Eval("Id") %>' />
+
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                </asp:GridView>
+                                                <asp:Label ID="lblTotalMiscellaneous" runat="server"
+                                                    ForeColor="Green" />
+                                            </asp:Panel>
+
+                                            <asp:Panel ID="pnlLodgingSection" runat="server" Visible="false">
+                                                <h4 class="card-title underline">Lodging</h4>
+                                                <asp:GridView ID="GridViewLodging" runat="server"
+                                                    AutoGenerateColumns="False" DataKeyNames="Id"
+                                                    CssClass="custom-grid">
+                                                    <Columns>
+                                                        <asp:TemplateField HeaderText="Date">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblLodgingDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
+                                                                </asp:Label>
+                                                                <asp:TextBox ID="txtLodgingDate" runat="server"
+                                                                    Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
+                                                                    Visible="false" CssClass="form-control">
+                                                                </asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="Amount">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblLodgingAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>'></asp:Label>
+                                                                <asp:TextBox ID="txtLodgingAmount" runat="server"
+                                                                    Text='<%# Eval("Amount") %>' Visible="false"
+                                                                    CssClass="form-control"></asp:TextBox>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                        <asp:TemplateField>
+                                                            <ItemTemplate>
+                                                                <asp:Button ID="btnEditLodging" runat="server"
+                                                                    Text="Edit" CssClass="btn btn-secondary"
+                                                                    OnClick="btnEdit_Click" CommandArgument="Lodging" />
+                                                                <asp:Button ID="btnDeleteLodging" runat="server"
+                                                                    CommandName="Lodging" Text="Delete"
+                                                                    CssClass="btn btn-danger" OnClick="btnDelete_Click"
+                                                                    CommandArgument='<%# Eval("Id") %>' />
+
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                </asp:GridView>
+                                                <asp:Label ID="lblTotalLodging" runat="server" ForeColor="Green" />
+                                            </asp:Panel>
+                                            <!-- GridView for Conveyance -->
+                                            <!-- GridView for Conveyance -->
+                                            <div class="col-12">
+                                                <!-- Reimbursement Total -->
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <!-- Label for "Total Reimbursement" -->
+                                                    <asp:Label ID="lblTotalReimbursement" runat="server"
+                                                        Text="Total Reimbursement:" Font-Bold="True"
+                                                        ForeColor="DarkBlue" Font-Size="Large" CssClass="me-auto">
+                                                    </asp:Label>
+
+
+                                                </div>
+                                            </div>
+                                            <!-- Individual Category Summary Grids -->
+                                            <asp:Repeater ID="rptIndividualSummaries" runat="server">
+                                                <ItemTemplate>
+                                                    <div class="col-12" style="margin-top: 30px; margin-bottom: 20px;">
+                                                        <asp:Label ID="lblCategoryHeader" runat="server"
+                                                            CssClass="form-label" Text='<%# Eval("CategoryName") %>'
+                                                            style="margin-bottom: 5px; display: block;"></asp:Label>
+                                                        <div
+                                                            style="width: 100%; height: 1px; background-color: #3f418d; margin-bottom: 15px;">
+                                                        </div>
+
+                                                        <div
+                                                            style="border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
+                                                            <asp:HiddenField ID="hdnCategoryName" runat="server"
+                                                                Value='<%# Eval("CategoryName") %>' />
+                                                            <asp:GridView ID="gvCategoryDetail" runat="server"
+                                                                AutoGenerateColumns="false" CellPadding="8"
+                                                                CellSpacing="0" DataSource='<%# Eval("Details") %>'
+                                                                DataKeyNames="Id"
+                                                                OnRowCommand="gvCategoryDetail_RowCommand"
+                                                                OnRowDataBound="gvCategoryDetail_RowDataBound"
+                                                                style="width: 100%; margin-bottom: 0; border-collapse: collapse; font-size: 13px;">
+                                                                <Columns>
+                                                                    <asp:TemplateField HeaderText="Date"
+                                                                        ItemStyle-Width="25%"
+                                                                        ItemStyle-HorizontalAlign="Center">
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblDate" runat="server"
+                                                                                Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
+                                                                            </asp:Label>
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Total Amount"
+                                                                        ItemStyle-Width="25%"
+                                                                        ItemStyle-HorizontalAlign="Right">
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblAmount" runat="server"
+                                                                                Text='<%# Eval("Amount", "{0:N2}") %>'>
+                                                                            </asp:Label>
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Action"
+                                                                        ItemStyle-Width="50%"
+                                                                        ItemStyle-HorizontalAlign="Center">
+                                                                        <ItemTemplate>
+                                                                            <asp:Button ID="btnEditSummary"
+                                                                                runat="server" Text="Edit"
+                                                                                CommandName="EditSummary"
+                                                                                CommandArgument='<%# Container.DataItemIndex %>'
+                                                                                CssClass="btn btn-primary btn-sm"
+                                                                                style="background-color: #3f418d; color: white; border: none; padding: 4px 10px; border-radius: 3px; cursor: pointer; margin-right: 5px; font-size: 11px;" />
+                                                                            <asp:Button ID="btnDeleteSummary"
+                                                                                runat="server" Text="Delete"
+                                                                                CommandName="DeleteSummary"
+                                                                                CommandArgument='<%# Eval("Id") %>'
+                                                                                CssClass="btn btn-danger btn-sm"
+                                                                                OnClientClick="return confirm('Are you sure you want to delete this expense?');"
+                                                                                style="background-color: #dc3545; color: white; border: none; padding: 4px 10px; border-radius: 3px; cursor: pointer; font-size: 11px;" />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                </Columns>
+                                                                <HeaderStyle BackColor="#1a2a5e" ForeColor="white"
+                                                                    Font-Bold="true" Font-Size="13px"
+                                                                    HorizontalAlign="Center" VerticalAlign="Middle" />
+                                                                <RowStyle BackColor="white" BorderColor="#1a2a5e"
+                                                                    BorderWidth="1px" HorizontalAlign="Center"
+                                                                    VerticalAlign="Middle" Height="35px" />
+                                                                <AlternatingRowStyle BackColor="#f0f4f8"
+                                                                    BorderColor="#1a2a5e" BorderWidth="1px"
+                                                                    HorizontalAlign="Center" VerticalAlign="Middle"
+                                                                    Height="35px" />
+                                                            </asp:GridView>
+                                                        </div>
                                                     </div>
+                                                </ItemTemplate>
+                                            </asp:Repeater>
+                                            <!-- Deprecated Imported Data Grid removed -->
 
-                                                    <!-- Flight Panel -->
-                                                    <asp:Panel ID="pnlFlightFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <div class="col-12">
-                                                            <label for="txtFlightDate" class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtFlightDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvFlightDate"
-                                                                runat="server" ControlToValidate="txtFlightDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtFlightAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtFlightAmount" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvFlightAmount"
-                                                                runat="server" ControlToValidate="txtFlightAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="fileUploadFlight" class="form-label">Upload
-                                                                Bill</label>
+                                            <div class="d-flex justify-content-center gap-3 mt-3">
 
-                                                            <div class="custom-file-upload position-relative">
-                                                                <!-- Hidden ASP.NET FileUpload -->
-                                                                <asp:FileUpload ID="fileUploadFlight" runat="server"
-                                                                    style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtFlightFileName', 'btnRemoveFlightFile')"
-                                                                    accept="image/*,application/pdf" />
+                                                <!-- Save Button -->
+                                                <asp:Button ID="btnSubmit" runat="server" Text="Save"
+                                                    CssClass="custom-button" OnClick="btnSubmit_Click"
+                                                    OnClientClick="if(!confirmSubmission()) return false; clearFormDirty(); return true;" />
 
-                                                                <!-- Fake textbox -->
-                                                                <input type="text" id="txtFlightFileName"
-                                                                    class="form-control" readonly
-                                                                    placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= fileUploadFlight.ClientID %>', 'txtFlightFileName')" />
+                                                <!-- Submit Button -->
+                                                <asp:Button ID="btnChangeStatus" runat="server" Text="Submit"
+                                                    CssClass="btn-submit " OnClick="btnChangeStatus_Click"
+                                                    OnClientClick="return confirmSubmit();" />
 
-                                                                <!-- Remove button -->
-                                                                <button type="button" id="btnRemoveFlightFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= fileUploadFlight.ClientID %>', 'txtFlightFileName', 'btnRemoveFlightFile')">
-                                                                </button>
-                                                            </div>
+                                                <!-- Cancel Button -->
+                                                <asp:Button ID="btnCancel" runat="server" Text="Cancel"
+                                                    CssClass="btn btn-danger btn-lg " OnClick="btnCancel_Click"
+                                                    CausesValidation="false" />
+                                            </div>
 
-                                                        </div>
+                                            <!-- Error Messages -->
+                                            <div class="text-center mt-2">
+                                                <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
+                                                <asp:Label ID="lblStatusError" runat="server" ForeColor="Green"
+                                                    CssClass="error-message" Visible="false"></asp:Label>
+                                            </div>
 
 
-                                                        <!-- New fields for From Time, To Time, Particulars, and Remarks -->
-                                                        <div class="col-12">
-                                                            <label for="txtFlightFromTime" class="form-label">From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtFlightFromTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvFromTime" runat="server"
-                                                                ControlToValidate="txtFlightFromTime"
-                                                                ErrorMessage="From Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtFlightToTime" class="form-label">To
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtFlightToTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvToTime" runat="server"
-                                                                ControlToValidate="txtFlightToTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtFlightParticulars"
-                                                                class="form-label">Particulars</label>
-                                                            <asp:TextBox ID="txtFlightParticulars" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvParticulars"
-                                                                runat="server" ControlToValidate="txtFlightParticulars"
-                                                                ErrorMessage="Particulars are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtFlightRemarks"
-                                                                class="form-label">Remarks</label>
-                                                            <asp:TextBox ID="txtFlightRemarks" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvRemarks" runat="server"
-                                                                ControlToValidate="txtFlightRemarks"
-                                                                ErrorMessage="Remarks are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
 
-                                                        <div class="col-12">
-                                                            <label for="txtFlightSmoNo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtFlightSmoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvFlightSmoNo"
-                                                                runat="server" ControlToValidate="txtFlightSmoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
 
-
-                                                        <div class="col-12">
-                                                            <label for="txtFlightSoNo" class="form-label">SO/SAP
-                                                                No</label>
-                                                            <asp:TextBox ID="txtFlightSoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator8"
-                                                                runat="server" ControlToValidate="txtFlightSoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtFlightRefNo" class="form-label">Ref
-                                                                No</label>
-                                                            <asp:TextBox ID="txtFlightRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvFlightRefNo"
-                                                                runat="server" ControlToValidate="txtFlightRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                    </asp:Panel>
-
-
-                                                    <!-- Bus Panel -->
-                                                    <asp:Panel ID="pnlBusFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <div class="col-12">
-                                                            <label for="txtBusDate" class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtBusDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvBusDate" runat="server"
-                                                                ControlToValidate="txtBusDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtBusAmount" class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtBusAmount" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvBusAmount" runat="server"
-                                                                ControlToValidate="txtBusAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="fileUploadBus" class="form-label">Upload
-                                                                Bill</label>
-
-                                                            <div class="custom-file-upload position-relative">
-                                                                <!-- Hidden ASP.NET FileUpload -->
-                                                                <asp:FileUpload ID="fileUploadBus" runat="server"
-                                                                    style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtBusFileName', 'btnRemoveBusFile')"
-                                                                    accept="image/*,application/pdf" />
-
-                                                                <!-- Fake textbox -->
-                                                                <input type="text" id="txtBusFileName"
-                                                                    class="form-control" readonly
-                                                                    placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= fileUploadBus.ClientID %>', 'txtBusFileName')" />
-
-                                                                <!-- Remove button -->
-                                                                <button type="button" id="btnRemoveBusFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= fileUploadBus.ClientID %>', 'txtBusFileName', 'btnRemoveBusFile')">
-                                                                </button>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <!-- New fields for From Time, To Time, Particulars, and Remarks -->
-                                                        <div class="col-12">
-                                                            <label for="txtFromTimeBus" class="form-label">From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtFromTimeBus" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvFromTimeBus"
-                                                                runat="server" ControlToValidate="txtFromTimeBus"
-                                                                ErrorMessage="From Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtToTimeBus" class="form-label">To Time</label>
-                                                            <asp:TextBox ID="txtToTimeBus" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvToTimeBus" runat="server"
-                                                                ControlToValidate="txtToTimeBus"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtParticularsBus"
-                                                                class="form-label">Particulars</label>
-                                                            <asp:TextBox ID="txtParticularsBus" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvParticularsBus"
-                                                                runat="server" ControlToValidate="txtParticularsBus"
-                                                                ErrorMessage="Particulars are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtRemarksBus"
-                                                                class="form-label">Remarks</label>
-                                                            <asp:TextBox ID="txtRemarksBus" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvRemarksBus"
-                                                                runat="server" ControlToValidate="txtRemarksBus"
-                                                                ErrorMessage="Remarks are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New fields for SMO No and Ref No -->
-                                                        <div class="col-12">
-                                                            <label for="txtBusSmoNo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtBusSmoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvBusSmoNo" runat="server"
-                                                                ControlToValidate="txtBusSmoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <div class="col-12">
-                                                            <label for="txtBusSoNo" class="form-label">SO/SAP No</label>
-                                                            <asp:TextBox ID="txtBusSoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator9"
-                                                                runat="server" ControlToValidate="txtBusSoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtBusRefNo" class="form-label">Ref No</label>
-                                                            <asp:TextBox ID="txtBusRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvBusRefNo" runat="server"
-                                                                ControlToValidate="txtBusRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                    </asp:Panel>
-
-
-                                                    <!-- Train Panel -->
-                                                    <asp:Panel ID="pnlTrainFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <div class="col-12">
-                                                            <label for="txtTrainDate" class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtTrainDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvTrainDate" runat="server"
-                                                                ControlToValidate="txtTrainDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTrainAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtTrainAmount" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTrainAmount"
-                                                                runat="server" ControlToValidate="txtTrainAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="fileUploadTrain" class="form-label">Upload
-                                                                Bill</label>
-
-                                                            <div class="custom-file-upload position-relative">
-                                                                <!-- Hidden ASP.NET FileUpload -->
-                                                                <asp:FileUpload ID="fileUploadTrain" runat="server"
-                                                                    style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtTrainFileName', 'btnRemoveTrainFile')"
-                                                                    accept="image/*,application/pdf" />
-
-                                                                <!-- Fake textbox -->
-                                                                <input type="text" id="txtTrainFileName"
-                                                                    class="form-control" readonly
-                                                                    placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= fileUploadTrain.ClientID %>', 'txtTrainFileName')" />
-
-                                                                <!-- Remove button -->
-                                                                <button type="button" id="btnRemoveTrainFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= fileUploadTrain.ClientID %>', 'txtTrainFileName', 'btnRemoveTrainFile')">
-                                                                </button>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <!-- New fields for From Time, To Time, Particulars, and Remarks -->
-                                                        <div class="col-12">
-                                                            <label for="txtFromTimeTrain" class="form-label">From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtFromTimeTrain" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvFromTimeTrain"
-                                                                runat="server" ControlToValidate="txtFromTimeTrain"
-                                                                ErrorMessage="From Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtToTimeTrain" class="form-label">To
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtToTimeTrain" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvToTimeTrain"
-                                                                runat="server" ControlToValidate="txtToTimeTrain"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtParticularsTrain"
-                                                                class="form-label">Particulars</label>
-                                                            <asp:TextBox ID="txtParticularsTrain" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvParticularsTrain"
-                                                                runat="server" ControlToValidate="txtParticularsTrain"
-                                                                ErrorMessage="Particulars are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtRemarksTrain"
-                                                                class="form-label">Remarks</label>
-                                                            <asp:TextBox ID="txtRemarksTrain" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvRemarksTrain"
-                                                                runat="server" ControlToValidate="txtRemarksTrain"
-                                                                ErrorMessage="Remarks are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New fields for SMO No and Ref No -->
-                                                        <div class="col-12">
-                                                            <label for="txtTrainSmoNo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTrainSmoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTrainSmoNo"
-                                                                runat="server" ControlToValidate="txtTrainSmoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <div class="col-12">
-                                                            <label for="txtTrainSoNo" class="form-label">SO/SAP
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTrainSoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator15"
-                                                                runat="server" ControlToValidate="txtTrainSoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTrainRefNo" class="form-label">Ref No</label>
-                                                            <asp:TextBox ID="txtTrainRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTrainRefNo"
-                                                                runat="server" ControlToValidate="txtTrainRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                    </asp:Panel>
-                                                    <!-- Cab Panel -->
-                                                    <asp:Panel ID="pnlcabTourFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <div class="col-12">
-                                                            <label for="txtCabDate" class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtCabDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvCabDate" runat="server"
-                                                                ControlToValidate="txtCabDate"
-                                                                ErrorMessage="Date is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtCabAmount" class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtCabAmount" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvCabAmount" runat="server"
-                                                                ControlToValidate="txtCabAmount"
-                                                                ErrorMessage="Amount is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="fileUploadCab" class="form-label">Upload
-                                                                Bill</label>
-
-                                                            <div class="custom-file-upload position-relative">
-                                                                <!-- Hidden ASP.NET FileUpload -->
-                                                                <asp:FileUpload ID="fileUploadCab" runat="server"
-                                                                    style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtCabFileName', 'btnRemoveCabFile')"
-                                                                    accept="image/*,application/pdf" />
-
-                                                                <!-- Fake textbox -->
-                                                                <input type="text" id="txtCabFileName"
-                                                                    class="form-control" readonly
-                                                                    placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= fileUploadCab.ClientID %>', 'txtCabFileName')" />
-
-                                                                <!-- Remove button -->
-                                                                <button type="button" id="btnRemoveCabFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= fileUploadCab.ClientID %>', 'txtCabFileName', 'btnRemoveCabFile')">
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- New fields for From Time, To Time, Particulars, and Remarks -->
-                                                        <div class="col-12">
-                                                            <label for="txtFromTimeCab" class="form-label">From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtFromTimeCab" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvFromTimeCab"
-                                                                runat="server" ControlToValidate="txtFromTimeCab"
-                                                                ErrorMessage="From Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtToTimeCab" class="form-label">To Time</label>
-                                                            <asp:TextBox ID="txtToTimeCab" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvToTimeCab" runat="server"
-                                                                ControlToValidate="txtToTimeCab"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtParticularsCab"
-                                                                class="form-label">Particulars</label>
-                                                            <asp:TextBox ID="txtParticularsCab" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvParticularsCab"
-                                                                runat="server" ControlToValidate="txtParticularsCab"
-                                                                ErrorMessage="Particulars are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtRemarksCab"
-                                                                class="form-label">Remarks</label>
-                                                            <asp:TextBox ID="txtRemarksCab" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvRemarksCab"
-                                                                runat="server" ControlToValidate="txtRemarksCab"
-                                                                ErrorMessage="Remarks are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New fields for SMO No and Ref No -->
-                                                        <div class="col-12">
-                                                            <label for="txtCabSmoNo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtCabSmoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvCabSmoNo" runat="server"
-                                                                ControlToValidate="txtCabSmoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-
-                                                        <div class="col-12">
-                                                            <label for="txtCabSoNo" class="form-label">SO/SAP No</label>
-                                                            <asp:TextBox ID="txtCabSoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator16"
-                                                                runat="server" ControlToValidate="txtCabSoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtCabRefNo" class="form-label">Ref No</label>
-                                                            <asp:TextBox ID="txtCabRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvCabRefNo" runat="server"
-                                                                ControlToValidate="txtCabRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                    </asp:Panel>
-
-
-                                                    <!-- Auto Panel -->
-                                                    <asp:Panel ID="pnlAutoTourFields" runat="server" Visible="false"
-                                                        CssClass="panel-fields">
-                                                        <asp:Image ID="fileUploadAuto" runat="server"
-                                                            ImageUrl='<%# "ImageHandler.ashx?id=" + Eval("Id") %>' />
-
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoDate" class="form-label">Date</label>
-                                                            <asp:TextBox ID="txtTourAutoDate" runat="server"
-                                                                CssClass="form-control" TextMode="Date" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourAutoDate"
-                                                                runat="server" ControlToValidate="txtTourAutoDate"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoDistance"
-                                                                class="form-label">Distance</label>
-                                                            <asp:TextBox ID="txtTourAutoDistance" runat="server"
-                                                                CssClass="form-control" AutoPostBack="true"
-                                                                OnTextChanged="txtAutoTourDistance_TextChanged" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoAmount"
-                                                                class="form-label">Amount</label>
-                                                            <asp:TextBox ID="txtTourAutoAmount" runat="server"
-                                                                CssClass="form-control" ReadOnly="true" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="fileUploadTourAuto" class="form-label">Upload
-                                                                Bill</label>
-
-                                                            <div class="custom-file-upload position-relative">
-                                                                <!-- Hidden ASP.NET FileUpload -->
-                                                                <asp:FileUpload ID="fileUploadTourAuto" runat="server"
-                                                                    style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtTourAutoFileName', 'btnRemoveTourAutoFile')"
-                                                                    accept="image/*,application/pdf" />
-
-                                                                <!-- Fake textbox -->
-                                                                <input type="text" id="txtTourAutoFileName"
-                                                                    class="form-control" readonly
-                                                                    placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= fileUploadTourAuto.ClientID %>', 'txtTourAutoFileName')" />
-
-                                                                <!-- Remove button -->
-                                                                <button type="button" id="btnRemoveTourAutoFile" style="position:absolute; right:6px; top:4px; display:none;
-   
-border:none;background:none;
-   font-size:30px; font-weight:bold; line-height:24px;
-   text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= fileUploadTourAuto.ClientID %>', 'txtTourAutoFileName', 'btnRemoveTourAutoFile')">
-                                                                </button>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoFromTime" class="form-label"> From
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtTourAutoFromTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourAutoFromTime"
-                                                                runat="server" ControlToValidate="txtTourAutoFromTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoToTime" class="form-label"> To
-                                                                Time</label>
-                                                            <asp:TextBox ID="txtTourAutoToTime" runat="server"
-                                                                CssClass="form-control" TextMode="Time" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourAutoToTime"
-                                                                runat="server" ControlToValidate="txtTourAutoToTime"
-                                                                ErrorMessage="To Time is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoParticular" class="form-label">
-                                                                Particular</label>
-                                                            <asp:TextBox ID="txtTourAutoParticular" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourAutoParticulars"
-                                                                runat="server" ControlToValidate="txtTourAutoParticular"
-                                                                ErrorMessage="Particular is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <div class="col-12">
-                                                            <label for="txTourAutoRemarks" class="form-label">
-                                                                Remarks</label>
-                                                            <asp:TextBox ID="txTourAutoRemarks" runat="server"
-                                                                CssClass="form-control" TextMode="MultiLine" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourAutoRemarks"
-                                                                runat="server" ControlToValidate="txTourAutoRemarks"
-                                                                ErrorMessage="Remarks are required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-
-                                                        <!-- New fields for SMO No and Ref No -->
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoSmoNo" class="form-label">SMO/WBS
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTourAutoSmoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourAutoSmoNo"
-                                                                runat="server" ControlToValidate="txtTourAutoSmoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoSoNo" class="form-label">SO/SAP
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTourAutoSoNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator17"
-                                                                runat="server" ControlToValidate="txtTourAutoSoNo"
-                                                                ErrorMessage="SMO No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="txtTourAutoRefNo" class="form-label">Ref
-                                                                No</label>
-                                                            <asp:TextBox ID="txtTourAutoRefNo" runat="server"
-                                                                CssClass="form-control" />
-                                                            <asp:RequiredFieldValidator ID="rfvTourAutoRefNo"
-                                                                runat="server" ControlToValidate="txtTourAutoRefNo"
-                                                                ErrorMessage="Ref No is required"
-                                                                CssClass="text-danger" />
-                                                        </div>
-                                                    </asp:Panel>
-
-
-                                                </asp:Panel>
-
-
-
-
-                                                <asp:Panel ID="pnlConveyanceSection" runat="server" Visible="false">
-                                                    <h4 class="card-title underline">Conveyance</h4>
-
-                                                    <asp:GridView ID="GridViewConveyance" runat="server"
-                                                        AutoGenerateColumns="False" DataKeyNames="Id"
-                                                        CssClass="custom-grid">
-                                                        <Columns>
-
-
-                                                            <asp:TemplateField HeaderText="Date">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
-                                                                    </asp:Label>
-                                                                    <asp:TextBox ID="txtDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
-                                                                        Visible="false" CssClass="form-control">
-                                                                    </asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-
-
-                                                            <asp:TemplateField HeaderText="Amount">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>'></asp:Label>
-                                                                    <asp:TextBox ID="txtAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>' Visible="false"
-                                                                        CssClass="form-control"></asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-
-                                                            <asp:TemplateField>
-                                                                <ItemTemplate>
-                                                                    <asp:Button ID="btnEditConveyance" runat="server"
-                                                                        Text="Edit" CssClass="btn btn-secondary"
-                                                                        OnClick="btnEdit1_Click"
-                                                                        CommandArgument="Conveyance" />
-                                                                    <asp:Button ID="btnDelete" runat="server"
-                                                                        CommandName="Conveyance" Text="Delete"
-                                                                        CssClass="btn btn-danger"
-                                                                        OnClick="btnDelete_Click"
-                                                                        CommandArgument='<%# Eval("Id") %>' />
-
-
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                        </Columns>
-                                                    </asp:GridView>
-
-
-                                                    <asp:Label ID="lblTotalLocalConveyance" runat="server"
-                                                        ForeColor="Green" />
-                                                </asp:Panel>
-                                                <asp:Panel ID="pnlFoodSection" runat="server" Visible="false">
-                                                    <h4 class="card-title underline">Food</h4>
-                                                    <asp:GridView ID="GridViewFood" runat="server"
-                                                        AutoGenerateColumns="False" DataKeyNames="Id"
-                                                        CssClass="custom-grid">
-                                                        <Columns>
-                                                            <asp:TemplateField HeaderText="Date">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblFoodDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
-                                                                    </asp:Label>
-                                                                    <asp:TextBox ID="txtFoodDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
-                                                                        Visible="false" CssClass="form-control">
-                                                                    </asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Amount">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblFoodAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>'></asp:Label>
-                                                                    <asp:TextBox ID="txtFoodAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>' Visible="false"
-                                                                        CssClass="form-control"></asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField>
-                                                                <ItemTemplate>
-                                                                    <asp:Button ID="btnEditFood" runat="server"
-                                                                        Text="Edit" CssClass="btn btn-secondary"
-                                                                        OnClick="btnEdit_Click"
-                                                                        CommandArgument="Food" />
-                                                                    <asp:Button ID="btnDeleteFood" runat="server"
-                                                                        CommandName="Food" Text="Delete"
-                                                                        CssClass="btn btn-danger"
-                                                                        OnClick="btnDelete_Click"
-                                                                        CommandArgument='<%# Eval("Id") %>' />
-
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                        </Columns>
-                                                    </asp:GridView>
-
-                                                    <asp:Label ID="lblTotalLocalFood" runat="server"
-                                                        ForeColor="Green" />
-                                                </asp:Panel>
-                                                <asp:Panel ID="pnlOthersSection" runat="server" Visible="false">
-                                                    <h4 class="card-title underline">Others</h4>
-                                                    <asp:GridView ID="GridViewOthers" runat="server"
-                                                        AutoGenerateColumns="False" DataKeyNames="Id"
-                                                        CssClass="custom-grid">
-                                                        <Columns>
-                                                            <asp:TemplateField HeaderText="Date">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblOthersDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
-                                                                    </asp:Label>
-                                                                    <asp:TextBox ID="txtOthersDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
-                                                                        Visible="false" CssClass="form-control">
-                                                                    </asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Amount">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblOthersAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>'></asp:Label>
-                                                                    <asp:TextBox ID="txtOthersAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>' Visible="false"
-                                                                        CssClass="form-control"></asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField>
-                                                                <ItemTemplate>
-                                                                    <asp:Button ID="btnEditOthers" runat="server"
-                                                                        Text="Edit" CssClass="btn btn-secondary"
-                                                                        OnClick="btnEdit1_Click"
-                                                                        CommandArgument="Others" />
-                                                                    <asp:Button ID="btnDeleteOthers" runat="server"
-                                                                        CommandName="Others" Text="Delete"
-                                                                        CssClass="btn btn-danger"
-                                                                        OnClick="btnDelete_Click"
-                                                                        CommandArgument='<%# Eval("Id") %>' />
-
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                        </Columns>
-                                                    </asp:GridView>
-                                                    <asp:Label ID="lblTotalOthers" runat="server" ForeColor="Green" />
-                                                </asp:Panel>
-                                                <asp:Panel ID="pnlMiscellaneousSection" runat="server" Visible="false">
-                                                    <h4 class="card-title underline">Miscellaneous</h4>
-                                                    <asp:GridView ID="GridViewMiscellaneous" runat="server"
-                                                        AutoGenerateColumns="False" DataKeyNames="Id"
-                                                        CssClass="custom-grid">
-                                                        <Columns>
-                                                            <asp:TemplateField HeaderText="Date">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblMiscDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
-                                                                    </asp:Label>
-                                                                    <asp:TextBox ID="txtMiscDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
-                                                                        Visible="false" CssClass="form-control">
-                                                                    </asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Amount">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblMiscAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>'></asp:Label>
-                                                                    <asp:TextBox ID="txtMiscAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>' Visible="false"
-                                                                        CssClass="form-control"></asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField>
-                                                                <ItemTemplate>
-                                                                    <asp:Button ID="btnEditMiscellaneous" runat="server"
-                                                                        Text="Edit" CssClass="btn btn-secondary"
-                                                                        OnClick="btnEdit1_Click"
-                                                                        CommandArgument="Miscellaneous" />
-                                                                    <asp:Button ID="btnDeleteMiscellaneous"
-                                                                        runat="server" CommandName="Miscellaneous"
-                                                                        Text="Delete" CssClass="btn btn-danger"
-                                                                        OnClick="btnDelete_Click"
-                                                                        CommandArgument='<%# Eval("Id") %>' />
-
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                        </Columns>
-                                                    </asp:GridView>
-                                                    <asp:Label ID="lblTotalMiscellaneous" runat="server"
-                                                        ForeColor="Green" />
-                                                </asp:Panel>
-
-                                                <asp:Panel ID="pnlLodgingSection" runat="server" Visible="false">
-                                                    <h4 class="card-title underline">Lodging</h4>
-                                                    <asp:GridView ID="GridViewLodging" runat="server"
-                                                        AutoGenerateColumns="False" DataKeyNames="Id"
-                                                        CssClass="custom-grid">
-                                                        <Columns>
-                                                            <asp:TemplateField HeaderText="Date">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblLodgingDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
-                                                                    </asp:Label>
-                                                                    <asp:TextBox ID="txtLodgingDate" runat="server"
-                                                                        Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>'
-                                                                        Visible="false" CssClass="form-control">
-                                                                    </asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Amount">
-                                                                <ItemTemplate>
-                                                                    <asp:Label ID="lblLodgingAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>'></asp:Label>
-                                                                    <asp:TextBox ID="txtLodgingAmount" runat="server"
-                                                                        Text='<%# Eval("Amount") %>' Visible="false"
-                                                                        CssClass="form-control"></asp:TextBox>
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                            <asp:TemplateField>
-                                                                <ItemTemplate>
-                                                                    <asp:Button ID="btnEditLodging" runat="server"
-                                                                        Text="Edit" CssClass="btn btn-secondary"
-                                                                        OnClick="btnEdit_Click"
-                                                                        CommandArgument="Lodging" />
-                                                                    <asp:Button ID="btnDeleteLodging" runat="server"
-                                                                        CommandName="Lodging" Text="Delete"
-                                                                        CssClass="btn btn-danger"
-                                                                        OnClick="btnDelete_Click"
-                                                                        CommandArgument='<%# Eval("Id") %>' />
-
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
-                                                        </Columns>
-                                                    </asp:GridView>
-                                                    <asp:Label ID="lblTotalLodging" runat="server" ForeColor="Green" />
-                                                </asp:Panel>
-                                                <!-- GridView for Conveyance -->
-                                                <!-- GridView for Conveyance -->
-                                                <div class="col-12">
-                                                    <!-- Reimbursement Total -->
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <!-- Label for "Total Reimbursement" -->
-                                                        <asp:Label ID="lblTotalReimbursement" runat="server"
-                                                            Text="Total Reimbursement:" Font-Bold="True"
-                                                            ForeColor="DarkBlue" Font-Size="Large" CssClass="me-auto">
-                                                        </asp:Label>
-
-
-                                                    </div>
-                                                </div>
-                                                <!-- Individual Category Summary Grids -->
-                                                <asp:Repeater ID="rptIndividualSummaries" runat="server">
-                                                    <ItemTemplate>
-                                                        <div class="col-12"
-                                                            style="margin-top: 30px; margin-bottom: 20px;">
-                                                            <asp:Label ID="lblCategoryHeader" runat="server"
-                                                                CssClass="form-label" Text='<%# Eval("CategoryName") %>'
-                                                                style="margin-bottom: 5px; display: block;"></asp:Label>
-                                                            <div
-                                                                style="width: 100%; height: 1px; background-color: #3f418d; margin-bottom: 15px;">
-                                                            </div>
-
-                                                            <div
-                                                                style="border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
-                                                                <asp:HiddenField ID="hdnCategoryName" runat="server"
-                                                                    Value='<%# Eval("CategoryName") %>' />
-                                                                <asp:GridView ID="gvCategoryDetail" runat="server"
-                                                                    AutoGenerateColumns="false" CellPadding="8"
-                                                                    CellSpacing="0" DataSource='<%# Eval("Details") %>'
-                                                                    DataKeyNames="Id"
-                                                                    OnRowCommand="gvCategoryDetail_RowCommand"
-                                                                    OnRowDataBound="gvCategoryDetail_RowDataBound"
-                                                                    style="width: 100%; margin-bottom: 0; border-collapse: collapse; font-size: 13px;">
-                                                                    <Columns>
-                                                                        <asp:TemplateField HeaderText="Date"
-                                                                            ItemStyle-Width="25%"
-                                                                            ItemStyle-HorizontalAlign="Center">
-                                                                            <ItemTemplate>
-                                                                                <asp:Label ID="lblDate" runat="server"
-                                                                                    Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>'>
-                                                                                </asp:Label>
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateField>
-                                                                        <asp:TemplateField HeaderText="Total Amount"
-                                                                            ItemStyle-Width="25%"
-                                                                            ItemStyle-HorizontalAlign="Right">
-                                                                            <ItemTemplate>
-                                                                                <asp:Label ID="lblAmount" runat="server"
-                                                                                    Text='<%# Eval("Amount", "{0:N2}") %>'>
-                                                                                </asp:Label>
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateField>
-                                                                        <asp:TemplateField HeaderText="Action"
-                                                                            ItemStyle-Width="50%"
-                                                                            ItemStyle-HorizontalAlign="Center">
-                                                                            <ItemTemplate>
-                                                                                <asp:Button ID="btnEditSummary"
-                                                                                    runat="server" Text="Edit"
-                                                                                    CommandName="EditSummary"
-                                                                                    CommandArgument='<%# Container.DataItemIndex %>'
-                                                                                    CssClass="btn btn-primary btn-sm"
-                                                                                    style="background-color: #3f418d; color: white; border: none; padding: 4px 10px; border-radius: 3px; cursor: pointer; margin-right: 5px; font-size: 11px;" />
-                                                                                <asp:Button ID="btnDeleteSummary"
-                                                                                    runat="server" Text="Delete"
-                                                                                    CommandName="DeleteSummary"
-                                                                                    CommandArgument='<%# Eval("Id") %>'
-                                                                                    CssClass="btn btn-danger btn-sm"
-                                                                                    OnClientClick="return confirm('Are you sure you want to delete this expense?');"
-                                                                                    style="background-color: #dc3545; color: white; border: none; padding: 4px 10px; border-radius: 3px; cursor: pointer; font-size: 11px;" />
-                                                                            </ItemTemplate>
-                                                                        </asp:TemplateField>
-                                                                    </Columns>
-                                                                    <HeaderStyle BackColor="#1a2a5e" ForeColor="white"
-                                                                        Font-Bold="true" Font-Size="13px"
-                                                                        HorizontalAlign="Center"
-                                                                        VerticalAlign="Middle" />
-                                                                    <RowStyle BackColor="white" BorderColor="#1a2a5e"
-                                                                        BorderWidth="1px" HorizontalAlign="Center"
-                                                                        VerticalAlign="Middle" Height="35px" />
-                                                                    <AlternatingRowStyle BackColor="#f0f4f8"
-                                                                        BorderColor="#1a2a5e" BorderWidth="1px"
-                                                                        HorizontalAlign="Center" VerticalAlign="Middle"
-                                                                        Height="35px" />
-                                                                </asp:GridView>
-                                                            </div>
-                                                        </div>
-                                                    </ItemTemplate>
-                                                </asp:Repeater>
-                                                <!-- Deprecated Imported Data Grid removed -->
-
-                                                <div class="d-flex justify-content-center gap-3 mt-3">
-
-                                                    <!-- Save Button -->
-                                                    <asp:Button ID="btnSubmit" runat="server" Text="Save"
-                                                        CssClass="custom-button" OnClick="btnSubmit_Click"
-                                                        OnClientClick="if(!confirmSubmission()) return false; clearFormDirty(); return true;" />
-
-                                                    <!-- Submit Button -->
-                                                    <asp:Button ID="btnChangeStatus" runat="server" Text="Submit"
-                                                        CssClass="btn-submit " OnClick="btnChangeStatus_Click"
-                                                        OnClientClick="return confirmSubmit();" />
-
-                                                    <!-- Cancel Button -->
-                                                    <asp:Button ID="btnCancel" runat="server" Text="Cancel"
-                                                        CssClass="btn btn-danger btn-lg " OnClick="btnCancel_Click"
-                                                        CausesValidation="false" />
-                                                </div>
-
-                                                <!-- Error Messages -->
-                                                <div class="text-center mt-2">
-                                                    <asp:Label ID="lblError" runat="server" ForeColor="Red"></asp:Label>
-                                                    <asp:Label ID="lblStatusError" runat="server" ForeColor="Green"
-                                                        CssClass="error-message" Visible="false"></asp:Label>
-                                                </div>
-
-
-
-
-                                            </section>
+                                        </section>
                             </div>
                         </div>
                     </div>
