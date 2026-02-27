@@ -484,8 +484,7 @@
                                             <div
                                                 style="background-color:#3f418d; color:white; padding:8px 16px; font-weight:bold; font-size:13px; display:flex; align-items:center; justify-content:space-between;">
                                                 <span>&#128203; Excel Rows Ready &mdash; Click <strong>Save All</strong>
-                                                    to save all rows to DB, or <strong>&#9998;</strong> to adjust a row
-                                                    in the form below before saving</span>
+                                                    to save all rows to DB</span>
                                                 <asp:Button ID="btnSaveAllExcel" runat="server"
                                                     Text="&#128190; Save All to DB" OnClick="btnSaveAllExcel_Click"
                                                     OnClientClick="return confirm('Save ALL Excel rows to database?');"
@@ -519,21 +518,7 @@
                                                             ItemStyle-Width="45px" />
                                                         <asp:BoundField DataField="Amount" HeaderText="Amount (&#8377;)"
                                                             ItemStyle-Width="80px" ItemStyle-HorizontalAlign="Right" />
-                                                        <%-- Action button: Edit only --%>
-                                                            <asp:TemplateField HeaderText="Action"
-                                                                ItemStyle-Width="45px"
-                                                                ItemStyle-HorizontalAlign="Center">
-                                                                <ItemTemplate>
-                                                                    <%-- Red pencil=Edit --%>
-                                                                        <asp:Button runat="server" Text="&#9998;"
-                                                                            CommandName="FillForm"
-                                                                            CommandArgument='<%# Eval("RowId") %>'
-                                                                            CssClass="btn btn-sm"
-                                                                            style="background:none; border:none; color:#dc3545; font-size:20px; font-weight:bold; padding:0 6px; cursor:pointer;"
-                                                                            ToolTip="Edit this row in the form"
-                                                                            OnClientClick="if(!confirmEditWithUnsaved()) return false; markFormDirty(); return true;" />
-                                                                </ItemTemplate>
-                                                            </asp:TemplateField>
+
                                                     </Columns>
                                                 </asp:GridView>
                                             </div>

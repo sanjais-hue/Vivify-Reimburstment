@@ -3813,15 +3813,15 @@ END";
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
-            string fileName = "Reimbursement_Template.xlsx";
+            string fileName = "Reimbursement_Template_HR.xlsx";
             // Check several likely locations for the template file
             string[] possiblePaths = {
-                Server.MapPath("~/Reimbursement_Template.xlsx"),
-                Server.MapPath("~/LTG/Reimbursement_Template.xlsx"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reimbursement_Template.xlsx"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LTG", "Reimbursement_Template.xlsx"),
-                @"Z:\My Folders\Vivify Reimburstment\Reimbursement_Template.xlsx",
-                @"Z:\My Folders\Vivify Reimburstment\LTG\Reimbursement_Template.xlsx"
+                Server.MapPath("~/Reimbursement_Template_HR.xlsx"),
+                Server.MapPath("~/LTG/Reimbursement_Template_HR.xlsx"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reimbursement_Template_HR.xlsx"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LTG", "Reimbursement_Template_HR.xlsx"),
+                @"Z:\My Folders\Vivify Reimburstment\Reimbursement_Template_HR.xlsx",
+                @"Z:\My Folders\Vivify Reimburstment\LTG\Reimbursement_Template_HR.xlsx"
             };
 
             string filePath = possiblePaths.FirstOrDefault(p => System.IO.File.Exists(p));
