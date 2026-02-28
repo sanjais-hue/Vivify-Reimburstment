@@ -4369,10 +4369,16 @@ END";
                 // Determine Main Category (Local, Tour)
                 string mainCategory = "Local";
 
-                // 1. Check explicit Tour/Local column
+                // 1. Check explicit Tour/Local column or Expense Type column
                 if (columnMap.ContainsKey("TourLocalColumn"))
                 {
                     var cellValue = worksheet.Cells[row, columnMap["TourLocalColumn"][0]].Value?.ToString()?.ToLower() ?? "";
+                    if (cellValue.Contains("tour")) mainCategory = "Tour";
+                    else if (cellValue.Contains("local")) mainCategory = "Local";
+                }
+                else if (columnMap.ContainsKey("ExpenseTypeColumn"))
+                {
+                    var cellValue = worksheet.Cells[row, columnMap["ExpenseTypeColumn"][0]].Value?.ToString()?.ToLower() ?? "";
                     if (cellValue.Contains("tour")) mainCategory = "Tour";
                     else if (cellValue.Contains("local")) mainCategory = "Local";
                 }
@@ -4699,10 +4705,16 @@ END";
                 // Determine Main Category (Local, Tour)
                 string mainCategory = "Local";
 
-                // 1. Check explicit Tour/Local column
+                // 1. Check explicit Tour/Local column or Expense Type column
                 if (columnMap.ContainsKey("TourLocalColumn"))
                 {
                     var cellValue = worksheet.Cells[row, columnMap["TourLocalColumn"][0]].Value?.ToString()?.ToLower() ?? "";
+                    if (cellValue.Contains("tour")) mainCategory = "Tour";
+                    else if (cellValue.Contains("local")) mainCategory = "Local";
+                }
+                else if (columnMap.ContainsKey("ExpenseTypeColumn"))
+                {
+                    var cellValue = worksheet.Cells[row, columnMap["ExpenseTypeColumn"][0]].Value?.ToString()?.ToLower() ?? "";
                     if (cellValue.Contains("tour")) mainCategory = "Tour";
                     else if (cellValue.Contains("local")) mainCategory = "Local";
                 }
