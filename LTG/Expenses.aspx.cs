@@ -521,6 +521,23 @@ namespace Vivify
 
         private void PopulateFormForEdit(string category, int id)
         {
+            // Clear all attachment status labels first
+            lblLocalMiscFileStatus.Text = "";
+            lblLocalCabFileStatus.Text = "";
+            lblLocalAutoFileStatus.Text = "";
+            lblLocalBillStatus.Text = "";
+            lblLocalServiceReportStatus.Text = "";
+            lblLocalApprovalStatus.Text = "";
+            lblTourMiscFileStatus.Text = "";
+            lblTourOthersFileStatus.Text = "";
+            lblServiceReportStatus.Text = "";
+            lblTourApprovalStatus.Text = "";
+            lblFlightFileStatus.Text = "";
+            lblBusFileStatus.Text = "";
+            lblTrainFileStatus.Text = "";
+            lblCabFileStatus.Text = "";
+            lblTourAutoFileStatus.Text = "";
+
             string constr = ConfigurationManager.ConnectionStrings["vivify"].ConnectionString;
             using (SqlConnection con = new SqlConnection(constr))
             {
@@ -540,6 +557,13 @@ namespace Vivify
                     hdnEditRecordId.Value = id.ToString();
                     hdnEditCategory.Value = category;
                     btnSubmit.Text = "Update";
+
+                    // Check for attachments (Image column exists in most tables except Food)
+                    bool hasImage = false;
+                    if (category != "Food" && category != "Lodging")
+                    {
+                        hasImage = reader["Image"] != DBNull.Value;
+                    }
 
                     // Common fields
                     string date = reader["Date"] != DBNull.Value ? Convert.ToDateTime(reader["Date"]).ToString("yyyy-MM-dd") : "";
@@ -567,6 +591,7 @@ namespace Vivify
                             PopulateLocalMiscellaneousFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtLocalMiscFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtLocalMiscToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
+                            if (hasImage) lblLocalMiscFileStatus.Text = "Already Attached";
                         }
                         else if (category == "Others")
                         {
@@ -575,6 +600,9 @@ namespace Vivify
                             PopulateLocalOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
                             if (reader["FromTime"] != DBNull.Value) txtLocalOthersFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtLocalOthersToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
+                            if (hasImage) lblLocalBillStatus.Text = "Already Attached";
+                            if (reader["ServiceReport"] != DBNull.Value) lblLocalServiceReportStatus.Text = "Already Attached";
+                            if (reader["ApprovalMail"] != DBNull.Value) lblLocalApprovalStatus.Text = "Already Attached";
                         }
                         else if (category == "Conveyance")
                         {
@@ -584,7 +612,7 @@ namespace Vivify
                             ddlLocalMode.SelectedValue = transportType;
                             ddlLocalMode_SelectedIndexChanged(null, null);
                             PopulateLocalConveyanceFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
-                            
+
                             if (transportType == "Bike")
                             {
                                 if (reader["FromTime"] != DBNull.Value) txtLocalBikeFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
@@ -605,6 +633,7 @@ namespace Vivify
                                 txtLocalCabSMONo.Text = smoNo;
                                 txtLocalCabSONo.Text = soNo;
                                 txtLocalCabRefNo.Text = refNo;
+                                if (hasImage) lblLocalCabFileStatus.Text = "Already Attached";
                             }
                             else if (transportType == "Auto")
                             {
@@ -616,78 +645,73 @@ namespace Vivify
                                 txtLocalAutoSONo.Text = soNo;
                                 txtLocalAutoRefNo.Text = refNo;
                                 txtLocalAutoDistance.Text = reader["Distance"]?.ToString();
+                                if (hasImage) lblLocalAutoFileStatus.Text = "Already Attached";
                             }
                         }
                     }
                     else if (expenseType == "Tour")
                     {
+                        ddlTourExpenseType.SelectedValue = category;
+                        ddlTourExpenseType_SelectedIndexChanged(null, null);
+
                         if (category == "Food")
                         {
-                            ddlTourExpenseType.SelectedValue = "Food";
-                            ddlTourExpenseType_SelectedIndexChanged(null, null);
-                            PopulateTourFoodFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
+                            txtTourFoodDate.Text = date;
+                            txtTourFoodAmount.Text = amount;
                             if (reader["FromTime"] != DBNull.Value) txtTourFoodFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtTourFoodToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
-                            if (reader["Designation"] != DBNull.Value) txtTourFoodDesignation.SelectedValue = reader["Designation"].ToString();
+                            txtTourFoodParticulars.Text = particulars;
+                            txtTourFoodRemarks.Text = remarks;
+                            txtTourFoodSMONo.Text = smoNo;
+                            txtTourFoodSoNo.Text = soNo;
+                            txtTourFoodRefNo.Text = refNo;
+                            if (reader["Designation"] != DBNull.Value) ddlTourFoodDesignation.SelectedValue = reader["Designation"].ToString();
                         }
                         else if (category == "Miscellaneous")
                         {
-                            ddlTourExpenseType.SelectedValue = "Miscellaneous";
-                            ddlTourExpenseType_SelectedIndexChanged(null, null);
-                            PopulateTourMiscellaneousFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
+                            txtTourMiscDate.Text = date;
+                            txtTourMiscAmount.Text = amount;
                             if (reader["FromTime"] != DBNull.Value) txtTourMiscFromTime.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtTourMiscToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
+                            txtTourMiscParticulars.Text = particulars;
+                            txtTourMiscRemarks.Text = remarks;
+                            txtTourMiscSMONo.Text = smoNo;
+                            txtTourMiscSoNo.Text = soNo;
+                            txtTourMiscRefNo.Text = refNo;
+                            if (hasImage) lblTourMiscFileStatus.Text = "Already Attached";
                         }
                         else if (category == "Others")
                         {
-                            ddlTourExpenseType.SelectedValue = "Lodging"; // This seems to be mapped to Lodging in UI for Tour
-                            ddlTourExpenseType_SelectedIndexChanged(null, null);
-                            PopulateTourOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
+                            txtTourOthersDate.Text = date;
+                            txtTourOthersAmount.Text = amount;
                             if (reader["FromTime"] != DBNull.Value) txtFromTimeTourOthers.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtToTimeTourOthers.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
+                            txtTourOthersParticulars.Text = particulars;
+                            txtTourOthersRemarks.Text = remarks;
+                            txtTourOthersSMONo.Text = smoNo;
+                            txtTourOthersSoNo.Text = soNo;
+                            txtTourOthersRefNo.Text = refNo;
+                            if (hasImage) lblTourOthersFileStatus.Text = "Already Attached";
+                            if (reader["ServiceReport"] != DBNull.Value) lblServiceReportStatus.Text = "Already Attached";
+                            if (reader["ApprovalMail"] != DBNull.Value) lblTourApprovalStatus.Text = "Already Attached";
                         }
                         else if (category == "Lodging")
                         {
-                            ddlTourExpenseType.SelectedValue = "Lodging";
-                            ddlTourExpenseType_SelectedIndexChanged(null, null);
-                            // Lodging use same fields as Others in Tour
-                            PopulateTourOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
-                            if (reader["FromTime"] != DBNull.Value) txtFromTimeTourOthers.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
-                            if (reader["ToTime"] != DBNull.Value) txtToTimeTourOthers.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
+                            txtLodgingDate.Text = date;
+                            txtLodgingAmount.Text = amount;
+                            txtLodgingParticulars.Text = particulars;
+                            txtLodgingRemarks.Text = remarks;
+                            txtLodgingSMONo.Text = smoNo;
+                            txtLodgingSoNo.Text = soNo;
+                            txtLodgingRefNo.Text = refNo;
                         }
                         else if (category == "Conveyance")
                         {
-                            ddlTourExpenseType.SelectedValue = "Conveyance";
-                            ddlTourExpenseType_SelectedIndexChanged(null, null);
                             string transportType = reader["TransportType"]?.ToString();
                             ddlTourTransportMode.SelectedValue = transportType;
                             ddlTourTransportMode_SelectedIndexChanged(null, null);
-                            
-                            if (transportType == "Cab")
-                            {
-                                txtCabDate.Text = date;
-                                txtCabAmount.Text = amount;
-                                if (reader["FromTime"] != DBNull.Value) txtFromTimeCab.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
-                                if (reader["ToTime"] != DBNull.Value) txtToTimeCab.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
-                                txtParticularsCab.Text = particulars;
-                                txtRemarksCab.Text = remarks;
-                                txtCabSmoNo.Text = smoNo;
-                                txtCabSoNo.Text = soNo;
-                                txtCabRefNo.Text = refNo;
-                            }
-                            else if (transportType == "Train")
-                            {
-                                txtTrainDate.Text = date;
-                                txtTrainAmount.Text = amount;
-                                if (reader["FromTime"] != DBNull.Value) txtFromTimeTrain.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
-                                if (reader["ToTime"] != DBNull.Value) txtToTimeTrain.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
-                                txtParticularsTrain.Text = particulars;
-                                txtRemarksTrain.Text = remarks;
-                                txtTrainSmoNo.Text = smoNo;
-                                txtTrainSoNo.Text = soNo;
-                                txtTrainRefNo.Text = refNo;
-                            }
-                            else if (transportType == "Flight")
+
+                            if (transportType == "Flight")
                             {
                                 txtFlightDate.Text = date;
                                 txtFlightAmount.Text = amount;
@@ -698,6 +722,7 @@ namespace Vivify
                                 txtFlightSmoNo.Text = smoNo;
                                 txtFlightSoNo.Text = soNo;
                                 txtFlightRefNo.Text = refNo;
+                                if (hasImage) lblFlightFileStatus.Text = "Already Attached";
                             }
                             else if (transportType == "Bus")
                             {
@@ -710,6 +735,33 @@ namespace Vivify
                                 txtBusSmoNo.Text = smoNo;
                                 txtBusSoNo.Text = soNo;
                                 txtBusRefNo.Text = refNo;
+                                if (hasImage) lblBusFileStatus.Text = "Already Attached";
+                            }
+                            else if (transportType == "Train")
+                            {
+                                txtTrainDate.Text = date;
+                                txtTrainAmount.Text = amount;
+                                if (reader["FromTime"] != DBNull.Value) txtFromTimeTrain.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
+                                if (reader["ToTime"] != DBNull.Value) txtToTimeTrain.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
+                                txtParticularsTrain.Text = particulars;
+                                txtRemarksTrain.Text = remarks;
+                                txtTrainSmoNo.Text = smoNo;
+                                txtTrainSoNo.Text = soNo;
+                                txtTrainRefNo.Text = refNo;
+                                if (hasImage) lblTrainFileStatus.Text = "Already Attached";
+                            }
+                            else if (transportType == "Cab")
+                            {
+                                txtCabDate.Text = date;
+                                txtCabAmount.Text = amount;
+                                if (reader["FromTime"] != DBNull.Value) txtFromTimeCab.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
+                                if (reader["ToTime"] != DBNull.Value) txtToTimeCab.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
+                                txtParticularsCab.Text = particulars;
+                                txtRemarksCab.Text = remarks;
+                                txtCabSmoNo.Text = smoNo;
+                                txtCabSoNo.Text = soNo;
+                                txtCabRefNo.Text = refNo;
+                                if (hasImage) lblCabFileStatus.Text = "Already Attached";
                             }
                             else if (transportType == "Auto")
                             {
@@ -723,6 +775,7 @@ namespace Vivify
                                 txtTourAutoSoNo.Text = soNo;
                                 txtTourAutoRefNo.Text = refNo;
                                 txtTourAutoDistance.Text = reader["Distance"]?.ToString();
+                                if (hasImage) lblTourAutoFileStatus.Text = "Already Attached";
                             }
                         }
                     }
@@ -730,6 +783,7 @@ namespace Vivify
                 reader.Close();
             }
         }
+
 
         protected void gvCategoryDetail_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -6024,37 +6078,39 @@ END";
                 {
                     return ts.ToString(@"hh\:mm");
                 }
-                else if (cellValue is double excelTime)
+                
+                // Handle numeric types (Excel stores time as a fraction of a day)
+                if (cellValue is double || cellValue is decimal || cellValue is float || cellValue is int || cellValue is long)
                 {
-                    // Excel stores time as a fraction of a day
-                    if (excelTime >= 0 && excelTime < 1)
-                    {
-                        return DateTime.FromOADate(excelTime).ToString("HH:mm");
-                    }
-                    else
-                    {
-                        // If it includes a date part, still extract the time
-                        return DateTime.FromOADate(excelTime).ToString("HH:mm");
-                    }
+                    double excelTime = Convert.ToDouble(cellValue);
+                    // OADate expects a double where 0.0 is 1899-12-30 and fractional part is time
+                    return DateTime.FromOADate(excelTime).ToString("HH:mm");
                 }
-                else
+
+                // Fallback string parsing
+                string timeStr = cellValue.ToString().Trim();
+                if (string.IsNullOrEmpty(timeStr)) return "";
+
+                if (DateTime.TryParse(timeStr, out DateTime parsedDt))
                 {
-                    // Fallback string parsing
-                    string timeStr = cellValue.ToString().Trim();
-                    if (DateTime.TryParse(timeStr, out DateTime parsedDt))
-                    {
-                        return parsedDt.ToString("HH:mm");
-                    }
-                    else if (TimeSpan.TryParse(timeStr, out TimeSpan parsedTs))
-                    {
-                        return parsedTs.ToString(@"hh\:mm");
-                    }
-                    return timeStr;
+                    return parsedDt.ToString("HH:mm");
                 }
+                else if (TimeSpan.TryParse(timeStr, out TimeSpan parsedTs))
+                {
+                    return parsedTs.ToString(@"hh\:mm");
+                }
+                
+                // If it's a numeric string, try converting to double
+                if (double.TryParse(timeStr, out double numericTime))
+                {
+                    return DateTime.FromOADate(numericTime).ToString("HH:mm");
+                }
+
+                return timeStr;
             }
             catch
             {
-                return cellValue.ToString();
+                return cellValue?.ToString() ?? "";
             }
         }
 

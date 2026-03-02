@@ -835,6 +835,9 @@ border:none;background:none;
                                                                 readonly placeholder="Choose file..."
                                                                 onclick="triggerOrOpen('<%= fileUploadLocalBill.ClientID %>', 'txtBillFileName')"
                                                                 style="padding-right:35px;" />
+                                                            <asp:Label ID="lblLocalBillStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
 
                                                             <!-- Remove button inside input -->
                                                             <button type="button" id="btnRemoveBillFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -901,6 +904,9 @@ border:none;background:none;
                                                                 class="form-control" readonly
                                                                 placeholder="Choose file..."
                                                                 onclick="triggerOrOpen('<%= fileServiceReport.ClientID %>', 'txtServiceReportFileName')" />
+                                                            <asp:Label ID="lblLocalServiceReportStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
 
                                                             <!-- Remove button -->
                                                             <button type="button" id="btnRemoveServiceReportFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -966,6 +972,9 @@ border:none;background:none;
                                                                 class="form-control" readonly
                                                                 placeholder="Choose file..."
                                                                 onclick="triggerOrOpen('<%= othersfileUploadApproval.ClientID %>', 'txtOthersApprovalFileName')" />
+                                                            <asp:Label ID="lblLocalApprovalStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
 
                                                             <!-- Remove button -->
                                                             <button type="button" id="btnRemoveOthersApprovalFile"
@@ -1152,14 +1161,17 @@ border:none;background:none;
                                                                 <!-- Hidden ASP.NET FileUpload -->
                                                                 <asp:FileUpload ID="fileUploadLocalCab" runat="server"
                                                                     style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtCabFileName', 'btnRemoveCabFile')"
+                                                                    onchange="handleFileSelect(this, 'txtLocalCabFileName', 'btnRemoveCabFile')"
                                                                     accept="image/*,application/pdf" />
 
                                                                 <!-- Fake textbox (click ? browse or open) -->
-                                                                <input type="text" id="txtCabFileName"
+                                                                <input type="text" id="txtLocalCabFileName"
                                                                     class="form-control" readonly
                                                                     placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= fileUploadLocalCab.ClientID %>', 'txtCabFileName')" />
+                                                                    onclick="triggerOrOpen('<%= fileUploadLocalCab.ClientID %>', 'txtLocalCabFileName')" />
+                                                                <asp:Label ID="lblLocalCabFileStatus" runat="server"
+                                                                    CssClass="text-success" Font-Bold="true" Text="">
+                                                                </asp:Label>
 
                                                                 <!-- Remove button -->
                                                                 <button type="button" id="btnRemoveCabFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -1167,7 +1179,7 @@ border:none;background:none;
 border:none;background:none;
    font-size:30px; font-weight:bold; line-height:24px;
    text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= fileUploadLocalCab.ClientID %>', 'txtCabFileName', 'btnRemoveCabFile')">
+                                                                    onclick="removeFile('<%= fileUploadLocalCab.ClientID %>', 'txtLocalCabFileName', 'btnRemoveCabFile')">
                                                                 </button>
                                                             </div>
 
@@ -1304,14 +1316,17 @@ border:none;background:none;
                                                                 <!-- Hidden ASP.NET FileUpload -->
                                                                 <asp:FileUpload ID="txtfileUploadLocalAuto"
                                                                     runat="server" style="display:none;"
-                                                                    onchange="handleFileSelect(this, 'txtAutoFileName', 'btnRemoveAutoFile')"
+                                                                    onchange="handleFileSelect(this, 'txtLocalAutoFileName', 'btnRemoveAutoFile')"
                                                                     accept="image/*,application/pdf" />
 
                                                                 <!-- Fake textbox -->
-                                                                <input type="text" id="txtAutoFileName"
+                                                                <input type="text" id="txtLocalAutoFileName"
                                                                     class="form-control" readonly
                                                                     placeholder="Choose file..."
-                                                                    onclick="triggerOrOpen('<%= txtfileUploadLocalAuto.ClientID %>', 'txtAutoFileName')" />
+                                                                    onclick="triggerOrOpen('<%= txtfileUploadLocalAuto.ClientID %>', 'txtLocalAutoFileName')" />
+                                                                <asp:Label ID="lblLocalAutoFileStatus" runat="server"
+                                                                    CssClass="text-success" Font-Bold="true" Text="">
+                                                                </asp:Label>
 
                                                                 <!-- Remove button -->
                                                                 <button type="button" id="btnRemoveAutoFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -1319,7 +1334,7 @@ border:none;background:none;
 border:none;background:none;
    font-size:30px; font-weight:bold; line-height:24px;
    text-align:center; cursor:pointer; color:#d00;" title="Remove File"
-                                                                    onclick="removeFile('<%= txtfileUploadLocalAuto.ClientID %>', 'txtAutoFileName', 'btnRemoveAutoFile')">
+                                                                    onclick="removeFile('<%= txtfileUploadLocalAuto.ClientID %>', 'txtLocalAutoFileName', 'btnRemoveAutoFile')">
                                                                 </button>
                                                             </div>
 
@@ -1639,14 +1654,20 @@ border:none;background:none;
                                                             <!-- Hidden ASP.NET FileUpload -->
                                                             <asp:FileUpload ID="fileUploadTourMiscellaneous"
                                                                 runat="server" style="display:none;"
-                                                                onchange="handleFileSelect(this, 'txtTourMiscFileName', 'btnRemoveTourMiscFile')"
+                                                                onchange="handleFileSelect(this, 'txtLocalMiscFileName', 'btnRemoveTourMiscFile')"
                                                                 accept="image/*,application/pdf" />
 
                                                             <!-- Fake textbox -->
-                                                            <input type="text" id="txtTourMiscFileName"
+                                                            <input type="text" id="txtLocalMiscFileName"
                                                                 class="form-control" readonly
                                                                 placeholder="Choose file..."
-                                                                onclick="triggerOrOpen('<%= fileUploadTourMiscellaneous.ClientID %>', 'txtTourMiscFileName')" />
+                                                                onclick="triggerOrOpen('<%= fileUploadTourMiscellaneous.ClientID %>', 'txtLocalMiscFileName')" />
+                                                            <asp:Label ID="lblLocalMiscFileStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
+                                                            <asp:Label ID="lblTourMiscFileStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
 
                                                             <!-- Remove button -->
                                                             <button type="button" id="btnRemoveTourMiscFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -1774,6 +1795,9 @@ border:none;background:none;
                                                                 class="form-control" readonly
                                                                 placeholder="Choose file..."
                                                                 onclick="triggerOrOpen('<%= fileUploadTourOthers.ClientID %>', 'txtTourOthersFileName')" />
+                                                            <asp:Label ID="lblTourOthersFileStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
 
                                                             <!-- Remove button -->
                                                             <button type="button" id="btnRemoveTourOthersFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -1838,6 +1862,9 @@ border:none;background:none;
                                                                 class="form-control" readonly
                                                                 placeholder="Choose file..."
                                                                 onclick="triggerOrOpen('<%= fileUploadServiceReport.ClientID %>', 'txtServiceReportFileName')" />
+                                                            <asp:Label ID="lblServiceReportStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
 
                                                             <!-- Remove button -->
                                                             <button type="button" id="btnRemoveServiceReportFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -1898,6 +1925,9 @@ border:none;background:none;
                                                                 class="form-control" readonly
                                                                 placeholder="Choose file..."
                                                                 onclick="triggerOrOpen('<%= fileUploadTourApproval.ClientID %>', 'txtTourApprovalFileName')" />
+                                                            <asp:Label ID="lblTourApprovalStatus" runat="server"
+                                                                CssClass="text-success" Font-Bold="true" Text="">
+                                                            </asp:Label>
 
                                                             <!-- Remove button -->
                                                             <button type="button" id="btnRemoveTourApprovalFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -1973,6 +2003,9 @@ border:none;background:none;
                                                                     class="form-control" readonly
                                                                     placeholder="Choose file..."
                                                                     onclick="triggerOrOpen('<%= fileUploadFlight.ClientID %>', 'txtFlightFileName')" />
+                                                                <asp:Label ID="lblFlightFileStatus" runat="server"
+                                                                    CssClass="text-success" Font-Bold="true" Text="">
+                                                                </asp:Label>
 
                                                                 <!-- Remove button -->
                                                                 <button type="button" id="btnRemoveFlightFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -2102,6 +2135,9 @@ border:none;background:none;
                                                                     class="form-control" readonly
                                                                     placeholder="Choose file..."
                                                                     onclick="triggerOrOpen('<%= fileUploadBus.ClientID %>', 'txtBusFileName')" />
+                                                                <asp:Label ID="lblBusFileStatus" runat="server"
+                                                                    CssClass="text-success" Font-Bold="true" Text="">
+                                                                </asp:Label>
 
                                                                 <!-- Remove button -->
                                                                 <button type="button" id="btnRemoveBusFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -2232,6 +2268,9 @@ border:none;background:none;
                                                                     class="form-control" readonly
                                                                     placeholder="Choose file..."
                                                                     onclick="triggerOrOpen('<%= fileUploadTrain.ClientID %>', 'txtTrainFileName')" />
+                                                                <asp:Label ID="lblTrainFileStatus" runat="server"
+                                                                    CssClass="text-success" Font-Bold="true" Text="">
+                                                                </asp:Label>
 
                                                                 <!-- Remove button -->
                                                                 <button type="button" id="btnRemoveTrainFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -2358,6 +2397,9 @@ border:none;background:none;
                                                                     class="form-control" readonly
                                                                     placeholder="Choose file..."
                                                                     onclick="triggerOrOpen('<%= fileUploadCab.ClientID %>', 'txtCabFileName')" />
+                                                                <asp:Label ID="lblCabFileStatus" runat="server"
+                                                                    CssClass="text-success" Font-Bold="true" Text="">
+                                                                </asp:Label>
 
                                                                 <!-- Remove button -->
                                                                 <button type="button" id="btnRemoveCabFile" style="position:absolute; right:6px; top:4px; display:none;
@@ -2491,6 +2533,9 @@ border:none;background:none;
                                                                     class="form-control" readonly
                                                                     placeholder="Choose file..."
                                                                     onclick="triggerOrOpen('<%= fileUploadTourAuto.ClientID %>', 'txtTourAutoFileName')" />
+                                                                <asp:Label ID="lblTourAutoFileStatus" runat="server"
+                                                                    CssClass="text-success" Font-Bold="true" Text="">
+                                                                </asp:Label>
 
                                                                 <!-- Remove button -->
                                                                 <button type="button" id="btnRemoveTourAutoFile" style="position:absolute; right:6px; top:4px; display:none;
