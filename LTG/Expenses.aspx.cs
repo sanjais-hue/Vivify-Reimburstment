@@ -4368,23 +4368,27 @@ END";
 
                 // Determine Main Category (Local, Tour)
                 string mainCategory = "Local";
+                bool categoryFound = false;
 
-                // 1. Check explicit Tour/Local column or Expense Type column
-                if (columnMap.ContainsKey("TourLocalColumn"))
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["TourLocalColumn"][0]].Value?.ToString()?.ToLower() ?? "";
-                    if (cellValue.Contains("tour")) mainCategory = "Tour";
-                    else if (cellValue.Contains("local")) mainCategory = "Local";
-                }
-                else if (columnMap.ContainsKey("ExpenseTypeColumn"))
+                // 1. Check explicit Expense Type column
+                if (columnMap.ContainsKey("ExpenseTypeColumn"))
                 {
                     var cellValue = worksheet.Cells[row, columnMap["ExpenseTypeColumn"][0]].Value?.ToString()?.ToLower() ?? "";
-                    if (cellValue.Contains("tour")) mainCategory = "Tour";
-                    else if (cellValue.Contains("local")) mainCategory = "Local";
+                    if (cellValue.Contains("tour")) { mainCategory = "Tour"; categoryFound = true; }
+                    else if (cellValue.Contains("local")) { mainCategory = "Local"; categoryFound = true; }
                 }
-                else
+
+                // 2. Check older Tour/Local column if category not found yet
+                if (!categoryFound && columnMap.ContainsKey("TourLocalColumn"))
                 {
-                    // 2. Fallback to Tour indicators
+                    var cellValue = worksheet.Cells[row, columnMap["TourLocalColumn"][0]].Value?.ToString()?.ToLower() ?? "";
+                    if (cellValue.Contains("tour")) { mainCategory = "Tour"; categoryFound = true; }
+                    else if (cellValue.Contains("local")) { mainCategory = "Local"; categoryFound = true; }
+                }
+
+                if (!categoryFound)
+                {
+                    // 3. Fallback to Tour indicators
                     bool isTourValue = false;
                     if (columnMap.ContainsKey("Lodging"))
                     {
@@ -4704,23 +4708,27 @@ END";
 
                 // Determine Main Category (Local, Tour)
                 string mainCategory = "Local";
+                bool categoryFound = false;
 
-                // 1. Check explicit Tour/Local column or Expense Type column
-                if (columnMap.ContainsKey("TourLocalColumn"))
-                {
-                    var cellValue = worksheet.Cells[row, columnMap["TourLocalColumn"][0]].Value?.ToString()?.ToLower() ?? "";
-                    if (cellValue.Contains("tour")) mainCategory = "Tour";
-                    else if (cellValue.Contains("local")) mainCategory = "Local";
-                }
-                else if (columnMap.ContainsKey("ExpenseTypeColumn"))
+                // 1. Check explicit Expense Type column
+                if (columnMap.ContainsKey("ExpenseTypeColumn"))
                 {
                     var cellValue = worksheet.Cells[row, columnMap["ExpenseTypeColumn"][0]].Value?.ToString()?.ToLower() ?? "";
-                    if (cellValue.Contains("tour")) mainCategory = "Tour";
-                    else if (cellValue.Contains("local")) mainCategory = "Local";
+                    if (cellValue.Contains("tour")) { mainCategory = "Tour"; categoryFound = true; }
+                    else if (cellValue.Contains("local")) { mainCategory = "Local"; categoryFound = true; }
                 }
-                else
+
+                // 2. Check older Tour/Local column if category not found yet
+                if (!categoryFound && columnMap.ContainsKey("TourLocalColumn"))
                 {
-                    // 2. Fallback to Tour indicators
+                    var cellValue = worksheet.Cells[row, columnMap["TourLocalColumn"][0]].Value?.ToString()?.ToLower() ?? "";
+                    if (cellValue.Contains("tour")) { mainCategory = "Tour"; categoryFound = true; }
+                    else if (cellValue.Contains("local")) { mainCategory = "Local"; categoryFound = true; }
+                }
+
+                if (!categoryFound)
+                {
+                    // 3. Fallback to Tour indicators
                     bool isTourValue = false;
                     if (columnMap.ContainsKey("Lodging"))
                     {
