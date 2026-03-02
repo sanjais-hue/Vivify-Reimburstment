@@ -663,9 +663,9 @@ namespace Vivify
                             txtTourFoodParticulars.Text = particulars;
                             txtTourFoodRemarks.Text = remarks;
                             txtTourFoodSMONo.Text = smoNo;
-                            txtTourFoodSoNo.Text = soNo;
+                            txtTourFoodSONo.Text = soNo;
                             txtTourFoodRefNo.Text = refNo;
-                            if (reader["Designation"] != DBNull.Value) ddlTourFoodDesignation.SelectedValue = reader["Designation"].ToString();
+                            if (reader["Designation"] != DBNull.Value) txtTourFoodDesignation.SelectedValue = reader["Designation"].ToString();
                         }
                         else if (category == "Miscellaneous")
                         {
@@ -675,7 +675,7 @@ namespace Vivify
                             if (reader["ToTime"] != DBNull.Value) txtTourMiscToTime.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
                             txtTourMiscParticulars.Text = particulars;
                             txtTourMiscRemarks.Text = remarks;
-                            txtTourMiscSMONo.Text = smoNo;
+                            txtTourMiscSmoNo.Text = smoNo;
                             txtTourMiscSoNo.Text = soNo;
                             txtTourMiscRefNo.Text = refNo;
                             if (hasImage) lblTourMiscFileStatus.Text = "Already Attached";
@@ -686,9 +686,9 @@ namespace Vivify
                             txtTourOthersAmount.Text = amount;
                             if (reader["FromTime"] != DBNull.Value) txtFromTimeTourOthers.Text = ((TimeSpan)reader["FromTime"]).ToString(@"hh\:mm");
                             if (reader["ToTime"] != DBNull.Value) txtToTimeTourOthers.Text = ((TimeSpan)reader["ToTime"]).ToString(@"hh\:mm");
-                            txtTourOthersParticulars.Text = particulars;
-                            txtTourOthersRemarks.Text = remarks;
-                            txtTourOthersSMONo.Text = smoNo;
+                            txtParticularsTourOthers.Text = particulars;
+                            txtRemarksTourOthers.Text = remarks;
+                            txtTourOthersSmoNo.Text = smoNo;
                             txtTourOthersSoNo.Text = soNo;
                             txtTourOthersRefNo.Text = refNo;
                             if (hasImage) lblTourOthersFileStatus.Text = "Already Attached";
@@ -697,13 +697,13 @@ namespace Vivify
                         }
                         else if (category == "Lodging")
                         {
-                            txtLodgingDate.Text = date;
-                            txtLodgingAmount.Text = amount;
-                            txtLodgingParticulars.Text = particulars;
-                            txtLodgingRemarks.Text = remarks;
-                            txtLodgingSMONo.Text = smoNo;
-                            txtLodgingSoNo.Text = soNo;
-                            txtLodgingRefNo.Text = refNo;
+                            txtTourOthersDate.Text = date;
+                            txtTourOthersAmount.Text = amount;
+                            txtParticularsTourOthers.Text = particulars;
+                            txtRemarksTourOthers.Text = remarks;
+                            txtTourOthersSmoNo.Text = smoNo;
+                            txtTourOthersSoNo.Text = soNo;
+                            txtTourOthersRefNo.Text = refNo;
                         }
                         else if (category == "Conveyance")
                         {
