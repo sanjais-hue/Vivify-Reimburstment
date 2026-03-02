@@ -5982,17 +5982,65 @@ END";
         }
 
 
+        private string ParseExcelTime(object cellValue)
+        {
+            if (cellValue == null) return "";
+
+            try
+            {
+                if (cellValue is DateTime dt)
+                {
+                    return dt.ToString("HH:mm");
+                }
+                else if (cellValue is TimeSpan ts)
+                {
+                    return ts.ToString(@"hh\:mm");
+                }
+                else if (cellValue is double excelTime)
+                {
+                    // Excel stores time as a fraction of a day
+                    if (excelTime >= 0 && excelTime < 1)
+                    {
+                        return DateTime.FromOADate(excelTime).ToString("HH:mm");
+                    }
+                    else
+                    {
+                        // If it includes a date part, still extract the time
+                        return DateTime.FromOADate(excelTime).ToString("HH:mm");
+                    }
+                }
+                else
+                {
+                    // Fallback string parsing
+                    string timeStr = cellValue.ToString().Trim();
+                    if (DateTime.TryParse(timeStr, out DateTime parsedDt))
+                    {
+                        return parsedDt.ToString("HH:mm");
+                    }
+                    else if (TimeSpan.TryParse(timeStr, out TimeSpan parsedTs))
+                    {
+                        return parsedTs.ToString(@"hh\:mm");
+                    }
+                    return timeStr;
+                }
+            }
+            catch
+            {
+                return cellValue.ToString();
+            }
+        }
+
         private string ExtractFromTime(OfficeOpenXml.ExcelWorksheet worksheet, int row, Dictionary<string, List<int>> columnMap)
         {
             if (columnMap.ContainsKey("FromTime") && columnMap["FromTime"].Count > 0)
-                return worksheet.Cells[row, columnMap["FromTime"][0]].Value?.ToString() ?? "";
+                return ParseExcelTime(worksheet.Cells[row, columnMap["FromTime"][0]].Value);
             return "";
         }
 
         private string ExtractToTime(OfficeOpenXml.ExcelWorksheet worksheet, int row, Dictionary<string, List<int>> columnMap)
         {
             if (columnMap.ContainsKey("ToTime") && columnMap["ToTime"].Count > 0)
-                return worksheet.Cells[row, columnMap["ToTime"][0]].Value?.ToString() ?? "";
+                return ParseExcelTime(worksheet.Cells[row, columnMap["ToTime"][0]].Value);
             return "";
         }
 
