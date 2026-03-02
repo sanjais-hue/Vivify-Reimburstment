@@ -5086,146 +5086,180 @@ END";
             }
         }
 
-        protected void btnSaveAllExcel_Click(object sender, EventArgs e)
+     protected void btnSaveAllExcel_Click(object sender, EventArgs e)
+{
+    try
+    {
+        if (Session["ServiceId"] == null)
         {
-            try
-            {
-                if (Session["ServiceId"] == null)
-                {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "err", "alert('Invalid Service ID.');", true);
-                    return;
-                }
-                int serviceId = Convert.ToInt32(Session["ServiceId"]);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "err", "alert('Invalid Service ID.');", true);
+            return;
+        }
+        int serviceId = Convert.ToInt32(Session["ServiceId"]);
 
-                DataTable dt = Session["ImportedExcelData"] as DataTable;
-                if (dt == null || dt.Rows.Count == 0)
-                {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "warn", "alert('No Excel rows to save.');", true);
-                    return;
-                }
-
-                string constr = ConfigurationManager.ConnectionStrings["vivify"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(constr))
-                {
-                    con.Open();
-                    using (SqlTransaction transaction = con.BeginTransaction())
-                    {
-                        try
-                        {
-                            int savedCount = 0;
-                            int skippedCount = 0;
-
-                            foreach (DataRow dr in dt.Rows)
-                            {
-                                string subCategory  = dr["SubCategory"]?.ToString() ?? "";
-                                string mainCategory = dr["MainCategory"]?.ToString() ?? "Local";
-                                string date         = dr["Date"]?.ToString() ?? "";
-                                string amount       = dr["Amount"]?.ToString() ?? "";
-                                string particulars  = dr["Particulars"]?.ToString() ?? "";
-                                string remarks      = dr["Remarks"]?.ToString() ?? "";
-                                string smoNo        = dr["SMONo"]?.ToString() ?? "";
-                                string soNo         = dr["SONo"]?.ToString() ?? "";
-                                string refNo        = dr["RefNo"]?.ToString() ?? "";
-                                string fromTime     = dr["FromTime"]?.ToString() ?? "";
-                                string toTime       = dr["ToTime"]?.ToString() ?? "";
-                                string distance     = dr["Distance"]?.ToString() ?? "";
-                                string transportMode = dr["TransportMode"]?.ToString() ?? "";
-
-                                // Skip rows with no amount or invalid date
-                                if (string.IsNullOrWhiteSpace(amount) || !decimal.TryParse(amount, out _))
-                                { skippedCount++; continue; }
-                                if (string.IsNullOrWhiteSpace(date) || !DateTime.TryParse(date, out _))
-                                { skippedCount++; continue; }
-
-                                switch (subCategory)
-                                {
-                                    case "Food":
-                                        TimeSpan? ft = TimeSpan.TryParse(fromTime, out TimeSpan parsedFt) ? parsedFt : (TimeSpan?)null;
-                                        TimeSpan? tt = TimeSpan.TryParse(toTime,   out TimeSpan parsedTt) ? parsedTt : (TimeSpan?)null;
-                                        InsertFoodExpense(con, transaction, serviceId, mainCategory,
-                                            amount, date, null, ft, tt, particulars, remarks, smoNo, refNo, soNo);
-                                        savedCount++; break;
-
-                                    case "Miscellaneous":
-                                        TimeSpan fromTs = TimeSpan.TryParse(fromTime, out TimeSpan mft) ? mft : TimeSpan.Zero;
-                                        TimeSpan toTs   = TimeSpan.TryParse(toTime,   out TimeSpan mtt) ? mtt : TimeSpan.Zero;
-                                        InsertMiscellaneousExpense(con, transaction, serviceId,
-                                            particulars, amount, date, null, mainCategory,
-                                            fromTs, toTs, particulars, remarks, smoNo, refNo, soNo);
-                                        savedCount++; break;
-
-                                    case "Others":
-                                        string safeFrom = TimeSpan.TryParse(fromTime, out _) ? fromTime : "00:00";
-                                        string safeTo   = TimeSpan.TryParse(toTime,   out _) ? toTime   : "00:00";
-                                        InsertOthersExpense(con, transaction, serviceId,
-                                            amount, date, safeFrom, safeTo, particulars, remarks,
-                                            null, othersfileUploadApproval, smoNo, refNo, soNo, null);
-                                        savedCount++; break;
-
-                                    case "Lodging":
-                                        InsertLodgingExpense(con, transaction, serviceId,
-                                            amount, date, fromTime, toTime, particulars, remarks,
-                                            fileUploadTourOthers, fileUploadTourApproval, smoNo, refNo, soNo, null);
-                                        savedCount++; break;
-
-                                    case "Conveyance":
-                                        // Map Cab/Bus for Local conveyance; keep as-is for Tour
-                                        string transport = transportMode;
-                                        if (mainCategory == "Local")
-                                        {
-                                            // Local only supports: Bike, Cab/Bus, Auto
-                                            if (transport.Equals("Cab", StringComparison.OrdinalIgnoreCase) ||
-                                                transport.Equals("Bus", StringComparison.OrdinalIgnoreCase) ||
-                                                transport.Equals("Cab/Bus", StringComparison.OrdinalIgnoreCase))
-                                                transport = "Cab/Bus";
-                                            else if (!transport.Equals("Bike", StringComparison.OrdinalIgnoreCase) &&
-                                                     !transport.Equals("Auto", StringComparison.OrdinalIgnoreCase))
-                                                transport = "Cab/Bus"; // default fallback for Local
-                                        }
-                                        InsertConveyanceExpense(con, transaction, serviceId,
-                                            transport, amount, date, fromTime, toTime,
-                                            particulars, remarks, null, mainCategory, distance, smoNo, refNo, soNo);
-                                        savedCount++; break;
-
-                                    default:
-                                        skippedCount++; break;
-                                }
-                            }
-
-                            transaction.Commit();
-
-                            // Clear the Excel session data after successful save
-                            Session.Remove("UploadedExcelDisplayData");
-                            Session.Remove("UploadedExcelTotal");
-                            Session.Remove("UploadedExcelFileBytes");
-                            Session.Remove("UploadedExcelFileName");
-
-                            // Refresh expenses display
-                            DisplayExpenses(serviceId);
-
-                            string msg = $"{savedCount} row(s) saved successfully.";
-                            if (skippedCount > 0) msg += $" {skippedCount} row(s) skipped (missing amount/date).";
-
-                            string redirectUrl = Request.Url.ToString();
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllDone",
-                                $"alert('{msg}'); window.location.href = '{redirectUrl}';", true);
-                        }
-                        catch (Exception ex)
-                        {
-                            try { transaction.Rollback(); } catch { }
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllErr",
-                                $"alert('Error saving Excel rows: {ex.Message.Replace("'", "\\'")}');", true);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllErrOuter",
-                    $"alert('Unexpected error: {ex.Message.Replace("'", "\\'")}');", true);
-            }
+        DataTable dt = Session["ImportedExcelData"] as DataTable;
+        if (dt == null || dt.Rows.Count == 0)
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "warn", "alert('No Excel rows to save.');", true);
+            return;
         }
 
+        string constr = ConfigurationManager.ConnectionStrings["vivify"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(constr))
+        {
+            con.Open();
+            using (SqlTransaction transaction = con.BeginTransaction())
+            {
+                try
+                {
+                    int savedCount = 0;
+                    int skippedCount = 0;
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        string subCategory = dr["SubCategory"]?.ToString() ?? "";
+                        string mainCategory = dr["MainCategory"]?.ToString() ?? "Local";
+                        string date = dr["Date"]?.ToString() ?? "";
+                        string amount = dr["Amount"]?.ToString() ?? "";
+                        string particulars = dr["Particulars"]?.ToString() ?? "";
+                        string remarks = dr["Remarks"]?.ToString() ?? "";
+                        string smoNo = dr["SMONo"]?.ToString() ?? "";
+                        string soNo = dr["SONo"]?.ToString() ?? "";
+                        string refNo = dr["RefNo"]?.ToString() ?? "";
+                        
+                        // Raw strings from Excel
+                        string rawFromTime = dr["FromTime"]?.ToString() ?? "";
+                        string rawToTime = dr["ToTime"]?.ToString() ?? "";
+                        string distance = dr["Distance"]?.ToString() ?? "";
+                        string transportMode = dr["TransportMode"]?.ToString() ?? "";
+
+                        // Skip rows with no amount or invalid date
+                        if (string.IsNullOrWhiteSpace(amount) || !decimal.TryParse(amount, out _))
+                        { skippedCount++; continue; }
+                        if (string.IsNullOrWhiteSpace(date) || !DateTime.TryParse(date, out _))
+                        { skippedCount++; continue; }
+
+                        // ---------------------------------------------------------
+                        // FIX: ROBUST TIME PARSING LOGIC
+                        // ---------------------------------------------------------
+                        TimeSpan tsFrom = TimeSpan.Zero;
+                        TimeSpan tsTo = TimeSpan.Zero;
+
+                        // Parse From Time (Handles "9:00 AM" and "09:00:00")
+                        if (!string.IsNullOrWhiteSpace(rawFromTime))
+                        {
+                            if (DateTime.TryParse(rawFromTime, out DateTime dtFrom))
+                                tsFrom = dtFrom.TimeOfDay; // Extracts time from date format
+                            else 
+                                TimeSpan.TryParse(rawFromTime, out tsFrom); // Tries direct duration format
+                        }
+
+                        // Parse To Time
+                        if (!string.IsNullOrWhiteSpace(rawToTime))
+                        {
+                            if (DateTime.TryParse(rawToTime, out DateTime dtTo))
+                                tsTo = dtTo.TimeOfDay;
+                            else 
+                                TimeSpan.TryParse(rawToTime, out tsTo);
+                        }
+                        // ---------------------------------------------------------
+
+                        switch (subCategory)
+                        {
+                            case "Food":
+                                // Food uses TimeSpan? (Nullable)
+                                TimeSpan? f_from = (tsFrom == TimeSpan.Zero && string.IsNullOrWhiteSpace(rawFromTime)) ? (TimeSpan?)null : tsFrom;
+                                TimeSpan? f_to = (tsTo == TimeSpan.Zero && string.IsNullOrWhiteSpace(rawToTime)) ? (TimeSpan?)null : tsTo;
+                                
+                                InsertFoodExpense(con, transaction, serviceId, mainCategory,
+                                    amount, date, null, f_from, f_to, particulars, remarks, smoNo, refNo, soNo);
+                                savedCount++; break;
+
+                            case "Miscellaneous":
+                                // Misc uses TimeSpan (Not nullable usually)
+                                InsertMiscellaneousExpense(con, transaction, serviceId,
+                                    particulars, amount, date, null, mainCategory,
+                                    tsFrom, tsTo, particulars, remarks, smoNo, refNo, soNo);
+                                savedCount++; break;
+
+                            case "Others":
+                                // Others likely takes Strings based on your code. We format the TimeSpan back to HH:mm
+                                string o_from = tsFrom.ToString(@"hh\:mm");
+                                string o_to = tsTo.ToString(@"hh\:mm");
+
+                                InsertOthersExpense(con, transaction, serviceId,
+                                    amount, date, o_from, o_to, particulars, remarks,
+                                    null, othersfileUploadApproval, smoNo, refNo, soNo, null);
+                                savedCount++; break;
+
+                            case "Lodging":
+                                // Lodging likely takes Strings
+                                string l_from = tsFrom.ToString(@"hh\:mm");
+                                string l_to = tsTo.ToString(@"hh\:mm");
+
+                                InsertLodgingExpense(con, transaction, serviceId,
+                                    amount, date, l_from, l_to, particulars, remarks,
+                                    fileUploadTourOthers, fileUploadTourApproval, smoNo, refNo, soNo, null);
+                                savedCount++; break;
+
+                            case "Conveyance":
+                                string transport = transportMode;
+                                if (mainCategory == "Local")
+                                {
+                                    if (transport.Equals("Cab", StringComparison.OrdinalIgnoreCase) ||
+                                        transport.Equals("Bus", StringComparison.OrdinalIgnoreCase) ||
+                                        transport.Equals("Cab/Bus", StringComparison.OrdinalIgnoreCase))
+                                        transport = "Cab/Bus";
+                                    else if (!transport.Equals("Bike", StringComparison.OrdinalIgnoreCase) &&
+                                             !transport.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+                                        transport = "Cab/Bus"; 
+                                }
+
+                                // Conveyance likely takes Strings
+                                string c_from = tsFrom.ToString(@"hh\:mm");
+                                string c_to = tsTo.ToString(@"hh\:mm");
+
+                                InsertConveyanceExpense(con, transaction, serviceId,
+                                    transport, amount, date, c_from, c_to,
+                                    particulars, remarks, null, mainCategory, distance, smoNo, refNo, soNo);
+                                savedCount++; break;
+
+                            default:
+                                skippedCount++; break;
+                        }
+                    }
+
+                    transaction.Commit();
+
+                    Session.Remove("UploadedExcelDisplayData");
+                    Session.Remove("UploadedExcelTotal");
+                    Session.Remove("UploadedExcelFileBytes");
+                    Session.Remove("UploadedExcelFileName");
+
+                    DisplayExpenses(serviceId);
+
+                    string msg = $"{savedCount} row(s) saved successfully.";
+                    if (skippedCount > 0) msg += $" {skippedCount} row(s) skipped.";
+
+                    string redirectUrl = Request.Url.ToString();
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllDone",
+                        $"alert('{msg}'); window.location.href = '{redirectUrl}';", true);
+                }
+                catch (Exception ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllErr",
+                        $"alert('Error saving Excel rows: {ex.Message.Replace("'", "\\'")}');", true);
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "saveAllErrOuter",
+            $"alert('Unexpected error: {ex.Message.Replace("'", "\\'")}');", true);
+    }
+}
 
 
         private int FindHeaderRow(OfficeOpenXml.ExcelWorksheet worksheet, int rowCount)
