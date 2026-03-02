@@ -5276,13 +5276,13 @@ END";
                     // Tour/Local Column detection
                     if ((cleanHeader.Contains("tour") || originalLower.Contains("tour")) && (cleanHeader.Contains("local") || originalLower.Contains("local")))
                         AddToMap("TourLocalColumn", col);
-                    else if ((cleanHeader.Equals("tour") || originalLower.Equals("tour")) || (cleanHeader.Equals("local") || originalLower.Equals("local")))
+                    else if ((cleanHeader.StartsWith("tour") || originalLower.StartsWith("tour")) || (cleanHeader.StartsWith("local") || originalLower.StartsWith("local")))
                         AddToMap("TourLocalColumn", col);
 
                     if (cleanHeader.Contains("serial") || originalLower.Contains("slno") || originalLower.Contains("sno") || cleanHeader.Contains("serialnumber"))
                         AddToMap("SerialNumber", col);
 
-                    if (cleanHeader.Equals("expensetype") || originalLower.Equals("expense type") || originalLower.Equals("expensetype") ||
+                    if (cleanHeader.Contains("expensetype") || originalLower.Contains("expense type") ||
                         cleanHeader.Contains("category") || originalLower.Contains("category") || cleanHeader.Contains("nature") || originalLower.Contains("nature") || cleanHeader.Contains("head") || originalLower.Contains("head"))
                         AddToMap("ExpenseTypeColumn", col);
 
