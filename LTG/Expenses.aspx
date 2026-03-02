@@ -456,6 +456,12 @@
                                                     OnClick="lnkDownloadTemplate_Click" Text="Download Template"
                                                     Style="color: #FFD700; font-weight: bold; font-size: 12px; margin-right: 5px; text-decoration: underline;"
                                                     ToolTip="Download the Excel Reimbursement Template" />
+                                                |
+                                                <!-- User Guide Download Link -->
+                                                <asp:LinkButton ID="lnkDownloadUserGuide" runat="server"
+                                                    OnClick="lnkDownloadUserGuide_Click" Text="User Guide"
+                                                    Style="color: #00FFCC; font-weight: bold; font-size: 12px; margin-left: 5px; margin-right: 5px; text-decoration: underline;"
+                                                    ToolTip="Download the Excel User Guide instructions" />
 
                                                 <!-- Hidden ASP.NET FileUpload -->
                                                 <asp:FileUpload ID="fileUploadExcel" runat="server" accept=".xlsx,.xls"
@@ -2943,6 +2949,7 @@ border:none;background:none;
                         </ContentTemplate>
                         <Triggers>
                             <asp:PostBackTrigger ControlID="lnkDownloadTemplate" />
+                            <asp:PostBackTrigger ControlID="lnkDownloadUserGuide" />
                             <asp:PostBackTrigger ControlID="btnImportExcel" />
                             <asp:PostBackTrigger ControlID="btnSubmit" />
                             <asp:PostBackTrigger ControlID="btnChangeStatus" />

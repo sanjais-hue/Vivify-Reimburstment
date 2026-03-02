@@ -3813,23 +3813,13 @@ END";
 
         protected void lnkDownloadTemplate_Click(object sender, EventArgs e)
         {
-            string fileName = "Reimbursement_Template_HR.xlsx";
-            // Check several likely locations for the template file
-            string[] possiblePaths = {
-                Server.MapPath("~/Reimbursement_Template_HR.xlsx"),
-                Server.MapPath("~/LTG/Reimbursement_Template_HR.xlsx"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reimbursement_Template_HR.xlsx"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LTG", "Reimbursement_Template_HR.xlsx"),
-                @"Z:\My Folders\Vivify Reimburstment\Reimbursement_Template_HR.xlsx",
-                @"Z:\My Folders\Vivify Reimburstment\LTG\Reimbursement_Template_HR.xlsx"
-            };
+            string fileName = "Sample-Template-Reimbursement.xlsx";
+            string filePath = Server.MapPath("~/Downloads/" + fileName);
 
-            string filePath = possiblePaths.FirstOrDefault(p => System.IO.File.Exists(p));
-
-            if (string.IsNullOrEmpty(filePath))
+            if (!System.IO.File.Exists(filePath))
             {
                 lblError.Visible = true;
-                lblError.Text = "Template file not found. Checked: " + string.Join(", ", possiblePaths.Take(2));
+                lblError.Text = "Template file not found at " + filePath;
                 lblError.ForeColor = System.Drawing.Color.Red;
                 return;
             }
@@ -3848,6 +3838,44 @@ END";
             {
                 lblError.Visible = true;
                 lblError.Text = "Error downloading template: " + ex.Message;
+                lblError.ForeColor = System.Drawing.Color.Red;
+            }
+            finally
+            {
+                if (Response.IsClientConnected)
+                {
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                }
+            }
+        }
+
+        protected void lnkDownloadUserGuide_Click(object sender, EventArgs e)
+        {
+            string fileName = "User_Guide_Excel_Expense_Template.pdf";
+            string filePath = Server.MapPath("~/Downloads/" + fileName);
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                lblError.Visible = true;
+                lblError.Text = "User Guide file not found at " + filePath;
+                lblError.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            try
+            {
+                Response.Clear();
+                Response.Buffer = true;
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                Response.AddHeader("Content-Length", new System.IO.FileInfo(filePath).Length.ToString());
+                Response.TransmitFile(filePath);
+                Response.Flush();
+            }
+            catch (Exception ex)
+            {
+                lblError.Visible = true;
+                lblError.Text = "Error downloading user guide: " + ex.Message;
                 lblError.ForeColor = System.Drawing.Color.Red;
             }
             finally
