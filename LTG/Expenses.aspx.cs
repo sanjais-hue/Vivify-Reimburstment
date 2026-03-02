@@ -560,7 +560,7 @@ namespace Vivify
 
                     // Check for attachments (Image column exists in most tables except Food)
                     bool hasImage = false;
-                    if (category != "Food" && category != "Lodging")
+                    if (category != "Food")
                     {
                         hasImage = reader["Image"] != DBNull.Value;
                     }
@@ -581,16 +581,16 @@ namespace Vivify
                             ddlLocalExpenseType.SelectedValue = "Food";
                             ddlLocalExpenseType_SelectedIndexChanged(null, null);
                             PopulateLocalFoodFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
-                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalFoodFromTime)) txtLocalFoodFromTime.Text = ts_txtLocalFoodFromTime.ToString(@"hh\\:mm"); else txtLocalFoodFromTime.Text = reader["FromTime"].ToString(); }
-                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalFoodToTime)) txtLocalFoodToTime.Text = ts_txtLocalFoodToTime.ToString(@"hh\\:mm"); else txtLocalFoodToTime.Text = reader["ToTime"].ToString(); }
+                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalFoodFromTime)) txtLocalFoodFromTime.Text = ts_txtLocalFoodFromTime.ToString(@"hh\:mm"); else txtLocalFoodFromTime.Text = reader["FromTime"].ToString(); }
+                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalFoodToTime)) txtLocalFoodToTime.Text = ts_txtLocalFoodToTime.ToString(@"hh\:mm"); else txtLocalFoodToTime.Text = reader["ToTime"].ToString(); }
                         }
                         else if (category == "Miscellaneous")
                         {
                             ddlLocalExpenseType.SelectedValue = "Miscellaneous";
                             ddlLocalExpenseType_SelectedIndexChanged(null, null);
                             PopulateLocalMiscellaneousFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
-                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalMiscFromTime)) txtLocalMiscFromTime.Text = ts_txtLocalMiscFromTime.ToString(@"hh\\:mm"); else txtLocalMiscFromTime.Text = reader["FromTime"].ToString(); }
-                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalMiscToTime)) txtLocalMiscToTime.Text = ts_txtLocalMiscToTime.ToString(@"hh\\:mm"); else txtLocalMiscToTime.Text = reader["ToTime"].ToString(); }
+                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalMiscFromTime)) txtLocalMiscFromTime.Text = ts_txtLocalMiscFromTime.ToString(@"hh\:mm"); else txtLocalMiscFromTime.Text = reader["FromTime"].ToString(); }
+                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalMiscToTime)) txtLocalMiscToTime.Text = ts_txtLocalMiscToTime.ToString(@"hh\:mm"); else txtLocalMiscToTime.Text = reader["ToTime"].ToString(); }
                             if (hasImage) lblLocalMiscFileStatus.Text = "Already Attached";
                         }
                         else if (category == "Others")
@@ -598,8 +598,8 @@ namespace Vivify
                             ddlLocalExpenseType.SelectedValue = "Others";
                             ddlLocalExpenseType_SelectedIndexChanged(null, null);
                             PopulateLocalOthersFields(date, amount, particulars, remarks, smoNo, soNo, refNo, null, null, null);
-                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalOthersFromTime)) txtLocalOthersFromTime.Text = ts_txtLocalOthersFromTime.ToString(@"hh\\:mm"); else txtLocalOthersFromTime.Text = reader["FromTime"].ToString(); }
-                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalOthersToTime)) txtLocalOthersToTime.Text = ts_txtLocalOthersToTime.ToString(@"hh\\:mm"); else txtLocalOthersToTime.Text = reader["ToTime"].ToString(); }
+                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalOthersFromTime)) txtLocalOthersFromTime.Text = ts_txtLocalOthersFromTime.ToString(@"hh\:mm"); else txtLocalOthersFromTime.Text = reader["FromTime"].ToString(); }
+                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalOthersToTime)) txtLocalOthersToTime.Text = ts_txtLocalOthersToTime.ToString(@"hh\:mm"); else txtLocalOthersToTime.Text = reader["ToTime"].ToString(); }
                             if (hasImage) lblLocalBillStatus.Text = "Already Attached";
                             if (reader["ServiceReport"] != DBNull.Value) lblLocalServiceReportStatus.Text = "Already Attached";
                             if (reader["ApprovalMail"] != DBNull.Value) lblLocalApprovalStatus.Text = "Already Attached";
@@ -615,8 +615,8 @@ namespace Vivify
 
                             if (transportType == "Bike")
                             {
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalBikeFromTime)) txtLocalBikeFromTime.Text = ts_txtLocalBikeFromTime.ToString(@"hh\\:mm"); else txtLocalBikeFromTime.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalBikeToTime)) txtLocalBikeToTime.Text = ts_txtLocalBikeToTime.ToString(@"hh\\:mm"); else txtLocalBikeToTime.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalBikeFromTime)) txtLocalBikeFromTime.Text = ts_txtLocalBikeFromTime.ToString(@"hh\:mm"); else txtLocalBikeFromTime.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalBikeToTime)) txtLocalBikeToTime.Text = ts_txtLocalBikeToTime.ToString(@"hh\:mm"); else txtLocalBikeToTime.Text = reader["ToTime"].ToString(); }
                                 txtLocalBikeParticular.Text = particulars;
                                 txtLocalBikeRemarks.Text = remarks;
                                 txtLocalBikeSMONo.Text = smoNo;
@@ -626,8 +626,8 @@ namespace Vivify
                             }
                             else if (transportType == "Cab/Bus")
                             {
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalCabFromTime)) txtLocalCabFromTime.Text = ts_txtLocalCabFromTime.ToString(@"hh\\:mm"); else txtLocalCabFromTime.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalCabToTime)) txtLocalCabToTime.Text = ts_txtLocalCabToTime.ToString(@"hh\\:mm"); else txtLocalCabToTime.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalCabFromTime)) txtLocalCabFromTime.Text = ts_txtLocalCabFromTime.ToString(@"hh\:mm"); else txtLocalCabFromTime.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalCabToTime)) txtLocalCabToTime.Text = ts_txtLocalCabToTime.ToString(@"hh\:mm"); else txtLocalCabToTime.Text = reader["ToTime"].ToString(); }
                                 txtLocalCabParticular.Text = particulars;
                                 txtLocalCabRemarks.Text = remarks;
                                 txtLocalCabSMONo.Text = smoNo;
@@ -637,8 +637,8 @@ namespace Vivify
                             }
                             else if (transportType == "Auto")
                             {
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalAutoFromTime)) txtLocalAutoFromTime.Text = ts_txtLocalAutoFromTime.ToString(@"hh\\:mm"); else txtLocalAutoFromTime.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalAutoToTime)) txtLocalAutoToTime.Text = ts_txtLocalAutoToTime.ToString(@"hh\\:mm"); else txtLocalAutoToTime.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtLocalAutoFromTime)) txtLocalAutoFromTime.Text = ts_txtLocalAutoFromTime.ToString(@"hh\:mm"); else txtLocalAutoFromTime.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtLocalAutoToTime)) txtLocalAutoToTime.Text = ts_txtLocalAutoToTime.ToString(@"hh\:mm"); else txtLocalAutoToTime.Text = reader["ToTime"].ToString(); }
                                 txtLocalAutoParticular.Text = particulars;
                                 txtLocalAutoRemarks.Text = remarks;
                                 txtLocalAutoSMONo.Text = smoNo;
@@ -658,8 +658,8 @@ namespace Vivify
                         {
                             txtTourFoodDate.Text = date;
                             txtTourFoodAmount.Text = amount;
-                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtTourFoodFromTime)) txtTourFoodFromTime.Text = ts_txtTourFoodFromTime.ToString(@"hh\\:mm"); else txtTourFoodFromTime.Text = reader["FromTime"].ToString(); }
-                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtTourFoodToTime)) txtTourFoodToTime.Text = ts_txtTourFoodToTime.ToString(@"hh\\:mm"); else txtTourFoodToTime.Text = reader["ToTime"].ToString(); }
+                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtTourFoodFromTime)) txtTourFoodFromTime.Text = ts_txtTourFoodFromTime.ToString(@"hh\:mm"); else txtTourFoodFromTime.Text = reader["FromTime"].ToString(); }
+                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtTourFoodToTime)) txtTourFoodToTime.Text = ts_txtTourFoodToTime.ToString(@"hh\:mm"); else txtTourFoodToTime.Text = reader["ToTime"].ToString(); }
                             txtTourFoodParticulars.Text = particulars;
                             txtTourFoodRemarks.Text = remarks;
                             txtTourFoodSMONo.Text = smoNo;
@@ -671,8 +671,8 @@ namespace Vivify
                         {
                             txtTourMiscDate.Text = date;
                             txtTourMiscAmount.Text = amount;
-                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtTourMiscFromTime)) txtTourMiscFromTime.Text = ts_txtTourMiscFromTime.ToString(@"hh\\:mm"); else txtTourMiscFromTime.Text = reader["FromTime"].ToString(); }
-                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtTourMiscToTime)) txtTourMiscToTime.Text = ts_txtTourMiscToTime.ToString(@"hh\\:mm"); else txtTourMiscToTime.Text = reader["ToTime"].ToString(); }
+                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtTourMiscFromTime)) txtTourMiscFromTime.Text = ts_txtTourMiscFromTime.ToString(@"hh\:mm"); else txtTourMiscFromTime.Text = reader["FromTime"].ToString(); }
+                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtTourMiscToTime)) txtTourMiscToTime.Text = ts_txtTourMiscToTime.ToString(@"hh\:mm"); else txtTourMiscToTime.Text = reader["ToTime"].ToString(); }
                             txtTourMiscParticulars.Text = particulars;
                             txtTourMiscRemarks.Text = remarks;
                             txtTourMiscSmoNo.Text = smoNo;
@@ -684,8 +684,8 @@ namespace Vivify
                         {
                             txtTourOthersDate.Text = date;
                             txtTourOthersAmount.Text = amount;
-                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeTourOthers)) txtFromTimeTourOthers.Text = ts_txtFromTimeTourOthers.ToString(@"hh\\:mm"); else txtFromTimeTourOthers.Text = reader["FromTime"].ToString(); }
-                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeTourOthers)) txtToTimeTourOthers.Text = ts_txtToTimeTourOthers.ToString(@"hh\\:mm"); else txtToTimeTourOthers.Text = reader["ToTime"].ToString(); }
+                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeTourOthers)) txtFromTimeTourOthers.Text = ts_txtFromTimeTourOthers.ToString(@"hh\:mm"); else txtFromTimeTourOthers.Text = reader["FromTime"].ToString(); }
+                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeTourOthers)) txtToTimeTourOthers.Text = ts_txtToTimeTourOthers.ToString(@"hh\:mm"); else txtToTimeTourOthers.Text = reader["ToTime"].ToString(); }
                             txtParticularsTourOthers.Text = particulars;
                             txtRemarksTourOthers.Text = remarks;
                             txtTourOthersSmoNo.Text = smoNo;
@@ -699,11 +699,16 @@ namespace Vivify
                         {
                             txtTourOthersDate.Text = date;
                             txtTourOthersAmount.Text = amount;
+                            if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeTourOthers_L)) txtFromTimeTourOthers.Text = ts_txtFromTimeTourOthers_L.ToString(@"hh\:mm"); else txtFromTimeTourOthers.Text = reader["FromTime"].ToString(); }
+                            if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeTourOthers_L)) txtToTimeTourOthers.Text = ts_txtToTimeTourOthers_L.ToString(@"hh\:mm"); else txtToTimeTourOthers.Text = reader["ToTime"].ToString(); }
                             txtParticularsTourOthers.Text = particulars;
                             txtRemarksTourOthers.Text = remarks;
                             txtTourOthersSmoNo.Text = smoNo;
                             txtTourOthersSoNo.Text = soNo;
                             txtTourOthersRefNo.Text = refNo;
+                            if (hasImage) lblTourOthersFileStatus.Text = "Already Attached";
+                            if (reader["ServiceReport"] != DBNull.Value) lblServiceReportStatus.Text = "Already Attached";
+                            if (reader["ApprovalMail"] != DBNull.Value) lblTourApprovalStatus.Text = "Already Attached";
                         }
                         else if (category == "Conveyance")
                         {
@@ -715,8 +720,8 @@ namespace Vivify
                             {
                                 txtFlightDate.Text = date;
                                 txtFlightAmount.Text = amount;
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFlightFromTime)) txtFlightFromTime.Text = ts_txtFlightFromTime.ToString(@"hh\\:mm"); else txtFlightFromTime.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtFlightToTime)) txtFlightToTime.Text = ts_txtFlightToTime.ToString(@"hh\\:mm"); else txtFlightToTime.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFlightFromTime)) txtFlightFromTime.Text = ts_txtFlightFromTime.ToString(@"hh\:mm"); else txtFlightFromTime.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtFlightToTime)) txtFlightToTime.Text = ts_txtFlightToTime.ToString(@"hh\:mm"); else txtFlightToTime.Text = reader["ToTime"].ToString(); }
                                 txtFlightParticulars.Text = particulars;
                                 txtFlightRemarks.Text = remarks;
                                 txtFlightSmoNo.Text = smoNo;
@@ -728,8 +733,8 @@ namespace Vivify
                             {
                                 txtBusDate.Text = date;
                                 txtBusAmount.Text = amount;
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeBus)) txtFromTimeBus.Text = ts_txtFromTimeBus.ToString(@"hh\\:mm"); else txtFromTimeBus.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeBus)) txtToTimeBus.Text = ts_txtToTimeBus.ToString(@"hh\\:mm"); else txtToTimeBus.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeBus)) txtFromTimeBus.Text = ts_txtFromTimeBus.ToString(@"hh\:mm"); else txtFromTimeBus.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeBus)) txtToTimeBus.Text = ts_txtToTimeBus.ToString(@"hh\:mm"); else txtToTimeBus.Text = reader["ToTime"].ToString(); }
                                 txtParticularsBus.Text = particulars;
                                 txtRemarksBus.Text = remarks;
                                 txtBusSmoNo.Text = smoNo;
@@ -741,8 +746,8 @@ namespace Vivify
                             {
                                 txtTrainDate.Text = date;
                                 txtTrainAmount.Text = amount;
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeTrain)) txtFromTimeTrain.Text = ts_txtFromTimeTrain.ToString(@"hh\\:mm"); else txtFromTimeTrain.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeTrain)) txtToTimeTrain.Text = ts_txtToTimeTrain.ToString(@"hh\\:mm"); else txtToTimeTrain.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeTrain)) txtFromTimeTrain.Text = ts_txtFromTimeTrain.ToString(@"hh\:mm"); else txtFromTimeTrain.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeTrain)) txtToTimeTrain.Text = ts_txtToTimeTrain.ToString(@"hh\:mm"); else txtToTimeTrain.Text = reader["ToTime"].ToString(); }
                                 txtParticularsTrain.Text = particulars;
                                 txtRemarksTrain.Text = remarks;
                                 txtTrainSmoNo.Text = smoNo;
@@ -754,8 +759,8 @@ namespace Vivify
                             {
                                 txtCabDate.Text = date;
                                 txtCabAmount.Text = amount;
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeCab)) txtFromTimeCab.Text = ts_txtFromTimeCab.ToString(@"hh\\:mm"); else txtFromTimeCab.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeCab)) txtToTimeCab.Text = ts_txtToTimeCab.ToString(@"hh\\:mm"); else txtToTimeCab.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtFromTimeCab)) txtFromTimeCab.Text = ts_txtFromTimeCab.ToString(@"hh\:mm"); else txtFromTimeCab.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtToTimeCab)) txtToTimeCab.Text = ts_txtToTimeCab.ToString(@"hh\:mm"); else txtToTimeCab.Text = reader["ToTime"].ToString(); }
                                 txtParticularsCab.Text = particulars;
                                 txtRemarksCab.Text = remarks;
                                 txtCabSmoNo.Text = smoNo;
@@ -767,8 +772,8 @@ namespace Vivify
                             {
                                 txtTourAutoDate.Text = date;
                                 txtTourAutoAmount.Text = amount;
-                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtTourAutoFromTime)) txtTourAutoFromTime.Text = ts_txtTourAutoFromTime.ToString(@"hh\\:mm"); else txtTourAutoFromTime.Text = reader["FromTime"].ToString(); }
-                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtTourAutoToTime)) txtTourAutoToTime.Text = ts_txtTourAutoToTime.ToString(@"hh\\:mm"); else txtTourAutoToTime.Text = reader["ToTime"].ToString(); }
+                                if (reader["FromTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["FromTime"].ToString(), out TimeSpan ts_txtTourAutoFromTime)) txtTourAutoFromTime.Text = ts_txtTourAutoFromTime.ToString(@"hh\:mm"); else txtTourAutoFromTime.Text = reader["FromTime"].ToString(); }
+                                if (reader["ToTime"] != DBNull.Value) { if (TimeSpan.TryParse(reader["ToTime"].ToString(), out TimeSpan ts_txtTourAutoToTime)) txtTourAutoToTime.Text = ts_txtTourAutoToTime.ToString(@"hh\:mm"); else txtTourAutoToTime.Text = reader["ToTime"].ToString(); }
                                 txtTourAutoParticular.Text = particulars;
                                 txTourAutoRemarks.Text = remarks;
                                 txtTourAutoSmoNo.Text = smoNo;
