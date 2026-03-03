@@ -23,10 +23,16 @@ namespace Vivify
             string filePath = Request.QueryString["filePath"];
             if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
             {
+                Response.Clear();
+                Response.ClearHeaders();
+                Response.ClearContent();
+                Response.Buffer = true;
+                Response.Charset = "";
                 Response.ContentType = "application/pdf";
-                Response.AppendHeader("Content-Disposition", $"attachment; filename={Path.GetFileName(filePath)}");
+                Response.AddHeader("content-disposition", "attachment; filename=UserGuide.pdf");
                 Response.TransmitFile(filePath);
-                Response.End();
+                Response.Flush();
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
         }
     }

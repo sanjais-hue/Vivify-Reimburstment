@@ -630,10 +630,15 @@ ORDER BY
                 {
                     package.SaveAs(stream);
                     Response.Clear();
+                    Response.ClearHeaders();
+                    Response.ClearContent();
+                    Response.Buffer = true;
+                    Response.Charset = "";
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("content-disposition", "attachment; filename=Travel_Expense_Report.xlsx");
-                    Response.BinaryWrite(stream.ToArray());
-                    Response.End();
+                    Response.AddHeader("content-disposition", "attachment;filename=TravelExpenses.xlsx");
+                    Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
             }
         }

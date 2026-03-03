@@ -252,9 +252,12 @@ namespace Vivify
         private void ExportToExcel(GridView gridView)
         {
             Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment;filename=Training_Report.xls");
+            Response.Charset = "";
             Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("content-disposition", "attachment;filename=Training_Report.xls");
             StringWriter sw = new StringWriter();
             HtmlTextWriter hw = new HtmlTextWriter(sw);
 
@@ -263,7 +266,7 @@ namespace Vivify
 
             Response.Output.Write(sw.ToString());
             Response.Flush();
-            Response.End();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
         protected void gvReport_RowDataBound(object sender, GridViewRowEventArgs e)

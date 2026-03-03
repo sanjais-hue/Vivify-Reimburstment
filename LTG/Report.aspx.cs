@@ -101,16 +101,19 @@ namespace Vivify
         private void ExportToExcel()
         {
             Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment;filename=ExpenseReport.xls");
             Response.Charset = "";
             Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("content-disposition", "attachment;filename=ExpenseReport.xls");
+
             System.IO.StringWriter sw = new System.IO.StringWriter();
             HtmlTextWriter hw = new HtmlTextWriter(sw);
             gvReport.RenderControl(hw);
             Response.Output.Write(sw.ToString());
             Response.Flush();
-            Response.End();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
         public override void VerifyRenderingInServerForm(Control control)

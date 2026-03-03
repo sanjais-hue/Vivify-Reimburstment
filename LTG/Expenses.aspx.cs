@@ -3886,9 +3886,12 @@ END";
             try
             {
                 Response.Clear();
+                Response.ClearHeaders();
+                Response.ClearContent();
                 Response.Buffer = true;
+                Response.Charset = "";
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                Response.AddHeader("content-disposition", "attachment; filename=\"" + fileName + "\"");
                 Response.AddHeader("Content-Length", new System.IO.FileInfo(filePath).Length.ToString());
                 Response.TransmitFile(filePath);
                 Response.Flush();
@@ -3924,9 +3927,12 @@ END";
             try
             {
                 Response.Clear();
+                Response.ClearHeaders();
+                Response.ClearContent();
                 Response.Buffer = true;
+                Response.Charset = "";
                 Response.ContentType = "application/pdf";
-                Response.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                Response.AddHeader("content-disposition", "attachment; filename=\"" + fileName + "\"");
                 Response.AddHeader("Content-Length", new System.IO.FileInfo(filePath).Length.ToString());
                 Response.TransmitFile(filePath);
                 Response.Flush();

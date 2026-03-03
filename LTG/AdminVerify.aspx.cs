@@ -634,10 +634,15 @@ ISNULL(l.IsClaimable, 0) AS IsClaimable,
 
                     // Send the file to the browser
                     Response.Clear();
+                    Response.ClearHeaders();
+                    Response.ClearContent();
+                    Response.Buffer = true;
+                    Response.Charset = "";
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("content-disposition", "attachment; filename=Expense_Report.xlsx");
+                    Response.AddHeader("content-disposition", "attachment;filename=Expense_Report.xlsx");
                     Response.BinaryWrite(stream.ToArray());
-                    Response.End();
+                    Response.Flush();
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
             }
         }
@@ -659,10 +664,15 @@ ISNULL(l.IsClaimable, 0) AS IsClaimable,
 
                     // Send the file to the browser
                     Response.Clear();
+                    Response.ClearHeaders();
+                    Response.ClearContent();
+                    Response.Buffer = true;
+                    Response.Charset = "";
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+                    Response.AddHeader("content-disposition", "attachment;filename=" + fileName);
                     Response.BinaryWrite(stream.ToArray());
-                    Response.End();
+                    Response.Flush();
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
             }
         }

@@ -289,10 +289,12 @@ namespace Vivify
 
             // Export to Excel
             Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment;filename=RefreshmentReport.xls");
-            Response.ContentType = "application/vnd.ms-excel";
             Response.Charset = "";
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("content-disposition", "attachment;filename=RefreshmentReport.xls");
 
             using (StringWriter sw = new StringWriter())
             {
@@ -337,7 +339,7 @@ namespace Vivify
 
                     Response.Write(sw.ToString());
                     Response.Flush();
-                    Response.End();
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
             }
         }

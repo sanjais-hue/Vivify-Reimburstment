@@ -379,10 +379,17 @@ namespace Vivify
             document.Close();
 
             // Set up the response for downloading the file
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.Charset = "";
             Response.ContentType = "application/pdf";
-            Response.AddHeader("Content-Disposition", "attachment;filename=Report_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".pdf");
+            string fileName = "Report_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".pdf");
             Response.BinaryWrite(ms.ToArray());
-            Response.End();
+            Response.Flush();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
     }

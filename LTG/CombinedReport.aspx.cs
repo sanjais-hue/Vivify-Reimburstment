@@ -1152,15 +1152,19 @@ FROM CombinedExpenses;
 
                     // Send file to the browser
                     Response.Clear();
+                    Response.ClearHeaders();
+                    Response.ClearContent();
+                    Response.Buffer = true;
+                    Response.Charset = "";
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("content-disposition", "attachment; filename=ExpenseReport.xlsx");
+                    Response.AddHeader("content-disposition", "attachment;filename=ExpenseReport.xlsx");
 
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
                         workbook.SaveAs(memoryStream);
                         memoryStream.WriteTo(Response.OutputStream);
                         Response.Flush();
-                        Response.End();
+                        HttpContext.Current.ApplicationInstance.CompleteRequest();
                     }
                 }
             }

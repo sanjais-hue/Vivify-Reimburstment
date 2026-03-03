@@ -407,9 +407,12 @@ ORDER BY emp.FirstName, expDetails.Date, expDetails.FromTime";
         private void ExportToExcel(GridView gridView)
         {
             Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment;filename=ExpenseReport.xls");
+            Response.Charset = "";
             Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("content-disposition", "attachment;filename=ExpenseReport.xls");
             StringWriter sw = new StringWriter();
             HtmlTextWriter hw = new HtmlTextWriter(sw);
 
@@ -418,7 +421,7 @@ ORDER BY emp.FirstName, expDetails.Date, expDetails.FromTime";
 
             Response.Output.Write(sw.ToString());
             Response.Flush();
-            Response.End();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
         public override void VerifyRenderingInServerForm(Control control)

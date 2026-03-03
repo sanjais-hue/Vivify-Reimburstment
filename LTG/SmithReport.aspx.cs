@@ -903,7 +903,10 @@ ORDER BY emp.BranchName;
 
                 // Clear the response and set headers
                 Response.Clear();
+                Response.ClearHeaders();
+                Response.ClearContent();
                 Response.Buffer = true;
+                Response.Charset = "";
                 Response.AddHeader("content-disposition", "attachment;filename=CombinedReport.xlsx");
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -1063,6 +1066,7 @@ ORDER BY emp.BranchName;
 
                     // Write the Excel file to the response
                     Response.BinaryWrite(package.GetAsByteArray());
+                    Response.Flush();
                 }
             }
             catch (Exception ex)
@@ -1073,7 +1077,7 @@ ORDER BY emp.BranchName;
             }
             finally
             {
-                Response.End(); // Ensure the response ends properly
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
         }
 

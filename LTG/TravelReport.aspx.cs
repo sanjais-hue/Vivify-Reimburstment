@@ -260,11 +260,13 @@ ORDER BY te.Date, emp.FirstName";
             DataTable dtExport = GetDataForExport();
 
             Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
             Response.Buffer = true;
+            Response.Charset = "";
             Response.ContentEncoding = System.Text.Encoding.UTF8;
-            Response.AddHeader("content-disposition", "attachment;filename=Smiths_Travel_Expense_Report_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xls");
             Response.ContentType = "application/vnd.ms-excel";
-            Response.Charset = "utf-8";
+            Response.AddHeader("content-disposition", "attachment;filename=Smiths_Travel_Expense_Report_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xls");
             StringWriter sw = new StringWriter();
             HtmlTextWriter hw = new HtmlTextWriter(sw);
 
@@ -569,7 +571,7 @@ ORDER BY te.Date, emp.FirstName";
 
             Response.Output.Write(sw.ToString());
             Response.Flush();
-            Response.End();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
         private DataTable GetDataForExport()
         {

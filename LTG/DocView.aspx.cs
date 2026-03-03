@@ -756,12 +756,18 @@ namespace Vivify
                 return false; // Invalid PDF
             }
         }
-        private void TriggerZIPDownload(string filePath)
+        private void TriggerZIPDownload(string zipPath, string fileName)
         {
-            Response.ContentType = "application/pdf";
-            Response.AppendHeader("Content-Disposition", "attachment; filename=MergedDocument.pdf");
-            Response.TransmitFile(filePath);
-            Response.End();
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.Charset = "";
+            Response.ContentType = "application/zip";
+            Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+            Response.TransmitFile(zipPath);
+            Response.Flush();
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
     }
 }
